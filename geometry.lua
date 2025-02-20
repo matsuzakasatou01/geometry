@@ -28,7 +28,7 @@ function regular_triangle(length,clockwise)--固定大小正三角形，可指�
     if clockwise == nil then
         clockwise = 0
     end
-    local a = length
+    local a = length/2
     local b = a/2*3^0.5
     local c = a/2
     if clockwise == 0 then
@@ -122,7 +122,7 @@ function pentagram(length,clockwise,proportion)--五角星形，可指定路径�
     if proportion > math.sin(math.rad(54)) then
         proportion = math.sin(math.rad(54))
     end
-    local a = length
+    local a = length/2
     local b = a*proportion
     local c = b*math.cos(math.rad(54))
     local d = b*math.sin(math.rad(54))
@@ -145,11 +145,12 @@ function regular_hexagon(length,clockwise)--固定边长正六边形，可指定
     end
     local a = length
     local b = a/2
-    local c = a/2*3^0.5
+    local c = a/4*3^0.5
+    local d = a/4
     if clockwise == 0 then
-        return string.format("m %.3f %.3f l %.3f %.3f l %.3f %.3f l %.3f %.3f l %.3f %.3f l %.3f %.3f ",-b,-c,b,-c,a,0,b,c,-b,c,-a,0)
+        return string.format("m %.3f %.3f l %.3f %.3f l %.3f %.3f l %.3f %.3f l %.3f %.3f l %.3f %.3f ",0,-b,c,-d,c,d,0,b,-c,d,-c,-d)
     elseif clockwise == 1 then
-        return string.format("m %.3f %.3f l %.3f %.3f l %.3f %.3f l %.3f %.3f l %.3f %.3f l %.3f %.3f ",-b,-c,-a,0,-b,c,b,c,a,0,b,-c)
+        return string.format("m %.3f %.3f l %.3f %.3f l %.3f %.3f l %.3f %.3f l %.3f %.3f l %.3f %.3f ",0,-b,-c,-d,-c,d,0,b,c,d,c,-d)
     end
 end
 
@@ -179,4 +180,66 @@ function note(x)--七个音符，可指定任意一个
     elseif x == 7 then
         return shape_two_sixteenth_notes
     end
+end
+
+function tessellation(shape,line_number,x_incline,line,y_incline,line_x_incline,first_overturn,adjacent_overturn,adjacent_y_incline)
+--[[生成密铺状态的可密铺图形
+    参数:图形,单行个数,x偏移量,总行数,y偏移量,偶数行初始x偏移量,偶数行第一个图形翻转状态,每行相邻两个图形的翻转状态,每行相邻两个图形的y偏移量]]
+    line_x_incline = line_x_incline or 0
+    adjacent_overturn = adjacent_overturn or 1
+    first_overturn = first_overturn or 1
+    adjacent_y_incline = adjacent_y_incline or 0
+    local ass = {}
+    for i = 1,line do
+        if i % 2 == 1 then
+            for j = 1,line_number do
+                if j % 2 == 1 then
+                    local shape1 = string.gsub(shape,"([+-]?[%d]+%.[%d]+) ([+-]?[%d]+%.[%d]+)",
+                    function (x,y)
+                        x = tonumber(x) + (j-1)*x_incline
+                        y = tonumber(y) + (i-1)*y_incline
+                        return string.format("%s %s",x,y)
+                    end)
+                    ass[#ass+1] = shape1
+                else
+                    local shape2 = string.gsub(shape,"([+-]?[%d]+%.[%d]+) ([+-]?[%d]+%.[%d]+)",
+                    function (x,y)
+                        x = tonumber(x) + (j-1)*x_incline
+                        if adjacent_overturn == 0 then
+                            y = -(tonumber(y) - (i-1)*y_incline + adjacent_y_incline)
+                        elseif adjacent_overturn == 1 then
+                            y = tonumber(y) + (i-1)*y_incline
+                        end
+                        return string.format("%s %s",x,y)
+                    end)
+                    ass[#ass+1] = shape2
+                end
+            end
+        else
+            for k = 1,line_number do
+                if k % 2 == 1 then
+                    local shape3 = string.gsub(shape,"([+-]?[%d]+%.[%d]+) ([+-]?[%d]+%.[%d]+)",
+                    function (x,y)
+                        x = tonumber(x) + (k-1)*x_incline + line_x_incline
+                        if first_overturn == 0 then
+                            y = -(tonumber(y) - (i-1)*y_incline + adjacent_y_incline)
+                        elseif first_overturn == 1 then
+                            y = tonumber(y) + (i-1)*y_incline
+                        end
+                        return string.format("%s %s",x,y)
+                    end)
+                    ass[#ass+1] = shape3
+                else
+                    local shape4 = string.gsub(shape,"([+-]?[%d]+%.[%d]+) ([+-]?[%d]+%.[%d]+)",
+                    function (x,y)
+                        x = tonumber(x) + (k-1)*x_incline + line_x_incline
+                        y = tonumber(y) + (i-1)*y_incline
+                        return string.format("%s %s",x,y)
+                    end)
+                    ass[#ass+1] = shape4
+                end
+            end
+        end
+    end
+    return table.concat(ass)
 end
