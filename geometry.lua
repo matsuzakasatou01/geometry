@@ -38,6 +38,19 @@ function regular_triangle(length,clockwise)--固定大小正三角形，可指�
     end
 end
 
+function isosceles_triangle(length,height,clockwise)--固定底高等腰三角形，可指定路径方向
+    if clockwise == nil then
+        clockwise = 0
+    end
+    local a = length/2
+    local b = height/2
+    if clockwise == 0 then
+        return string.format("m %.1f %.1f l %.1f %.1f l %.1f %.1f ",0,-b/2,a/2,b/2,-a/2,b/2)
+    elseif clockwise == 1 then
+        return string.format("m %.1f %.1f l %.1f %.1f l %.1f %.1f ",0,-b/2,-a/2,b/2,a/2,b/2)
+    end
+end
+
 function square(length,clockwise)--固定边长正方形，可指定路径方向
     if clockwise == nil then
         clockwise = 0
@@ -76,6 +89,9 @@ function rectangle(length,height,clockwise)--固定长宽矩形，可指定路�
 end
 
 function rhombus(length,height,clockwise)--固定长高菱形，可指定路径方向
+    if height == nil then
+        height = length
+    end
     if clockwise == nil then
         clockwise = 0
     end
@@ -154,6 +170,42 @@ function regular_hexagon(length,clockwise)--固定边长正六边形，可指定
     end
 end
 
+function arrow(length1,length2,length3,length4,direction,clockwise)--箭头，可指定指向和路径方向
+    if length3 == nil then
+        length3 = length1/2
+    end
+    if length4 == nil then
+        length4 = length2/2
+    end
+    if direction == nil then
+        direction = 4
+    end
+    if clockwise == nil then
+        clockwise = 0
+    end
+    local a = length1/2 + length3/2
+    local b = a - length3
+    local c = length2/2 + length4
+    local d = length2/2
+    if clockwise == 0 and direction == 1 then
+        return string.format("m %.1f %.1f l %.1f %.1f l %.1f %.1f l %.1f %.1f l %.1f %.1f l %.1f %.1f l %.1f %.1f ",0,-a,c,-b,d,-b,d,a,-d,a,-d,-b,-c,-b)
+    elseif clockwise == 0 and direction == 2 then
+        return string.format("m %.1f %.1f l %.1f %.1f l %.1f %.1f l %.1f %.1f l %.1f %.1f l %.1f %.1f l %.1f %.1f ",0,a,-c,b,-d,b,-d,-a,d,-a,d,b,c,b)
+    elseif clockwise == 0 and direction == 3 then
+        return string.format("m %.1f %.1f l %.1f %.1f l %.1f %.1f l %.1f %.1f l %.1f %.1f l %.1f %.1f l %.1f %.1f ",-a,0,-b,-c,-b,-d,a,-d,a,d,-b,d,-b,c)
+    elseif clockwise == 0 and direction == 4 then
+        return string.format("m %.1f %.1f l %.1f %.1f l %.1f %.1f l %.1f %.1f l %.1f %.1f l %.1f %.1f l %.1f %.1f ",a,0,b,c,b,d,-a,d,-a,-d,b,-d,b,-c)
+    elseif clockwise == 1 and direction == 1 then
+        return string.format("m %.1f %.1f l %.1f %.1f l %.1f %.1f l %.1f %.1f l %.1f %.1f l %.1f %.1f l %.1f %.1f ",0,-a,-c,-b,-d,-b,-d,a,d,a,d,-b,c,-b)
+    elseif clockwise == 1 and direction == 2 then
+        return string.format("m %.1f %.1f l %.1f %.1f l %.1f %.1f l %.1f %.1f l %.1f %.1f l %.1f %.1f l %.1f %.1f ",0,a,c,b,d,b,d,-a,-d,-a,-d,b,-c,b)
+    elseif clockwise == 1 and direction == 3 then
+        return string.format("m %.1f %.1f l %.1f %.1f l %.1f %.1f l %.1f %.1f l %.1f %.1f l %.1f %.1f l %.1f %.1f ",-a,0,-b,c,-b,d,a,d,a,-d,-b,-d,-b,-c)
+    elseif clockwise == 1 and direction == 4 then
+        return string.format("m %.1f %.1f l %.1f %.1f l %.1f %.1f l %.1f %.1f l %.1f %.1f l %.1f %.1f l %.1f %.1f ",a,0,b,-c,b,-d,-a,-d,-a,d,b,d,b,c)
+    end
+end
+
 function note(x)--七个音符，可指定任意一个
     local shape_G_clef="m 3 -93 b -7 -93 -18 -68 -9 -38 b -24 -24 -41 -1 -37 14 b -32 44 -8 49 8 45 l 12 65 b 13 88 -10 89 -12 81 b -9 80 0 81 -3 67 b -6 57 -22 58 -23 74 b -20 96 17 94 15 67 l 11 44 b 20 38 29 30 27 12 b 24 4 14 -9 1 -6 l -3 -24 b 20 -41 18 -85 3 -93 m 6 -78 b 14 -77 9 -50 -6 -41 b -9 -58 -7 -78 6 -78 m 7 41 b -21 55 -51 10 -6 -21 l -2 -5 b -33 14 -8 36 -3 34 l -3 33 b -13 28 -16 12 0 7 m 10 40 l 2 7 b 21 4 27 31 10 40" 
     local shape_half_note="m -2 -85 l -2 51 b -11 44 -56 48 -51 85 b -48 106 -4 94 2 69 l 2 -85 m -46 86 b -50 72 -12 48 -4 56 b -2 75 -43 96 -46 86"
@@ -186,8 +238,8 @@ function tessellation(shape,line_number,x_incline,line,y_incline,line_x_incline,
 --[[生成密铺状态的可密铺图形
     参数:图形,单行个数,x偏移量,总行数,y偏移量,偶数行初始x偏移量,偶数行第一个图形翻转状态,每行相邻两个图形的翻转状态,每行相邻两个图形的y偏移量]]
     line_x_incline = line_x_incline or 0
+    first_overturn = first_overturn or 2
     adjacent_overturn = adjacent_overturn or 1
-    first_overturn = first_overturn or 1
     adjacent_y_incline = adjacent_y_incline or 0
     local ass = {}
     for i = 1,line do
@@ -220,10 +272,14 @@ function tessellation(shape,line_number,x_incline,line,y_incline,line_x_incline,
                 if k % 2 == 1 then
                     local shape3 = string.gsub(shape,"([+-]?[%d]+%.[%d]+) ([+-]?[%d]+%.[%d]+)",
                     function (x,y)
-                        x = tonumber(x) + (k-1)*x_incline + line_x_incline
                         if first_overturn == 0 then
-                            y = -(tonumber(y) - (i-1)*y_incline + adjacent_y_incline)
+                            x = -(tonumber(x) - (k-1)*x_incline - line_x_incline)
+                            y = tonumber(y) + (i-1)*y_incline
                         elseif first_overturn == 1 then
+                            x = tonumber(x) + (k-1)*x_incline + line_x_incline
+                            y = -(tonumber(y) - (i-1)*y_incline + adjacent_y_incline)
+                        elseif first_overturn == 2 then
+                            x = tonumber(x) + (k-1)*x_incline + line_x_incline
                             y = tonumber(y) + (i-1)*y_incline
                         end
                         return string.format("%s %s",x,y)
@@ -232,8 +288,19 @@ function tessellation(shape,line_number,x_incline,line,y_incline,line_x_incline,
                 else
                     local shape4 = string.gsub(shape,"([+-]?[%d]+%.[%d]+) ([+-]?[%d]+%.[%d]+)",
                     function (x,y)
-                        x = tonumber(x) + (k-1)*x_incline + line_x_incline
-                        y = tonumber(y) + (i-1)*y_incline
+                        if adjacent_overturn == 1 and first_overturn == 0 then
+                            x = -(tonumber(x) - (k-1)*x_incline - line_x_incline)
+                            y = tonumber(y) + (i-1)*y_incline
+                        elseif adjacent_overturn == 1 and first_overturn == 1 then
+                            x = tonumber(x) + (k-1)*x_incline + line_x_incline
+                            y = -(tonumber(y) - (i-1)*y_incline + adjacent_y_incline)
+                        elseif adjacent_overturn == 1 and first_overturn == 2 then
+                            x = tonumber(x) + (k-1)*x_incline + line_x_incline
+                            y = tonumber(y) + (i-1)*y_incline
+                        elseif adjacent_overturn == 0 and first_overturn == 1 then
+                            x = tonumber(x) + (k-1)*x_incline + line_x_incline
+                            y = tonumber(y) + (i-1)*y_incline
+                        end
                         return string.format("%s %s",x,y)
                     end)
                     ass[#ass+1] = shape4
