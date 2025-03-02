@@ -201,35 +201,39 @@ function translation(ass_shape,x_incline,y_incline)--平移绘图
     y_incline = y_incline or 0
     local shape = string.gsub(ass_shape,"([-.%d]+) ([-.%d]+)",
     function (x,y)
-        x = tonumber(x) + x_incline
-        y = tonumber(y) + y_incline
+        x = x + x_incline
+        y = y + y_incline
         return string.format("%s %s",x,y)
     end)
     return shape
 end
 
-function zoom(ass_shape,x_zoom,y_zoom)--缩放绘图
+function zoom(ass_shape,x_zoom,y_zoom,zoom_center,zoom_middle)--缩放绘图
     x_zoom = x_zoom or 100
     y_zoom = y_zoom or x_zoom
+    zoom_center = zoom_center or 0
+    zoom_middle = zoom_middle or 0
     local shape = string.gsub(ass_shape,"([-.%d]+) ([-.%d]+)",
     function (x,y)
-        x = tonumber(x)*x_zoom/100
-        y = tonumber(y)*y_zoom/100
+        x = zoom_center + (x-zoom_center)*x_zoom/100
+        y = zoom_middle + (y-zoom_middle)*y_zoom/100
         return string.format("%s %s",x,y)
     end)
     return shape
 end
 
-function spin(ass_shape,x_angle,y_angle,z_angle)--旋转绘图
+function spin(ass_shape,x_angle,y_angle,z_angle,spin_center,spin_middle)--旋转绘图
     x_angle = x_angle or 0
     y_angle = y_angle or 0
     z_angle = z_angle or 0
+    spin_center = spin_center or 0
+    spin_middle = spin_middle or 0
     local shape = string.gsub(ass_shape,"([-.%d]+) ([-.%d]+)",
     function (x,y)
-        x = tonumber(x)*math.cos(math.rad(y_angle))
-        y = tonumber(y)*math.cos(math.rad(x_angle))
-        local new_x = x*math.cos(math.rad(-z_angle)) - y*math.sin(math.rad(-z_angle))
-        local new_y = x*math.sin(math.rad(-z_angle)) + y*math.cos(math.rad(-z_angle))
+        x = spin_center + (x-spin_center)*math.cos(math.rad(y_angle))
+        y = spin_middle + (y-spin_middle)*math.cos(math.rad(x_angle))
+        local new_x = spin_center + (x-spin_center)*math.cos(math.rad(-z_angle)) - (y-spin_middle)*math.sin(math.rad(-z_angle))
+        local new_y = spin_middle + (x-spin_center)*math.sin(math.rad(-z_angle)) + (y-spin_middle)*math.cos(math.rad(-z_angle))
         return string.format("%s %s",new_x,new_y)
     end)
     return shape
@@ -249,19 +253,19 @@ function tessellation(ass_shape,line_number,x_incline,line,y_incline,line_x_incl
                 if j % 2 == 1 then
                     local shape = string.gsub(ass_shape,"([-.%d]+) ([-.%d]+)",
                     function (x,y)
-                        x = tonumber(x) + (j-1)*x_incline
-                        y = tonumber(y) + (i-1)*y_incline
+                        x = x + (j-1)*x_incline
+                        y = y + (i-1)*y_incline
                         return string.format("%s %s",x,y)
                     end)
                     ass[#ass+1] = shape
                 else
                     local shape = string.gsub(ass_shape,"([-.%d]+) ([-.%d]+)",
                     function (x,y)
-                        x = tonumber(x) + (j-1)*x_incline
+                        x = x + (j-1)*x_incline
                         if adjacent_overturn == 0 then
-                            y = -(tonumber(y) - (i-1)*y_incline + adjacent_y_incline)
+                            y = -(y - (i-1)*y_incline + adjacent_y_incline)
                         elseif adjacent_overturn == 1 then
-                            y = tonumber(y) + (i-1)*y_incline
+                            y = y + (i-1)*y_incline
                         end
                         return string.format("%s %s",x,y)
                     end)
@@ -274,14 +278,14 @@ function tessellation(ass_shape,line_number,x_incline,line,y_incline,line_x_incl
                     local shape = string.gsub(ass_shape,"([-.%d]+) ([-.%d]+)",
                     function (x,y)
                         if first_overturn == 0 then
-                            x = -(tonumber(x) - (k-1)*x_incline - line_x_incline)
-                            y = tonumber(y) + (i-1)*y_incline
+                            x = -(x - (k-1)*x_incline - line_x_incline)
+                            y = y + (i-1)*y_incline
                         elseif first_overturn == 1 then
-                            x = tonumber(x) + (k-1)*x_incline + line_x_incline
-                            y = -(tonumber(y) - (i-1)*y_incline + adjacent_y_incline)
+                            x = x + (k-1)*x_incline + line_x_incline
+                            y = -(y - (i-1)*y_incline + adjacent_y_incline)
                         elseif first_overturn == 2 then
-                            x = tonumber(x) + (k-1)*x_incline + line_x_incline
-                            y = tonumber(y) + (i-1)*y_incline
+                            x = x + (k-1)*x_incline + line_x_incline
+                            y = y + (i-1)*y_incline
                         end
                         return string.format("%s %s",x,y)
                     end)
@@ -290,17 +294,17 @@ function tessellation(ass_shape,line_number,x_incline,line,y_incline,line_x_incl
                     local shape = string.gsub(ass_shape,"([-.%d]+) ([-.%d]+)",
                     function (x,y)
                         if adjacent_overturn == 1 and first_overturn == 0 then
-                            x = -(tonumber(x) - (k-1)*x_incline - line_x_incline)
-                            y = tonumber(y) + (i-1)*y_incline
+                            x = -(x - (k-1)*x_incline - line_x_incline)
+                            y = y + (i-1)*y_incline
                         elseif adjacent_overturn == 1 and first_overturn == 1 then
-                            x = tonumber(x) + (k-1)*x_incline + line_x_incline
-                            y = -(tonumber(y) - (i-1)*y_incline + adjacent_y_incline)
+                            x = x + (k-1)*x_incline + line_x_incline
+                            y = -(y - (i-1)*y_incline + adjacent_y_incline)
                         elseif adjacent_overturn == 1 and first_overturn == 2 then
-                            x = tonumber(x) + (k-1)*x_incline + line_x_incline
-                            y = tonumber(y) + (i-1)*y_incline
+                            x = x + (k-1)*x_incline + line_x_incline
+                            y = y + (i-1)*y_incline
                         elseif adjacent_overturn == 0 and first_overturn == 1 then
-                            x = tonumber(x) + (k-1)*x_incline + line_x_incline
-                            y = tonumber(y) + (i-1)*y_incline
+                            x = x + (k-1)*x_incline + line_x_incline
+                            y = y + (i-1)*y_incline
                         end
                         return string.format("%s %s",x,y)
                     end)
