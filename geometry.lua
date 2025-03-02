@@ -199,7 +199,7 @@ end
 function translation(ass_shape,x_incline,y_incline)--平移绘图
     x_incline = x_incline or 0
     y_incline = y_incline or 0
-    local shape = string.gsub(ass_shape,"([+-]?[%d]+[%.[%d]+]?) ([+-]?[%d]+[%.[%d]+]?)",
+    local shape = string.gsub(ass_shape,"([-.%d]+) ([-.%d]+)",
     function (x,y)
         x = tonumber(x) + x_incline
         y = tonumber(y) + y_incline
@@ -211,7 +211,7 @@ end
 function zoom(ass_shape,x_zoom,y_zoom)--缩放绘图
     x_zoom = x_zoom or 100
     y_zoom = y_zoom or x_zoom
-    local shape = string.gsub(ass_shape,"([+-]?[%d]+[%.[%d]+]?) ([+-]?[%d]+[%.[%d]+]?)",
+    local shape = string.gsub(ass_shape,"([-.%d]+) ([-.%d]+)",
     function (x,y)
         x = tonumber(x)*x_zoom/100
         y = tonumber(y)*y_zoom/100
@@ -224,7 +224,7 @@ function spin(ass_shape,x_angle,y_angle,z_angle)--旋转绘图
     x_angle = x_angle or 0
     y_angle = y_angle or 0
     z_angle = z_angle or 0
-    local shape = string.gsub(ass_shape,"([+-]?[%d]+[%.[%d]+]?) ([+-]?[%d]+[%.[%d]+]?)",
+    local shape = string.gsub(ass_shape,"([-.%d]+) ([-.%d]+)",
     function (x,y)
         x = tonumber(x)*math.cos(math.rad(y_angle))
         y = tonumber(y)*math.cos(math.rad(x_angle))
@@ -247,7 +247,7 @@ function tessellation(ass_shape,line_number,x_incline,line,y_incline,line_x_incl
         if i % 2 == 1 then
             for j = 1,line_number do
                 if j % 2 == 1 then
-                    local shape = string.gsub(ass_shape,"([+-]?[%d]+%.[%d]+) ([+-]?[%d]+%.[%d]+)",
+                    local shape = string.gsub(ass_shape,"([-.%d]+) ([-.%d]+)",
                     function (x,y)
                         x = tonumber(x) + (j-1)*x_incline
                         y = tonumber(y) + (i-1)*y_incline
@@ -255,7 +255,7 @@ function tessellation(ass_shape,line_number,x_incline,line,y_incline,line_x_incl
                     end)
                     ass[#ass+1] = shape
                 else
-                    local shape = string.gsub(ass_shape,"([+-]?[%d]+%.[%d]+) ([+-]?[%d]+%.[%d]+)",
+                    local shape = string.gsub(ass_shape,"([-.%d]+) ([-.%d]+)",
                     function (x,y)
                         x = tonumber(x) + (j-1)*x_incline
                         if adjacent_overturn == 0 then
@@ -271,7 +271,7 @@ function tessellation(ass_shape,line_number,x_incline,line,y_incline,line_x_incl
         else
             for k = 1,line_number do
                 if k % 2 == 1 then
-                    local shape = string.gsub(ass_shape,"([+-]?[%d]+%.[%d]+) ([+-]?[%d]+%.[%d]+)",
+                    local shape = string.gsub(ass_shape,"([-.%d]+) ([-.%d]+)",
                     function (x,y)
                         if first_overturn == 0 then
                             x = -(tonumber(x) - (k-1)*x_incline - line_x_incline)
@@ -287,7 +287,7 @@ function tessellation(ass_shape,line_number,x_incline,line,y_incline,line_x_incl
                     end)
                     ass[#ass+1] = shape
                 else
-                    local shape = string.gsub(ass_shape,"([+-]?[%d]+%.[%d]+) ([+-]?[%d]+%.[%d]+)",
+                    local shape = string.gsub(ass_shape,"([-.%d]+) ([-.%d]+)",
                     function (x,y)
                         if adjacent_overturn == 1 and first_overturn == 0 then
                             x = -(tonumber(x) - (k-1)*x_incline - line_x_incline)
