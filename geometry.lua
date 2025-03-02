@@ -201,8 +201,8 @@ function translation(ass_shape,x_incline,y_incline)--平移绘图
     y_incline = y_incline or 0
     local shape = string.gsub(ass_shape,"([-.%d]+) ([-.%d]+)",
     function (x,y)
-        x = x + x_incline
-        y = y + y_incline
+        x = tonumber(x) + x_incline
+        y = tonumber(y) + y_incline
         return string.format("%s %s",x,y)
     end)
     return shape
@@ -215,8 +215,8 @@ function zoom(ass_shape,x_zoom,y_zoom,zoom_center,zoom_middle)--缩放绘图
     zoom_middle = zoom_middle or 0
     local shape = string.gsub(ass_shape,"([-.%d]+) ([-.%d]+)",
     function (x,y)
-        x = zoom_center + (x-zoom_center)*x_zoom/100
-        y = zoom_middle + (y-zoom_middle)*y_zoom/100
+        x = zoom_center + (tonumber(x)-zoom_center)*x_zoom/100
+        y = zoom_middle + (tonumber(y)-zoom_middle)*y_zoom/100
         return string.format("%s %s",x,y)
     end)
     return shape
@@ -230,8 +230,8 @@ function spin(ass_shape,x_angle,y_angle,z_angle,spin_center,spin_middle)--旋转
     spin_middle = spin_middle or 0
     local shape = string.gsub(ass_shape,"([-.%d]+) ([-.%d]+)",
     function (x,y)
-        x = spin_center + (x-spin_center)*math.cos(math.rad(y_angle))
-        y = spin_middle + (y-spin_middle)*math.cos(math.rad(x_angle))
+        x = spin_center + (tonumber(x)-spin_center)*math.cos(math.rad(y_angle))
+        y = spin_middle + (tonumber(y)-spin_middle)*math.cos(math.rad(x_angle))
         local new_x = spin_center + (x-spin_center)*math.cos(math.rad(-z_angle)) - (y-spin_middle)*math.sin(math.rad(-z_angle))
         local new_y = spin_middle + (x-spin_center)*math.sin(math.rad(-z_angle)) + (y-spin_middle)*math.cos(math.rad(-z_angle))
         return string.format("%s %s",new_x,new_y)
@@ -253,19 +253,19 @@ function tessellation(ass_shape,line_number,x_incline,line,y_incline,line_x_incl
                 if j % 2 == 1 then
                     local shape = string.gsub(ass_shape,"([-.%d]+) ([-.%d]+)",
                     function (x,y)
-                        x = x + (j-1)*x_incline
-                        y = y + (i-1)*y_incline
+                        x = tonumber(x) + (j-1)*x_incline
+                        y = tonumber(y) + (i-1)*y_incline
                         return string.format("%s %s",x,y)
                     end)
                     ass[#ass+1] = shape
                 else
                     local shape = string.gsub(ass_shape,"([-.%d]+) ([-.%d]+)",
                     function (x,y)
-                        x = x + (j-1)*x_incline
+                        x = tonumber(x) + (j-1)*x_incline
                         if adjacent_overturn == 0 then
-                            y = -(y - (i-1)*y_incline + adjacent_y_incline)
+                            y = -(tonumber(y) - (i-1)*y_incline + adjacent_y_incline)
                         elseif adjacent_overturn == 1 then
-                            y = y + (i-1)*y_incline
+                            y = tonumber(y) + (i-1)*y_incline
                         end
                         return string.format("%s %s",x,y)
                     end)
@@ -278,14 +278,14 @@ function tessellation(ass_shape,line_number,x_incline,line,y_incline,line_x_incl
                     local shape = string.gsub(ass_shape,"([-.%d]+) ([-.%d]+)",
                     function (x,y)
                         if first_overturn == 0 then
-                            x = -(x - (k-1)*x_incline - line_x_incline)
-                            y = y + (i-1)*y_incline
+                            x = -(tonumber(x) - (k-1)*x_incline - line_x_incline)
+                            y = tonumber(y) + (i-1)*y_incline
                         elseif first_overturn == 1 then
-                            x = x + (k-1)*x_incline + line_x_incline
-                            y = -(y - (i-1)*y_incline + adjacent_y_incline)
+                            x = tonumber(x) + (k-1)*x_incline + line_x_incline
+                            y = -(tonumber(y) - (i-1)*y_incline + adjacent_y_incline)
                         elseif first_overturn == 2 then
-                            x = x + (k-1)*x_incline + line_x_incline
-                            y = y + (i-1)*y_incline
+                            x = tonumber(x) + (k-1)*x_incline + line_x_incline
+                            y = tonumber(y) + (i-1)*y_incline
                         end
                         return string.format("%s %s",x,y)
                     end)
@@ -294,17 +294,17 @@ function tessellation(ass_shape,line_number,x_incline,line,y_incline,line_x_incl
                     local shape = string.gsub(ass_shape,"([-.%d]+) ([-.%d]+)",
                     function (x,y)
                         if adjacent_overturn == 1 and first_overturn == 0 then
-                            x = -(x - (k-1)*x_incline - line_x_incline)
-                            y = y + (i-1)*y_incline
+                            x = -(tonumber(x) - (k-1)*x_incline - line_x_incline)
+                            y = tonumber(y) + (i-1)*y_incline
                         elseif adjacent_overturn == 1 and first_overturn == 1 then
-                            x = x + (k-1)*x_incline + line_x_incline
-                            y = -(y - (i-1)*y_incline + adjacent_y_incline)
+                            x = tonumber(x) + (k-1)*x_incline + line_x_incline
+                            y = -(tonumber(y) - (i-1)*y_incline + adjacent_y_incline)
                         elseif adjacent_overturn == 1 and first_overturn == 2 then
-                            x = x + (k-1)*x_incline + line_x_incline
-                            y = y + (i-1)*y_incline
+                            x = tonumber(x) + (k-1)*x_incline + line_x_incline
+                            y = tonumber(y) + (i-1)*y_incline
                         elseif adjacent_overturn == 0 and first_overturn == 1 then
-                            x = x + (k-1)*x_incline + line_x_incline
-                            y = y + (i-1)*y_incline
+                            x = tonumber(x) + (k-1)*x_incline + line_x_incline
+                            y = tonumber(y) + (i-1)*y_incline
                         end
                         return string.format("%s %s",x,y)
                     end)
