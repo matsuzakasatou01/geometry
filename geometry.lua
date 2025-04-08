@@ -1,105 +1,115 @@
 function round(diameter,clockwise)--固定直径圆形，可指定路径方向
     clockwise = clockwise or 0
+    local S = "m %.3f %.3f b %.3f %.3f %.3f %.3f %.3f %.3f b %.3f %.3f %.3f %.3f %.3f %.3f "
     local a = diameter/2
     local b = a*4/3
     if clockwise == 0 then
-        return string.format("m %.3f %.3f b %.3f %.3f %.3f %.3f %.3f %.3f b %.3f %.3f %.3f %.3f %.3f %.3f ",-a,0,-a,-b,a,-b,a,0,a,b,-a,b,-a,0)
+        return string.format(S,-a,0,-a,-b,a,-b,a,0,a,b,-a,b,-a,0)
     elseif clockwise == 1 then
-        return string.format("m %.3f %.3f b %.3f %.3f %.3f %.3f %.3f %.3f b %.3f %.3f %.3f %.3f %.3f %.3f ",a,0,a,-b,-a,-b,-a,0,-a,b,a,b,a,0)
+        return string.format(S,a,0,a,-b,-a,-b,-a,0,-a,b,a,b,a,0)
     end
 end
 
 function random_round(min,max,clockwise)--随机范围直径圆形，可指定路径方向
     clockwise = clockwise or 0
+    local S = "m %.3f %.3f b %.3f %.3f %.3f %.3f %.3f %.3f b %.3f %.3f %.3f %.3f %.3f %.3f "
     local a = math.random(min/2,max/2)
     local b = a*4/3
     if clockwise == 0 then
-        return string.format("m %.3f %.3f b %.3f %.3f %.3f %.3f %.3f %.3f b %.3f %.3f %.3f %.3f %.3f %.3f ",-a,0,-a,-b,a,-b,a,0,a,b,-a,b,-a,0)
+        return string.format(S,-a,0,-a,-b,a,-b,a,0,a,b,-a,b,-a,0)
     elseif clockwise == 1 then
-        return string.format("m %.3f %.3f b %.3f %.3f %.3f %.3f %.3f %.3f b %.3f %.3f %.3f %.3f %.3f %.3f ",a,0,a,-b,-a,-b,-a,0,-a,b,a,b,a,0)
+        return string.format(S,a,0,a,-b,-a,-b,-a,0,-a,b,a,b,a,0)
     end
 end
 
 function regular_triangle(length,clockwise)--固定大小正三角形，可指定路径方向
     clockwise = clockwise or 0
+    local S = "m %.3f %.3f l %.3f %.3f l %.3f %.3f "
     local a = length/2
     local b = a/2*3^0.5
     local c = a/2
     if clockwise == 0 then
-        return string.format("m %.3f %.3f l %.3f %.3f l %.3f %.3f ",-b,c,0,-a,b,c)
+        return string.format(S,-b,c,0,-a,b,c)
     elseif clockwise == 1 then
-        return string.format("m %.3f %.3f l %.3f %.3f l %.3f %.3f ",b,c,0,-a,-b,c)
+        return string.format(S,b,c,0,-a,-b,c)
     end
 end
 
 function isosceles_triangle(length,height,clockwise)--固定底高等腰三角形，可指定路径方向
     clockwise = clockwise or 0
+    local S = "m %.1f %.1f l %.1f %.1f l %.1f %.1f "
     local a = length/2
     local b = height/2
     if clockwise == 0 then
-        return string.format("m %.1f %.1f l %.1f %.1f l %.1f %.1f ",0,-b/2,a/2,b/2,-a/2,b/2)
+        return string.format(S,0,-b/2,a/2,b/2,-a/2,b/2)
     elseif clockwise == 1 then
-        return string.format("m %.1f %.1f l %.1f %.1f l %.1f %.1f ",0,-b/2,-a/2,b/2,a/2,b/2)
+        return string.format(S,0,-b/2,-a/2,b/2,a/2,b/2)
     end
 end
 
 function square(length,clockwise)--固定边长正方形，可指定路径方向
     clockwise = clockwise or 0
+    local S = "m %.1f %.1f l %.1f %.1f l %.1f %.1f l %.1f %.1f "
     local a = length
     if clockwise == 0 then
-        return string.format("m -%.1f -%.1f l %.1f -%.1f l %.1f %.1f l -%.1f %.1f ",a/2,a/2,a/2,a/2,a/2,a/2,a/2,a/2)
+        return string.format(S,-a/2,-a/2,a/2,-a/2,a/2,a/2,-a/2,a/2)
     elseif clockwise == 1 then
-        return string.format("m -%.1f -%.1f l -%.1f %.1f l %.1f %.1f l %.1f -%.1f ",a/2,a/2,a/2,a/2,a/2,a/2,a/2,a/2)
+        return string.format(S,-a/2,-a/2,-a/2,a/2,a/2,a/2,a/2,-a/2)
     end
 end
 
 function random_square(min,max,clockwise)--随机范围边长正方形，可指定路径方向
     clockwise = clockwise or 0
+    local S = "m %.1f %.1f l %.1f %.1f l %.1f %.1f l %.1f %.1f "
     local a = math.random(min,max)
     if clockwise == 0 then
-        return string.format("m -%.1f -%.1f l %.1f -%.1f l %.1f %.1f l -%.1f %.1f ",a/2,a/2,a/2,a/2,a/2,a/2,a/2,a/2)
+        return string.format(S,-a/2,-a/2,a/2,-a/2,a/2,a/2,-a/2,a/2)
     elseif clockwise == 1 then
-        return string.format("m -%.1f -%.1f l -%.1f %.1f l %.1f %.1f l %.1f -%.1f ",a/2,a/2,a/2,a/2,a/2,a/2,a/2,a/2)
+        return string.format(S,-a/2,-a/2,-a/2,a/2,a/2,a/2,a/2,-a/2)
     end
 end
 
 function rectangle(length,height,clockwise)--固定长宽矩形，可指定路径方向
     clockwise = clockwise or 0
+    local S = "m %.1f %.1f l %.1f %.1f l %.1f %.1f l %.1f %.1f "
     local a = length
     local b = height
     if clockwise == 0 then
-        return string.format("m -%.1f -%.1f l %.1f -%.1f l %.1f %.1f l -%.1f %.1f ",a/2,b/2,a/2,b/2,a/2,b/2,a/2,b/2)
+        return string.format(S,-a/2,-b/2,a/2,-b/2,a/2,b/2,-a/2,b/2)
     elseif clockwise == 1 then
-        return string.format("m -%.1f -%.1f l -%.1f %.1f l %.1f %.1f l %.1f -%.1f ",a/2,b/2,a/2,b/2,a/2,b/2,a/2,b/2)
+        return string.format(S,-a/2,-b/2,-a/2,b/2,a/2,b/2,a/2,-b/2)
     end
 end
 
 function rhombus(length,height,clockwise)--固定长高菱形，可指定路径方向
     height = height or length
     clockwise = clockwise or 0
+    local S = "m %.1f %.1f l %.1f %.1f l %.1f %.1f l %.1f %.1f "
     local a = length
     local b = height
     if clockwise == 0 then
-        return string.format("m %.1f %.1f l %.1f %.1f l %.1f %.1f l %.1f %.1f ",0,-b/2,a/2,0,0,b/2,-a/2,0)
+        return string.format(S,0,-b/2,a/2,0,0,b/2,-a/2,0)
     elseif clockwise == 1 then
-        return string.format("m %.1f %.1f l %.1f %.1f l %.1f %.1f l %.1f %.1f ",0,-b/2,-a/2,0,0,b/2,a/2,0)
+        return string.format(S,0,-b/2,-a/2,0,0,b/2,a/2,0)
     end
 end
 
-function parallelogram(length,height,incline,directivity,clockwise)--固定长高平行四边形，可指定倾斜量、倾斜方向和路径方向
+function parallelogram(length,height,incline,directivity,clockwise)
+    --固定长高平行四边形，可指定倾斜量、倾斜方向和路径方向
     directivity = directivity or 1
     clockwise = clockwise or 0
+    local S = "m %.1f %.1f l %.1f %.1f l %.1f %.1f l %.1f %.1f "
     local a = length
     local b = height
     local c = incline
     if clockwise == 0 and directivity == 0 then
-        return string.format("m %.1f %.1f l %.1f %.1f l %.1f %.1f l %.1f %.1f ",-a/2-c,-b/2,a/2-c,-b/2,a/2+c,b/2,-a/2+c,b/2)
+        return string.format(S,-a/2-c,-b/2,a/2-c,-b/2,a/2+c,b/2,-a/2+c,b/2)
     elseif clockwise == 0 and directivity == 1 then
-        return string.format("m %.1f %.1f l %.1f %.1f l %.1f %.1f l %.1f %.1f ",-a/2+c,-b/2,a/2+c,-b/2,a/2-c,b/2,-a/2-c,b/2)
+        return string.format(S,-a/2+c,-b/2,a/2+c,-b/2,a/2-c,b/2,-a/2-c,b/2)
     elseif clockwise == 1 and directivity == 0 then
-        return string.format("m %.1f %.1f l %.1f %.1f l %.1f %.1f l %.1f %.1f ",-a/2-c,-b/2,-a/2+c,b/2,a/2+c,b/2,a/2-c,-b/2)
+        return string.format(S,-a/2-c,-b/2,-a/2+c,b/2,a/2+c,b/2,a/2-c,-b/2)
     elseif clockwise == 1 and directivity == 1 then
-        return string.format("m %.1f %.1f l %.1f %.1f l %.1f %.1f l %.1f %.1f ",-a/2+c,-b/2,-a/2-c,b/2,a/2-c,b/2,a/2+c,-b/2)
+        return string.format(S,-a/2+c,-b/2,-a/2-c,b/2,a/2-c,b/2,a/2+c,-b/2)
     end
 end
 
@@ -112,6 +122,7 @@ function pentagram(length,clockwise,proportion)--五角星形，可指定路径�
     if proportion > math.sin(math.rad(54)) then
         proportion = math.sin(math.rad(54))
     end
+    local S = "m %.3f %.3f l %.3f %.3f l %.3f %.3f l %.3f %.3f l %.3f %.3f l %.3f %.3f l %.3f %.3f l %.3f %.3f l %.3f %.3f l %.3f %.3f l %.3f %.3f "
     local a = length/2
     local b = a*proportion
     local c = b*math.cos(math.rad(54))
@@ -123,22 +134,23 @@ function pentagram(length,clockwise,proportion)--五角星形，可指定路径�
     local i = a*math.cos(math.rad(54))
     local j = a*math.sin(math.rad(54))
     if clockwise == 0 then
-        return string.format("m %.3f %.3f l %.3f %.3f l %.3f %.3f l %.3f %.3f l %.3f %.3f l %.3f %.3f l %.3f %.3f l %.3f %.3f l %.3f %.3f l %.3f %.3f l %.3f %.3f ",0,-a,c,-d,e,-f,g,h,i,j,0,b,-i,j,-g,h,-e,-f,-c,-d,0,-a)
+        return string.format(S,0,-a,c,-d,e,-f,g,h,i,j,0,b,-i,j,-g,h,-e,-f,-c,-d,0,-a)
     elseif clockwise == 1 then
-        return string.format("m %.3f %.3f l %.3f %.3f l %.3f %.3f l %.3f %.3f l %.3f %.3f l %.3f %.3f l %.3f %.3f l %.3f %.3f l %.3f %.3f l %.3f %.3f l %.3f %.3f ",0,-a,-c,-d,-e,-f,-g,h,-i,j,0,b,i,j,g,h,e,-f,c,-d,0,-a)
+        return string.format(S,0,-a,-c,-d,-e,-f,-g,h,-i,j,0,b,i,j,g,h,e,-f,c,-d,0,-a)
     end
 end
 
 function regular_hexagon(length,clockwise)--固定边长正六边形，可指定路径方向
     clockwise = clockwise or 0
+    local S = "m %.3f %.3f l %.3f %.3f l %.3f %.3f l %.3f %.3f l %.3f %.3f l %.3f %.3f "
     local a = length
     local b = a/2
     local c = a/4*3^0.5
     local d = a/4
     if clockwise == 0 then
-        return string.format("m %.3f %.3f l %.3f %.3f l %.3f %.3f l %.3f %.3f l %.3f %.3f l %.3f %.3f ",0,-b,c,-d,c,d,0,b,-c,d,-c,-d)
+        return string.format(S,0,-b,c,-d,c,d,0,b,-c,d,-c,-d)
     elseif clockwise == 1 then
-        return string.format("m %.3f %.3f l %.3f %.3f l %.3f %.3f l %.3f %.3f l %.3f %.3f l %.3f %.3f ",0,-b,-c,-d,-c,d,0,b,c,d,c,-d)
+        return string.format(S,0,-b,-c,-d,-c,d,0,b,c,d,c,-d)
     end
 end
 
@@ -147,27 +159,42 @@ function arrow(length1,length2,length3,length4,direction,clockwise)--箭头，�
     length4 = length4 or length2/2
     direction = direction or 4
     clockwise = clockwise or 0
+    local S = "m %.1f %.1f l %.1f %.1f l %.1f %.1f l %.1f %.1f l %.1f %.1f l %.1f %.1f l %.1f %.1f "
     local a = length1/2 + length3/2
     local b = a - length3
     local c = length2/2 + length4
     local d = length2/2
     if clockwise == 0 and direction == 1 then
-        return string.format("m %.1f %.1f l %.1f %.1f l %.1f %.1f l %.1f %.1f l %.1f %.1f l %.1f %.1f l %.1f %.1f ",0,-a,c,-b,d,-b,d,a,-d,a,-d,-b,-c,-b)
+        return string.format(S,0,-a,c,-b,d,-b,d,a,-d,a,-d,-b,-c,-b)
     elseif clockwise == 0 and direction == 2 then
-        return string.format("m %.1f %.1f l %.1f %.1f l %.1f %.1f l %.1f %.1f l %.1f %.1f l %.1f %.1f l %.1f %.1f ",0,a,-c,b,-d,b,-d,-a,d,-a,d,b,c,b)
+        return string.format(S,0,a,-c,b,-d,b,-d,-a,d,-a,d,b,c,b)
     elseif clockwise == 0 and direction == 3 then
-        return string.format("m %.1f %.1f l %.1f %.1f l %.1f %.1f l %.1f %.1f l %.1f %.1f l %.1f %.1f l %.1f %.1f ",-a,0,-b,-c,-b,-d,a,-d,a,d,-b,d,-b,c)
+        return string.format(S,-a,0,-b,-c,-b,-d,a,-d,a,d,-b,d,-b,c)
     elseif clockwise == 0 and direction == 4 then
-        return string.format("m %.1f %.1f l %.1f %.1f l %.1f %.1f l %.1f %.1f l %.1f %.1f l %.1f %.1f l %.1f %.1f ",a,0,b,c,b,d,-a,d,-a,-d,b,-d,b,-c)
+        return string.format(S,a,0,b,c,b,d,-a,d,-a,-d,b,-d,b,-c)
     elseif clockwise == 1 and direction == 1 then
-        return string.format("m %.1f %.1f l %.1f %.1f l %.1f %.1f l %.1f %.1f l %.1f %.1f l %.1f %.1f l %.1f %.1f ",0,-a,-c,-b,-d,-b,-d,a,d,a,d,-b,c,-b)
+        return string.format(S,0,-a,-c,-b,-d,-b,-d,a,d,a,d,-b,c,-b)
     elseif clockwise == 1 and direction == 2 then
-        return string.format("m %.1f %.1f l %.1f %.1f l %.1f %.1f l %.1f %.1f l %.1f %.1f l %.1f %.1f l %.1f %.1f ",0,a,c,b,d,b,d,-a,-d,-a,-d,b,-c,b)
+        return string.format(S,0,a,c,b,d,b,d,-a,-d,-a,-d,b,-c,b)
     elseif clockwise == 1 and direction == 3 then
-        return string.format("m %.1f %.1f l %.1f %.1f l %.1f %.1f l %.1f %.1f l %.1f %.1f l %.1f %.1f l %.1f %.1f ",-a,0,-b,c,-b,d,a,d,a,-d,-b,-d,-b,-c)
+        return string.format(S,-a,0,-b,c,-b,d,a,d,a,-d,-b,-d,-b,-c)
     elseif clockwise == 1 and direction == 4 then
-        return string.format("m %.1f %.1f l %.1f %.1f l %.1f %.1f l %.1f %.1f l %.1f %.1f l %.1f %.1f l %.1f %.1f ",a,0,b,-c,b,-d,-a,-d,-a,d,b,d,b,c)
+        return string.format(S,a,0,b,-c,b,-d,-a,-d,-a,d,b,d,b,c)
     end
+end
+
+function binary_digit(digit)
+    local num = {}
+    local O = "m 1 -41 b -39 -42 -38 41 0 40 b 38 41 39 -42 1 -41 m 16 -18 l -18 7 b -20 -43 10 -38 16 -18 m -16 17 l 18 -8 b 23 37 -10 39 -16 17 "
+    local I = "m -4 -40 l -29 -27 l -25 -19 l -6 -30 l -6 28 l -26 28 l -26 38 l 23 38 l 23 28 l 5 28 l 5 -40 "
+    for i = 1,digit do
+        if math.random(1,2) == 1 then
+            num[#num+1] = translation(O,70*(i-1))
+        else
+            num[#num+1] = translation(I,70*(i-1))
+        end
+    end
+    return table.concat(num)
 end
 
 function note(x)--七个音符，可指定任意一个
