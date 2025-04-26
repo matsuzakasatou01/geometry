@@ -1,4 +1,10 @@
-function round(diameter,clockwise)--固定直径圆形，可指定路径方向
+function round(num,decimal)--保留指定小数位数
+    decimal = decimal or 0
+    local mult = 10^decimal
+    return math.floor(num*mult + 0.5)/mult
+end
+
+function circle(diameter,clockwise)--固定直径圆形，可指定路径方向
     clockwise = clockwise or 0
     local S = "m %.3f %.3f b %.3f %.3f %.3f %.3f %.3f %.3f b %.3f %.3f %.3f %.3f %.3f %.3f "
     local a = diameter/2
@@ -10,7 +16,7 @@ function round(diameter,clockwise)--固定直径圆形，可指定路径方向
     end
 end
 
-function random_round(min,max,clockwise)--随机范围直径圆形，可指定路径方向
+function random_circle(min,max,clockwise)--随机范围直径圆形，可指定路径方向
     clockwise = clockwise or 0
     local S = "m %.3f %.3f b %.3f %.3f %.3f %.3f %.3f %.3f b %.3f %.3f %.3f %.3f %.3f %.3f "
     local a = math.random(min/2,max/2)
@@ -94,8 +100,7 @@ function rhombus(length,height,clockwise)--固定长高菱形，可指定路径�
     end
 end
 
-function parallelogram(length,height,incline,directivity,clockwise)
-    --固定长高平行四边形，可指定倾斜量、倾斜方向和路径方向
+function parallelogram(length,height,incline,directivity,clockwise)--固定长高平行四边形，可指定倾斜量、倾斜方向和路径方向
     directivity = directivity or 1
     clockwise = clockwise or 0
     local S = "m %.1f %.1f l %.1f %.1f l %.1f %.1f l %.1f %.1f "
@@ -183,20 +188,6 @@ function arrow(length1,length2,length3,length4,direction,clockwise)--箭头，�
     end
 end
 
-function binary_digit(digit)
-    local num = {}
-    local O = "m 1 -41 b -39 -42 -38 41 0 40 b 38 41 39 -42 1 -41 m 16 -18 l -18 7 b -20 -43 10 -38 16 -18 m -16 17 l 18 -8 b 23 37 -10 39 -16 17 "
-    local I = "m -4 -40 l -29 -27 l -25 -19 l -6 -30 l -6 28 l -26 28 l -26 38 l 23 38 l 23 28 l 5 28 l 5 -40 "
-    for i = 1,digit do
-        if math.random(1,2) == 1 then
-            num[#num+1] = translation(O,70*(i-1))
-        else
-            num[#num+1] = translation(I,70*(i-1))
-        end
-    end
-    return table.concat(num)
-end
-
 function note(x)--七个音符，可指定任意一个
     local shape_G_clef="m 3 -93 b -7 -93 -18 -68 -9 -38 b -24 -24 -41 -1 -37 14 b -32 44 -8 49 8 45 l 12 65 b 13 88 -10 89 -12 81 b -9 80 0 81 -3 67 b -6 57 -22 58 -23 74 b -20 96 17 94 15 67 l 11 44 b 20 38 29 30 27 12 b 24 4 14 -9 1 -6 l -3 -24 b 20 -41 18 -85 3 -93 m 6 -78 b 14 -77 9 -50 -6 -41 b -9 -58 -7 -78 6 -78 m 7 41 b -21 55 -51 10 -6 -21 l -2 -5 b -33 14 -8 36 -3 34 l -3 33 b -13 28 -16 12 0 7 m 10 40 l 2 7 b 21 4 27 31 10 40" 
     local shape_half_note="m -2 -85 l -2 51 b -11 44 -56 48 -51 85 b -48 106 -4 94 2 69 l 2 -85 m -46 86 b -50 72 -12 48 -4 56 b -2 75 -43 96 -46 86"
@@ -264,6 +255,93 @@ function spin(ass_shape,x_angle,y_angle,z_angle,spin_center,spin_middle)--旋转
         return string.format("%s %s",new_x,new_y)
     end)
     return shape
+end
+
+function binary_digit(digit)--生成指定位数的随机二进制数字绘图
+    local num = {}
+    local O = "m 1 -41 b -39 -42 -38 41 0 40 b 38 41 39 -42 1 -41 m 16 -18 l -18 7 b -20 -43 10 -38 16 -18 m -16 17 l 18 -8 b 23 37 -10 39 -16 17 "
+    local I = "m -4 -40 l -29 -27 l -25 -19 l -6 -30 l -6 28 l -26 28 l -26 38 l 23 38 l 23 28 l 5 28 l 5 -40 "
+    for i = 1,digit do
+        if math.random(1,2) == 1 then
+            num[#num+1] = translation(O,70*(i-1))
+        else
+            num[#num+1] = translation(I,70*(i-1))
+        end
+    end
+    return table.concat(num)
+end
+
+function ellipse(x_length,y_length,clockwise)--椭圆，可指定路径方向
+    clockwise = clockwise or 0
+    return zoom(circle(x_length,clockwise),100,y_length/x_length*100)
+end
+
+function chain(num,x_length,y_length,width,first)--生成直线锁链绘图
+    x_length = x_length or 30
+    y_length = y_length or 20
+    width = width or 5
+    first = first or 0
+    local function link(length1,length2,clockwise)
+        length2 = length2 or length1
+        clockwise = clockwise or 0
+        local S = "m %.3f %.3f b %.3f %.3f %.3f %.3f %.3f %.3f l %.3f %.3f b %.3f %.3f %.3f %.3f %.3f %.3f "
+        local a = length1/2
+        local b = length2/2
+        if clockwise == 0 then
+            return string.format(S,-a,-b,-a,-b-a*4/3,a,-b-a*4/3,a,-b,a,b,a,b+a*4/3,-a,b+a*4/3,-a,b)
+        elseif clockwise == 1 then
+            return string.format(S,-a,b,-a,b+a*4/3,a,b+a*4/3,a,b,a,-b,a,-b-a*4/3,-a,-b-a*4/3,-a,-b)
+        end
+    end
+    local O = link(x_length,y_length)..link(x_length - width*2,y_length,1)
+    local I = link(width,x_length + y_length - width*2)
+    local ass = {}
+    if first == 0 then
+        for i = 1,num do
+            if i % 2 == 1 then
+                ass[#ass+1] = translation(O,0,(x_length + y_length - width*3)*(i - 1))
+            else
+                ass[#ass+1] = translation(I,0,(x_length + y_length - width*3)*(i - 1))
+            end
+        end
+    elseif first == 1 then
+        for i = 1,num do
+            if i % 2 == 1 then
+                ass[#ass+1] = translation(I,0,(x_length + y_length - width*3)*(i - 1))
+            else
+                ass[#ass+1] = translation(O,0,(x_length + y_length - width*3)*(i - 1))
+            end
+        end
+    end
+    return table.concat(ass)
+end
+
+function arrange(ass_shape,line_number,x_incline,line,y_incline,first_proportion,last_proportion,line_x_incline)--生成规律排列的绘图
+    line = line or 1
+    y_incline = y_incline or x_incline
+    first_proportion = first_proportion or 100
+    last_proportion = last_proportion or first_proportion
+    line_x_incline = line_x_incline or 0
+    local z = (last_proportion - first_proportion)/(line - 1)
+    local ass = {}
+    if line == 1 then
+        for j = 1,line_number do
+            ass[#ass+1] = translation(ass_shape,x_incline*(j - 1),0)
+        end
+    else
+        for i = 1,line do
+            if i % 2 == 1 then
+                for j = 1,line_number do
+                    ass[#ass+1] = translation(zoom(ass_shape,first_proportion + z*(i - 1)),x_incline*(j - 1),y_incline*(i - 1))
+                end
+            else
+                for j = 1,line_number do
+                    ass[#ass+1] = translation(zoom(ass_shape,first_proportion + z*(i - 1)),x_incline*(j - 1) + line_x_incline,y_incline*(i - 1))
+                end
+            end
+        end
+    end
+    return table.concat(ass)
 end
 
 function tessellation(ass_shape,line_number,x_incline,line,y_incline,line_x_incline,first_overturn,adjacent_overturn,adjacent_y_incline)
