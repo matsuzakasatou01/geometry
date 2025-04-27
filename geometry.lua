@@ -257,6 +257,11 @@ function spin(ass_shape,x_angle,y_angle,z_angle,spin_center,spin_middle)--旋转
     return shape
 end
 
+function ellipse(x_length,y_length,clockwise)--椭圆，可指定路径方向
+    clockwise = clockwise or 0
+    return zoom(circle(x_length,clockwise),100,y_length/x_length*100)
+end
+
 function binary_digit(digit)--生成指定位数的随机二进制数字绘图
     local num = {}
     local O = "m 1 -41 b -39 -42 -38 41 0 40 b 38 41 39 -42 1 -41 m 16 -18 l -18 7 b -20 -43 10 -38 16 -18 m -16 17 l 18 -8 b 23 37 -10 39 -16 17 "
@@ -269,11 +274,6 @@ function binary_digit(digit)--生成指定位数的随机二进制数字绘图
         end
     end
     return table.concat(num)
-end
-
-function ellipse(x_length,y_length,clockwise)--椭圆，可指定路径方向
-    clockwise = clockwise or 0
-    return zoom(circle(x_length,clockwise),100,y_length/x_length*100)
 end
 
 function chain(num,x_length,y_length,width,first)--生成直线锁链绘图
@@ -316,12 +316,14 @@ function chain(num,x_length,y_length,width,first)--生成直线锁链绘图
     return table.concat(ass)
 end
 
-function arrange(ass_shape,line_number,x_incline,line,y_incline,first_proportion,last_proportion,line_x_incline)--生成规律排列的绘图
+function arrange(ass_shape,line_number,x_incline,line,y_incline,first_proportion,last_proportion,line_x_incline,mode)
+--[[生成规律排列的绘图  参数:图形,单行个数,x偏移量,总行数,y偏移量,第一行缩放比例,最后一行缩放比例,偶数行初始x偏移量,模式]]
     line = line or 1
     y_incline = y_incline or x_incline
     first_proportion = first_proportion or 100
     last_proportion = last_proportion or first_proportion
     line_x_incline = line_x_incline or 0
+    mode = mode or 0
     local z = (last_proportion - first_proportion)/(line - 1)
     local ass = {}
     if line == 1 then
@@ -341,16 +343,21 @@ function arrange(ass_shape,line_number,x_incline,line,y_incline,first_proportion
             end
         end
     end
-    return table.concat(ass)
+    if mode == 0 then
+        return table.concat(ass)
+    elseif mode == 1 then
+        return ass
+    end
 end
 
-function tessellation(ass_shape,line_number,x_incline,line,y_incline,line_x_incline,first_overturn,adjacent_overturn,adjacent_y_incline)
+function tessellation(ass_shape,line_number,x_incline,line,y_incline,line_x_incline,first_overturn,adjacent_overturn,adjacent_y_incline,mode)
 --[[生成密铺状态的可密铺图形
-    参数:图形,单行个数,x偏移量,总行数,y偏移量,偶数行初始x偏移量,偶数行第一个图形翻转状态,每行相邻两个图形的翻转状态,每行相邻两个图形的y偏移量]]
+    参数:图形,单行个数,x偏移量,总行数,y偏移量,偶数行初始x偏移量,偶数行第一个图形翻转状态,每行相邻两个图形的翻转状态,每行相邻两个图形的y偏移量,模式]]
     line_x_incline = line_x_incline or 0
     first_overturn = first_overturn or 2
     adjacent_overturn = adjacent_overturn or 1
     adjacent_y_incline = adjacent_y_incline or 0
+    mode = mode or 0
     local ass = {}
     for i = 1,line do
         if i % 2 == 1 then
@@ -418,5 +425,9 @@ function tessellation(ass_shape,line_number,x_incline,line,y_incline,line_x_incl
             end
         end
     end
-    return table.concat(ass)
+    if mode == 0 then
+        return table.concat(ass)
+    elseif mode == 1 then
+        return ass
+    end
 end
