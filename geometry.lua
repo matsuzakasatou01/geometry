@@ -214,7 +214,7 @@ function note(x)--七个音符，可指定任意一个
     end
 end
 
-function translation(ass_shape,x_incline,y_incline)--平移绘图
+function translate(ass_shape,x_incline,y_incline)--平移绘图
     x_incline = x_incline or 0
     y_incline = y_incline or 0
     local shape = string.gsub(ass_shape,"([-.%d]+) ([-.%d]+)",
@@ -268,9 +268,9 @@ function binary_digit(digit)--生成指定位数的随机二进制数字绘图
     local I = "m -4 -40 l -29 -27 l -25 -19 l -6 -30 l -6 28 l -26 28 l -26 38 l 23 38 l 23 28 l 5 28 l 5 -40 "
     for i = 1,digit do
         if math.random(1,2) == 1 then
-            num[#num+1] = translation(O,70*(i-1))
+            num[#num+1] = translate(O,70*(i-1))
         else
-            num[#num+1] = translation(I,70*(i-1))
+            num[#num+1] = translate(I,70*(i-1))
         end
     end
     return table.concat(num)
@@ -299,17 +299,17 @@ function chain(num,x_length,y_length,width,first)--生成直线锁链绘图
     if first == 0 then
         for i = 1,num do
             if i % 2 == 1 then
-                ass[#ass+1] = translation(O,0,(x_length + y_length - width*3)*(i - 1))
+                ass[#ass+1] = translate(O,0,(x_length + y_length - width*3)*(i - 1))
             else
-                ass[#ass+1] = translation(I,0,(x_length + y_length - width*3)*(i - 1))
+                ass[#ass+1] = translate(I,0,(x_length + y_length - width*3)*(i - 1))
             end
         end
     elseif first == 1 then
         for i = 1,num do
             if i % 2 == 1 then
-                ass[#ass+1] = translation(I,0,(x_length + y_length - width*3)*(i - 1))
+                ass[#ass+1] = translate(I,0,(x_length + y_length - width*3)*(i - 1))
             else
-                ass[#ass+1] = translation(O,0,(x_length + y_length - width*3)*(i - 1))
+                ass[#ass+1] = translate(O,0,(x_length + y_length - width*3)*(i - 1))
             end
         end
     end
@@ -328,17 +328,17 @@ function arrange(ass_shape,line_number,x_incline,line,y_incline,first_proportion
     local ass = {}
     if line == 1 then
         for j = 1,line_number do
-            ass[#ass+1] = translation(ass_shape,x_incline*(j - 1),0)
+            ass[#ass+1] = translate(ass_shape,x_incline*(j - 1),0)
         end
     else
         for i = 1,line do
             if i % 2 == 1 then
                 for j = 1,line_number do
-                    ass[#ass+1] = translation(zoom(ass_shape,first_proportion + z*(i - 1)),x_incline*(j - 1),y_incline*(i - 1))
+                    ass[#ass+1] = translate(zoom(ass_shape,first_proportion + z*(i - 1)),x_incline*(j - 1),y_incline*(i - 1))
                 end
             else
                 for j = 1,line_number do
-                    ass[#ass+1] = translation(zoom(ass_shape,first_proportion + z*(i - 1)),x_incline*(j - 1) + line_x_incline,y_incline*(i - 1))
+                    ass[#ass+1] = translate(zoom(ass_shape,first_proportion + z*(i - 1)),x_incline*(j - 1) + line_x_incline,y_incline*(i - 1))
                 end
             end
         end
