@@ -2,7 +2,7 @@ local get = aegisub.gettext
 
 script_name = get "除闪除叠"
 script_description = get "修正闪轴叠轴的错误"
-script_author = "霜庭云花Sub  松坂さとう"
+script_author = "松坂さとう"
 script_version = "1.01"
 
 function same_style(subs,sel)

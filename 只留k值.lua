@@ -2,7 +2,7 @@ local get = aegisub.gettext
 
 script_name = get "只留k值"
 script_description = get "只留k值"
-script_author = "霜庭云花Sub  松坂さとう"
+script_author = "松坂さとう"
 script_version = "1.0"
 
 function k(subs)

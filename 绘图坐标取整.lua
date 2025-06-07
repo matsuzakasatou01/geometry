@@ -2,7 +2,7 @@ local get = aegisub.gettext
 
 script_name = get "绘图坐标取整"
 script_description = get "把选中行的绘图坐标取整"
-script_author = "霜庭云花Sub  松坂さとう"
+script_author = "松坂さとう"
 script_version = "1.0"
 
 function round(num,decimal)
