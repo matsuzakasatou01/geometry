@@ -4,6 +4,26 @@ function round(num,decimal)--保留指定小数位数
     return math.floor(num*mult + 0.5)/mult
 end
 
+function random_N(min,max,variance,expectation)--正态分布随机数发生器
+    if not max then
+        max = min
+        min = 0
+    end
+    variance = variance or ((max - min)/6)^2
+    expectation = expectation or (min + max)/2
+    local std = math.sqrt(variance)
+    for _ = 1,1000 do
+        local u1,u2 = math.random(),math.random()
+        local z = math.sqrt(-2*math.log(u1))*math.cos(2*math.pi*u2)
+        local x = expectation + z*std
+        local n = math.floor(x + 0.5)
+        if n >= min and n <= max then
+            return n
+        end
+    end
+    return (math.abs(expectation - min) < math.abs(expectation - max)) and min or max
+end
+
 function circle(diameter,clockwise)--固定直径圆形，可指定路径方向
     clockwise = clockwise or 0
     local S = "m %.3f %.3f b %.3f %.3f %.3f %.3f %.3f %.3f b %.3f %.3f %.3f %.3f %.3f %.3f "
@@ -257,6 +277,61 @@ function spin(ass_shape,x_angle,y_angle,z_angle,spin_center,spin_middle)--旋转
     return shape
 end
 
+function translate_tbl(ass_table,x_incline,y_incline)--平移绘图表中的每个绘图
+    x_incline = x_incline or 0
+    y_incline = y_incline or 0
+    local ass = {}
+    for i = 1,#ass_table do
+        local shape = string.gsub(ass_table[i],"([-.%d]+) ([-.%d]+)",
+        function (x,y)
+            x = tonumber(x) + x_incline
+            y = tonumber(y) + y_incline
+            return string.format("%s %s",x,y)
+        end)
+        ass[#ass+1] = shape
+    end
+    return ass
+end
+
+function zoom_tbl(ass_table,x_zoom,y_zoom,zoom_center,zoom_middle)--缩放绘图表中的每个绘图
+    x_zoom = x_zoom or 100
+    y_zoom = y_zoom or x_zoom
+    zoom_center = zoom_center or 0
+    zoom_middle = zoom_middle or 0
+    local ass = {}
+    for i = 1,#ass_table do
+        local shape = string.gsub(ass_table[i],"([-.%d]+) ([-.%d]+)",
+        function (x,y)
+            x = zoom_center + (tonumber(x)-zoom_center)*x_zoom/100
+            y = zoom_middle + (tonumber(y)-zoom_middle)*y_zoom/100
+            return string.format("%s %s",x,y)
+        end)
+        ass[#ass+1] = shape
+    end
+    return ass
+end
+
+function spin_tbl(ass_table,x_angle,y_angle,z_angle,spin_center,spin_middle)--旋转绘图表中的每个绘图
+    x_angle = x_angle or 0
+    y_angle = y_angle or 0
+    z_angle = z_angle or 0
+    spin_center = spin_center or 0
+    spin_middle = spin_middle or 0
+    local ass = {}
+    for i = 1,#ass_table do
+        local shape = string.gsub(ass_table[i],"([-.%d]+) ([-.%d]+)",
+        function (x,y)
+            x = spin_center + (tonumber(x)-spin_center)*math.cos(math.rad(y_angle))
+            y = spin_middle + (tonumber(y)-spin_middle)*math.cos(math.rad(x_angle))
+            local new_x = spin_center + (x-spin_center)*math.cos(math.rad(-z_angle)) - (y-spin_middle)*math.sin(math.rad(-z_angle))
+            local new_y = spin_middle + (x-spin_center)*math.sin(math.rad(-z_angle)) + (y-spin_middle)*math.cos(math.rad(-z_angle))
+            return string.format("%s %s",new_x,new_y)
+        end)
+        ass[#ass+1] = shape
+    end
+    return ass
+end
+
 function ellipse(x_length,y_length,clockwise)--椭圆，可指定路径方向
     clockwise = clockwise or 0
     return zoom(circle(x_length,clockwise),100,y_length/x_length*100)
@@ -316,8 +391,35 @@ function chain(num,x_length,y_length,width,first)--生成直线锁链绘图
     return table.concat(ass)
 end
 
+function disassemble(ass_shape)--拆解单m绘图
+    local ass = {}
+    for m in string.gmatch(ass_shape,"m[^m]+") do
+        ass[#ass+1] = string.match(m,"(m[^m]+)")
+    end
+    return ass
+end
+
+function part(tbl,level,mode)--随机显示表中一部分比例的绘图
+    level = level < 0 and 0 or level
+    level = level > 1 and 1 or level
+    mode = mode or 0
+    local result = {}
+    for i = #tbl,2,-1 do
+        local j = math.random(i)
+        tbl[i],tbl[j] = tbl[j],tbl[i]
+    end
+    for i = 1,math.ceil(#tbl*level) do
+        result[i] = tbl[i]
+    end
+    if mode == 0 then
+        return table.concat(result)
+    elseif mode == 1 then
+        return result
+    end
+end
+
 function arrange(ass_shape,line_number,x_incline,line,y_incline,first_proportion,last_proportion,line_x_incline,mode)
---[[生成规律排列的绘图  参数:图形,单行个数,x偏移量,总行数,y偏移量,第一行缩放比例,最后一行缩放比例,偶数行初始x偏移量,模式]]
+--生成规律排列的绘图  参数:图形,单行个数,x偏移量,总行数,y偏移量,第一行缩放比例,最后一行缩放比例,偶数行初始x偏移量,模式
     line = line or 1
     y_incline = y_incline or x_incline
     first_proportion = first_proportion or 100
