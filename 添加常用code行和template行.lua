@@ -137,6 +137,18 @@ function Auto3(subs,sel)
     end
 end
 
+function fxgroup(subs,sel)
+    for i = 1,#sel do
+        local line = subs[sel[i]]
+        line.comment = true
+        line.effect = "code line"
+        line.text = 'fxgroup.one=(line.actor=="1") fxgroup.two=(line.actor=="2") fxgroup.three=(line.actor=="3") fxgroup.four=(line.actor=="4") fxgroup.five=(line.actor=="5") fxgroup.six=(line.actor=="6") fxgroup.seven=(line.actor=="7") fxgroup.eight=(line.actor=="8") fxgroup.nine=(line.actor=="9") fxgroup.ten=(line.actor=="10") fxgroup.eleven=(line.actor=="11") fxgroup.twelve=(line.actor=="12") fxgroup.thirteen=(line.actor=="13") fxgroup.fourteen=(line.actor=="14") fxgroup.fifteen=(line.actor=="15") fxgroup.sixteen=(line.actor=="16") fxgroup.seventeen=(line.actor=="17") fxgroup.eighteen=(line.actor=="18") fxgroup.nineteen=(line.actor=="19") fxgroup.twenty=(line.actor=="20")'
+        line.start_time = 0
+        line.end_time = 0
+        subs[-i] = line
+    end
+end
+
 aegisub.register_macro(script_name.."/code once",script_description,insert_s1)
 aegisub.register_macro(script_name.."/code syl noblank",script_description,insert_s2)
 aegisub.register_macro(script_name.."/code line",script_description,insert_s3)
@@ -148,3 +160,4 @@ aegisub.register_macro(script_name.."/AutoTags系列/AutoTags",script_descriptio
 aegisub.register_macro(script_name.."/AutoTags系列/AutoTags1",script_description,Auto1)
 aegisub.register_macro(script_name.."/AutoTags系列/AutoTags2",script_description,Auto2)
 aegisub.register_macro(script_name.."/AutoTags系列/AutoTags3",script_description,Auto3)
+aegisub.register_macro(script_name.."/fxgroup",script_description,fxgroup)
