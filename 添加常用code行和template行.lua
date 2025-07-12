@@ -69,7 +69,7 @@ function insert_l3(subs,sel)
     for i = 1,#sel do
         local line = subs[sel[i]]
         line.comment = true
-        line.effect = "template line noblank"
+        line.effect = "template line"
         line.text = ""
         line.start_time = 0
         line.end_time = 0
@@ -81,7 +81,7 @@ function insert_l4(subs,sel)
     for i = 1,#sel do
         local line = subs[sel[i]]
         line.comment = true
-        line.effect = "template line noblank notext"
+        line.effect = "template line notext"
         line.text = ""
         line.start_time = 0
         line.end_time = 0
@@ -154,8 +154,8 @@ aegisub.register_macro(script_name.."/code syl noblank",script_description,inser
 aegisub.register_macro(script_name.."/code line",script_description,insert_s3)
 aegisub.register_macro(script_name.."/template syl noblank",script_description,insert_l1)
 aegisub.register_macro(script_name.."/template syl noblank notext",script_description,insert_l2)
-aegisub.register_macro(script_name.."/template line noblank",script_description,insert_l3)
-aegisub.register_macro(script_name.."/template line noblank notext",script_description,insert_l4)
+aegisub.register_macro(script_name.."/template line",script_description,insert_l3)
+aegisub.register_macro(script_name.."/template line notext",script_description,insert_l4)
 aegisub.register_macro(script_name.."/AutoTags系列/AutoTags",script_description,Auto)
 aegisub.register_macro(script_name.."/AutoTags系列/AutoTags1",script_description,Auto1)
 aegisub.register_macro(script_name.."/AutoTags系列/AutoTags2",script_description,Auto2)
