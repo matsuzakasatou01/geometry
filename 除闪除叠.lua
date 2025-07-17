@@ -1,9 +1,9 @@
 local get = aegisub.gettext
 
 script_name = get "除闪除叠"
-script_description = get "修正闪轴叠轴的错误"
+script_description = get "修正闪轴叠轴的错误（使用时要把相同样式行放在一起）"
 script_author = "松坂さとう"
-script_version = "1.01"
+script_version = "1.1"
 
 function same_style(subs,sel)
     local style = {}
@@ -29,8 +29,11 @@ function correct_time(subs,sel)
         local line_2 = subs[i+cnt1]
         if line_1.comment == false and line_2.comment == false and line_1.section == "[Events]" and line_1.end_time < line_2.start_time and line_2.start_time - line_1.end_time <= 300 then
             line_1.comment = true
+            line_1.text = line_1.text
+            line_1.actor = "此句闪轴"
             subs[i+cnt1-1] = line_1
             line_1.comment = false
+            line_1.actor = ""
             line_1.end_time = line_2.start_time
             subs[-i-cnt1] = line_1
             cnt1 = cnt1 + 1
@@ -41,8 +44,11 @@ function correct_time(subs,sel)
         local line_2 = subs[i+cnt2]
         if line_1.comment == false and line_2.comment == false and line_1.section == "[Events]" and line_1.end_time > line_2.start_time and line_1.end_time - line_2.start_time <= 300 and line_1.margin_l == line_2.margin_l and line_1.margin_r == line_2.margin_r and find_an(line_1.text) == find_an(line_2.text) then
             line_2.comment = true
+            line_2.text = line_2.text
+            line_2.actor = "此句叠轴"
             subs[i+cnt2] = line_2
             line_2.comment = false
+            line_2.actor = ""
             line_2.start_time = line_1.end_time
             subs[-i-cnt2] = line_2
             cnt2 = cnt2 + 1
