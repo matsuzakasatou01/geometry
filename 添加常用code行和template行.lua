@@ -3,7 +3,7 @@ local get = aegisub.gettext
 script_name = get "添加常用code行和template行"
 script_description = get "添加常用code行和template行"
 script_author = "松坂さとう"
-script_version = "1.0"
+script_version = "2.0"
 
 function insert_s1(subs,sel)
     for i = 1,#sel do
@@ -137,7 +137,7 @@ function Auto3(subs,sel)
     end
 end
 
-function fxgroup(subs,sel)
+function fxgroup_code(subs,sel)
     for i = 1,#sel do
         local line = subs[sel[i]]
         line.comment = true
@@ -146,6 +146,35 @@ function fxgroup(subs,sel)
         line.start_time = 0
         line.end_time = 0
         subs[-i] = line
+    end
+end
+
+function add_all(subs,sel)
+    for _,i in ipairs(sel) do
+        local line = subs[i]
+        if string.find(line.effect,"code") or string.find(line.effect,"template") and not string.find(line.effect," all%s*$") then
+            line.effect = string.gsub(line.effect,"%s*$","").." all"
+        end
+        subs[i] = line
+    end
+end
+
+function add_fxgroup(subs,sel)
+    local num = {}
+    for i = 1,20 do
+        num[#num+1] = tostring(i)
+    end
+    local tbl = {"one","two","three","four","five","six","seven","eight","nine","ten","eleven","twelve","thirteen","fourteen","fifteen","sixteen","seventeen","eighteen","nineteen","twenty"}
+    for _,i in ipairs(sel) do
+        local line = subs[i]
+        if string.find(line.effect,"template") and not string.find(line.effect,"fxgroup") then
+            for j = 1,20 do
+                if line.actor == num[j] then
+                    line.effect = string.gsub(line.effect,"%s*$","").." fxgroup "..tbl[j]
+                end
+            end
+        end
+        subs[i] = line
     end
 end
 
@@ -160,4 +189,6 @@ aegisub.register_macro(script_name.."/AutoTags系列/AutoTags",script_descriptio
 aegisub.register_macro(script_name.."/AutoTags系列/AutoTags1",script_description,Auto1)
 aegisub.register_macro(script_name.."/AutoTags系列/AutoTags2",script_description,Auto2)
 aegisub.register_macro(script_name.."/AutoTags系列/AutoTags3",script_description,Auto3)
-aegisub.register_macro(script_name.."/fxgroup",script_description,fxgroup)
+aegisub.register_macro(script_name.."/fxgroup",script_description,fxgroup_code)
+aegisub.register_macro(script_name.."/选中行修饰语后加all",script_description,add_all)
+aegisub.register_macro(script_name.."/选中行修饰语后加fxgroup",script_description,add_fxgroup)
