@@ -26,25 +26,25 @@ end
 
 function circle(diameter,clockwise)--固定直径圆形，可指定路径方向
     clockwise = clockwise or 0
-    local S = "m %.3f %.3f b %.3f %.3f %.3f %.3f %.3f %.3f b %.3f %.3f %.3f %.3f %.3f %.3f "
+    local S = "m %.3f %.3f b %.3f %.3f %.3f %.3f %.3f %.3f b %.3f %.3f %.3f %.3f %.3f %.3f b %.3f %.3f %.3f %.3f %.3f %.3f b %.3f %.3f %.3f %.3f %.3f %.3f "
     local a = diameter/2
-    local b = a*4/3
+    local b = a*4/3*(2^0.5-1)
     if clockwise == 0 then
-        return string.format(S,-a,0,-a,-b,a,-b,a,0,a,b,-a,b,-a,0)
+        return string.format(S,-a,0,-a,-b,-b,-a,0,-a,b,-a,a,-b,a,0,a,b,b,a,0,a,-b,a,-a,b,-a,0)
     elseif clockwise == 1 then
-        return string.format(S,a,0,a,-b,-a,-b,-a,0,-a,b,a,b,a,0)
+        return string.format(S,-a,0,-a,b,-b,a,0,a,b,a,a,b,a,0,a,-b,b,-a,0,-a,-b,-a,-a,-b,-a,0)
     end
 end
 
 function random_circle(min,max,clockwise)--随机范围直径圆形，可指定路径方向
     clockwise = clockwise or 0
-    local S = "m %.3f %.3f b %.3f %.3f %.3f %.3f %.3f %.3f b %.3f %.3f %.3f %.3f %.3f %.3f "
+    local S = "m %.3f %.3f b %.3f %.3f %.3f %.3f %.3f %.3f b %.3f %.3f %.3f %.3f %.3f %.3f b %.3f %.3f %.3f %.3f %.3f %.3f b %.3f %.3f %.3f %.3f %.3f %.3f "
     local a = math.random(min/2,max/2)
-    local b = a*4/3
+    local b = a*4/3*(2^0.5-1)
     if clockwise == 0 then
-        return string.format(S,-a,0,-a,-b,a,-b,a,0,a,b,-a,b,-a,0)
+        return string.format(S,-a,0,-a,-b,-b,-a,0,-a,b,-a,a,-b,a,0,a,b,b,a,0,a,-b,a,-a,b,-a,0)
     elseif clockwise == 1 then
-        return string.format(S,a,0,a,-b,-a,-b,-a,0,-a,b,a,b,a,0)
+        return string.format(S,-a,0,-a,b,-b,a,0,a,b,a,a,b,a,0,a,-b,b,-a,0,-a,-b,-a,-a,-b,-a,0)
     end
 end
 
@@ -467,19 +467,19 @@ function tessellation(ass_shape,line_number,x_incline,line,y_incline,line_x_incl
                 if j % 2 == 1 then
                     local shape = string.gsub(ass_shape,"([-.%d]+) ([-.%d]+)",
                     function (x,y)
-                        x = tonumber(x) + (j-1)*x_incline
-                        y = tonumber(y) + (i-1)*y_incline
+                        x = round(tonumber(x) + (j-1)*x_incline,3)
+                        y = round(tonumber(y) + (i-1)*y_incline,3)
                         return string.format("%s %s",x,y)
                     end)
                     ass[#ass+1] = shape
                 else
                     local shape = string.gsub(ass_shape,"([-.%d]+) ([-.%d]+)",
                     function (x,y)
-                        x = tonumber(x) + (j-1)*x_incline
+                        x = round(tonumber(x) + (j-1)*x_incline,3)
                         if adjacent_overturn == 0 then
-                            y = -(tonumber(y) - (i-1)*y_incline + adjacent_y_incline)
+                            y = round(-(tonumber(y) - (i-1)*y_incline + adjacent_y_incline),3)
                         elseif adjacent_overturn == 1 then
-                            y = tonumber(y) + (i-1)*y_incline
+                            y = round(tonumber(y) + (i-1)*y_incline,3)
                         end
                         return string.format("%s %s",x,y)
                     end)
@@ -492,14 +492,14 @@ function tessellation(ass_shape,line_number,x_incline,line,y_incline,line_x_incl
                     local shape = string.gsub(ass_shape,"([-.%d]+) ([-.%d]+)",
                     function (x,y)
                         if first_overturn == 0 then
-                            x = -(tonumber(x) - (k-1)*x_incline - line_x_incline)
-                            y = tonumber(y) + (i-1)*y_incline
+                            x = round(-(tonumber(x) - (k-1)*x_incline - line_x_incline),3)
+                            y = round(tonumber(y) + (i-1)*y_incline,3)
                         elseif first_overturn == 1 then
-                            x = tonumber(x) + (k-1)*x_incline + line_x_incline
-                            y = -(tonumber(y) - (i-1)*y_incline + adjacent_y_incline)
+                            x = round(tonumber(x) + (k-1)*x_incline + line_x_incline,3)
+                            y = round(-(tonumber(y) - (i-1)*y_incline + adjacent_y_incline),3)
                         elseif first_overturn == 2 then
-                            x = tonumber(x) + (k-1)*x_incline + line_x_incline
-                            y = tonumber(y) + (i-1)*y_incline
+                            x = round(tonumber(x) + (k-1)*x_incline + line_x_incline,3)
+                            y = round(tonumber(y) + (i-1)*y_incline,3)
                         end
                         return string.format("%s %s",x,y)
                     end)
@@ -508,17 +508,17 @@ function tessellation(ass_shape,line_number,x_incline,line,y_incline,line_x_incl
                     local shape = string.gsub(ass_shape,"([-.%d]+) ([-.%d]+)",
                     function (x,y)
                         if adjacent_overturn == 1 and first_overturn == 0 then
-                            x = -(tonumber(x) - (k-1)*x_incline - line_x_incline)
-                            y = tonumber(y) + (i-1)*y_incline
+                            x = round(-(tonumber(x) - (k-1)*x_incline - line_x_incline),3)
+                            y = round(tonumber(y) + (i-1)*y_incline,3)
                         elseif adjacent_overturn == 1 and first_overturn == 1 then
-                            x = tonumber(x) + (k-1)*x_incline + line_x_incline
-                            y = -(tonumber(y) - (i-1)*y_incline + adjacent_y_incline)
+                            x = round(tonumber(x) + (k-1)*x_incline + line_x_incline,3)
+                            y = round(-(tonumber(y) - (i-1)*y_incline + adjacent_y_incline),3)
                         elseif adjacent_overturn == 1 and first_overturn == 2 then
-                            x = tonumber(x) + (k-1)*x_incline + line_x_incline
-                            y = tonumber(y) + (i-1)*y_incline
+                            x = round(tonumber(x) + (k-1)*x_incline + line_x_incline,3)
+                            y = round(tonumber(y) + (i-1)*y_incline,3)
                         elseif adjacent_overturn == 0 and first_overturn == 1 then
-                            x = tonumber(x) + (k-1)*x_incline + line_x_incline
-                            y = tonumber(y) + (i-1)*y_incline
+                            x = round(tonumber(x) + (k-1)*x_incline + line_x_incline,3)
+                            y = round(tonumber(y) + (i-1)*y_incline,3)
                         end
                         return string.format("%s %s",x,y)
                     end)
