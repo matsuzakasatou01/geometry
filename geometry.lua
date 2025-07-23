@@ -107,6 +107,59 @@ function rectangle(length,height,clockwise)--固定长宽矩形，可指定路�
     end
 end
 
+function random_rectangle(l_min,l_max,h_min,h_max,clockwise)--随机范围长宽矩形，可指定路径方向
+    h_min = h_min or l_min
+    h_max= h_max or l_max
+    clockwise = clockwise or 0
+    local S = "m %.1f %.1f l %.1f %.1f l %.1f %.1f l %.1f %.1f "
+    local a = math.random(l_min,l_max)
+    local b = math.random(h_min,h_max)
+    if clockwise == 0 then
+        return string.format(S,-a/2,-b/2,a/2,-b/2,a/2,b/2,-a/2,b/2)
+    elseif clockwise == 1 then
+        return string.format(S,-a/2,-b/2,-a/2,b/2,a/2,b/2,a/2,-b/2)
+    end
+end
+
+function rounded_rectangle(length,height,roundx,roundy,clockwise)--固定长宽圆角矩形，可指定路径方向
+    height = height or length
+    roundx = roundx or math.min(length/5,height/5)
+    roundy = roundy or roundx
+    clockwise = clockwise or 0
+    local S = "m %.3f %.3f b %.3f %.3f %.3f %.3f %.3f %.3f l %.3f %.3f b %.3f %.3f %.3f %.3f %.3f %.3f l %.3f %.3f b %.3f %.3f %.3f %.3f %.3f %.3f l %.3f %.3f b %.3f %.3f %.3f %.3f %.3f %.3f l %.3f %.3f "
+    local a = length/2
+    local b = height/2
+    local c = 1-4/3*(2^0.5-1)
+    local rx = roundx
+    local ry = roundy
+    local b_rx=roundx*c
+    local b_ry=roundy*c
+    if clockwise == 0 then
+        return string.format(S,-a,-b+ry,-a,-b+b_ry,-a+b_rx,-b,-a+rx,-b,a-rx,-b,a-b_rx,-b,a,-b+b_ry,a,-b+ry,a,b-ry,a,b-b_ry,a-b_rx,b,a-rx,b,-a+rx,b,-a+b_rx,b,-a,b-b_ry,-a,b-ry,-a,-b+ry)
+    elseif clockwise == 1 then
+        return string.format(S,-a,b-ry,-a,b-b_ry,-a+b_rx,b,-a+rx,b,a-rx,b,a-b_rx,b,a,b-b_ry,a,b-ry,a,-b+ry,a,-b+b_ry,a-b_rx,-b,a-rx,-b,-a+rx,-b,-a+b_rx,-b,-a,-b+b_ry,-a,-b+ry,-a,b-ry)
+    end
+end
+
+function ran_rou_rect(l_min,l_max,h_min,h_max,rx,ry,clockwise)--随机范围长宽圆角矩形，可指定路径方向
+    h_min = h_min or l_min
+    h_max= h_max or l_max
+    local a = math.random(l_min,l_max)/2
+    local b = math.random(h_min,h_max)/2
+    rx = rx or math.min(a*2/5,b*2/5)
+    ry = ry or rx
+    clockwise = clockwise or 0
+    local S = "m %.3f %.3f b %.3f %.3f %.3f %.3f %.3f %.3f l %.3f %.3f b %.3f %.3f %.3f %.3f %.3f %.3f l %.3f %.3f b %.3f %.3f %.3f %.3f %.3f %.3f l %.3f %.3f b %.3f %.3f %.3f %.3f %.3f %.3f l %.3f %.3f "
+    local c = 1-4/3*(2^0.5-1)
+    local b_rx=rx*c
+    local b_ry=ry*c
+    if clockwise == 0 then
+        return string.format(S,-a,-b+ry,-a,-b+b_ry,-a+b_rx,-b,-a+rx,-b,a-rx,-b,a-b_rx,-b,a,-b+b_ry,a,-b+ry,a,b-ry,a,b-b_ry,a-b_rx,b,a-rx,b,-a+rx,b,-a+b_rx,b,-a,b-b_ry,-a,b-ry,-a,-b+ry)
+    elseif clockwise == 1 then
+        return string.format(S,-a,b-ry,-a,b-b_ry,-a+b_rx,b,-a+rx,b,a-rx,b,a-b_rx,b,a,b-b_ry,a,b-ry,a,-b+ry,a,-b+b_ry,a-b_rx,-b,a-rx,-b,-a+rx,-b,-a+b_rx,-b,-a,-b+b_ry,-a,-b+ry,-a,b-ry)
+    end
+end
+
 function rhombus(length,height,clockwise)--固定长高菱形，可指定路径方向
     height = height or length
     clockwise = clockwise or 0
@@ -135,6 +188,17 @@ function parallelogram(length,height,incline,directivity,clockwise)--固定长�
         return string.format(S,-a/2-c,-b/2,-a/2+c,b/2,a/2+c,b/2,a/2-c,-b/2)
     elseif clockwise == 1 and directivity == 1 then
         return string.format(S,-a/2+c,-b/2,-a/2-c,b/2,a/2-c,b/2,a/2+c,-b/2)
+    end
+end
+
+function star(length,curvature,clockwise)--星形，可指定形状和路径方向
+    curvature = curvature and math.min(curvature,length/2) or length/10
+    clockwise = clockwise or 0
+    local S="m %.1f %.1f b %.1f %.1f %.1f %.1f %.1f %.1f b %.1f %.1f %.1f %.1f %.1f %.1f b %.1f %.1f %.1f %.1f %.1f %.1f b %.1f %.1f %.1f %.1f %.1f %.1f "
+    if clockwise == 0 then
+        return string.format(S,0,-length/2,0,-curvature,curvature,0,length/2,0,curvature,0,0,curvature,0,length/2,0,curvature,-curvature,0,-length/2,0,-curvature,0,0,-curvature,0,-length/2)
+    elseif clockwise == 1 then
+        return string.format(S,0,-length/2,0,-curvature,-curvature,0,-length/2,0,-curvature,0,0,curvature,0,length/2,0,curvature,curvature,0,length/2,0,curvature,0,0,-curvature,0,-length/2)
     end
 end
 
@@ -332,6 +396,19 @@ function spin_tbl(ass_table,x_angle,y_angle,z_angle,spin_center,spin_middle)--�
     return ass
 end
 
+function round_tbl(ass_table,decimal)--给表里的绘图坐标保留指定小数位数
+    decimal = decimal or 0
+    for i = 1,#ass_table do
+        ass_table[i] = string.gsub(ass_table[i],"([-.%d]+) ([-.%d]+)",
+        function (x,y)
+            x = round(tonumber(x),decimal)
+            y = round(tonumber(y),decimal)
+            return string.format("%s %s",x,y)
+        end)
+    end
+    return ass_table
+end
+
 function ellipse(x_length,y_length,clockwise)--椭圆，可指定路径方向
     clockwise = clockwise or 0
     return zoom(circle(x_length,clockwise),100,y_length/x_length*100)
@@ -349,6 +426,31 @@ function binary_digit(digit)--生成指定位数的随机二进制数字绘图
         end
     end
     return table.concat(num)
+end
+
+function clip_blinds(length,height,num,pct,angle,x,y,direction,mode)--生成百叶窗绘图，用于clip效果
+    pct = pct < 0 and 0 or pct > 1 and 1 or pct
+    angle = angle or 0
+    x = x or 0
+    y = y or 0
+    direction = direction or 0
+    mode = mode or 0
+    local len = (length^2 + height^2)^0.5
+    local wid = len/num
+    local ass = {}
+    for i = 1,num do
+        if direction == 0 then
+            ass[#ass+1] = translate(rectangle(wid*pct,len),-len/2 + (i - 1)*wid + wid*pct/2)
+        elseif direction == 1 then
+            ass[#ass+1] = translate(rectangle(wid*pct,len),-len/2 + (i - 1/2)*wid)
+        end
+    end
+    ass = round_tbl(translate_tbl(spin_tbl(ass,0,0,angle),x,y),2)
+    if mode == 0 then
+        return table.concat(ass)
+    elseif mode == 1 then
+        return ass
+    end
 end
 
 function chain(num,x_length,y_length,width,first)--生成直线锁链绘图
