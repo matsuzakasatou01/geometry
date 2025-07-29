@@ -34,10 +34,8 @@ Comment: 0,0:00:00.00,0:00:00.00,OPJP,,0,0,0,code line,x=_G.tessellation(_G.regu
 Comment: 0,0:00:00.00,0:00:00.00,OPJP,,0,0,0,code line,d=_G.space.freemove(dia,line.start_time,line.end_time,fdur,function(t) fsc=0.65 ang={5*t,80} axis={"z","x"} return{ang,axis,fsc} end,c)
 Comment: 0,0:00:00.00,0:00:00.00,OPJP,,0,0,0,code line,text=Yutils.decode.create_font(line.styleref.fontname,line.styleref.bold,line.styleref.italic,line.styleref.underline,line.styleref.strikeout,line.styleref.fontsize,line.styleref.xscale,line.styleref.yscale,line.styleref.hspace).text_to_shape(line.text_stripped) text=string.gsub(text,"c","")
 Comment: 0,0:00:00.00,0:00:00.00,OPJP,,0,0,0,template line notext,!maxloop(#t)!!retime("line",math.random(0,800),0)!{\fad(300,500)\p1\an7\bord0\move(!$lleft-10+t[j].x!,!$ltop+4+t[j].y!,!$lleft-10+t[j].x+math.random(-40,40)!,!$ltop+4+t[j].y+math.random(-40,40)!,!line.duration-800!,!line.duration!)\1c!c3[math.random(#c3)]!\alpha&H30&\t(!line.duration-800!,!line.duration!,\frx!math.random(360)!\fry!math.random(360)!\frz!math.random(360)!)}!t[j].s!
-Comment: 0,0:00:00.00,0:00:00.00,OPJP,,0,0,0,template line,{\1a&HFF&\pos($lx,$ly)}
-Comment: 0,0:00:00.00,0:00:00.00,OPJP,,0,0,0,template line notext,!maxloop(#x)!{\p1\an7\bord0\pos($lleft,$ltop)\clip(!_G.translate(text,$lleft,$ltop)!)\1c!c2[math.random(#c2)]!}!x[j]!
-Comment: 0,0:00:00.00,0:00:00.00,OPJP,,0,0,0,template line,!maxloop(36)!!retime("line",$fdur*(j-1),-$ldur/2)!{\bord0.9\pos($lx,$ly)\clip(!_G.part(_G.translate_tbl(x,$lleft,$ltop),(j/maxj)^1.5)!)}
-Comment: 0,0:00:00.00,0:00:00.00,OPJP,,0,0,0,template line,!maxloop(36)!!retime("line",$ldur/2,-$fdur*(j-1))!{\bord0.9\pos($lx,$ly)\clip(!_G.part(_G.translate_tbl(x,$lleft,$ltop),(j/maxj)^1.5)!)}
+Comment: 0,0:00:00.00,0:00:00.00,OPJP,,0,0,0,template line,
+Comment: 0,0:00:00.00,0:00:00.00,OPJP,,0,0,0,template line notext,!maxloop(#x)!{\p1\an7\bord0\pos($lleft,$ltop)\clip(!_G.translate(text,$lleft,$ltop)!)\1c!c2[math.random(#c2)]!\t(!remember("a",math.random(0,800))!,!recall.a+1!,\1a&HFF&\t(!$ldur-remember("b",math.random(0,800))-1!,!$ldur-recall.b!,\1a&H00&}!x[j]!
 Comment: 0,0:00:00.00,0:00:00.00,OPJP,,0,0,0,template line notext,!gloop(d.n)!!relayer(d[gi][gii].lay)!!retime("line",(gii-1)*$ldur/gin,gii/gin*$ldur-$ldur)!{\p1\an7\bord0.15\1a!alpha(d[gi][gii].c,1.5)!\3a&H90&\pos($lcenter,!$lmiddle-65!)\c!color_brightness(d[gi][gii].c,1.6)!\3c&H000000&}!d[gi][gii].s!
 Comment: 0,0:00:01.46,0:00:04.65,OPJP,,0,0,0,karaoke,眠りの手
 Comment: 0,0:00:05.13,0:00:12.18,OPJP,,0,0,0,karaoke,閉じ込められていた熱が
