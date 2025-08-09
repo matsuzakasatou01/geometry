@@ -33,7 +33,7 @@
 
 快捷键配置文件的路径为`C:\Users\你的用户名\AppData\Roaming\Aegisub\hotkey.json`
 
-==注意！！！如果你想用我的快捷键配置，在用我的json覆盖你的json之前一定要备份自己的json！！！==
+**注意！！！如果你想用我的快捷键配置，在用我的json覆盖你的json之前一定要备份自己的json！！！**
 
 ## 模板
 
@@ -151,7 +151,7 @@ tenv.gloop =
 
 
 
-<p style="text-align: right; font-weight: bold;">松坂さとう</p>
+**松坂さとう**
 
-<p style="text-align: right; font-weight: bold;">2025.08.09</p>
+**2025.08.09**
 
