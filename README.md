@@ -31,7 +31,9 @@
 
 如果懒得配，你可以用我的快捷键配置  [阿里云盘链接](https://www.alipan.com/s/sbKkXdQmPVM)  ~~配好脚本快捷键后你就可以光速连招爽玩Aeg~~  
 
-快捷键配置文件的路径为`C:\Users\你的用户名\AppData\Roaming\Aegisub\hotkey.json`
+快捷键配置文件的路径为`C:\Users\你的用户名\AppData\Roaming\Aegisub\hotkey.json`  
+
+配置完json后需要重启Aegisub配置才会生效。
 
 **注意！！！如果你想用我的快捷键配置，在用我的json覆盖你的json之前一定要备份自己的json！！！**
 
