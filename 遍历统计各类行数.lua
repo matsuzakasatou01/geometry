@@ -6,7 +6,7 @@ script_author = "松坂さとう"
 script_version = "1.0"
 
 function lines_number(subs)
-    local n,a,b,c,d,e = 0,0,0,0,0,0
+    local n,a,b,c,d = 0,0,0,0,0
     for i = 1,#subs do
         local l = subs[i]
         n = n + 1
@@ -25,13 +25,11 @@ function lines_number(subs)
             c = c + 1
         elseif l.effect == "fx" then
             d = d + 1
-        else
-            e = e + 1
         end
     end
-    local f = a + b
-    local g = a + b + c + d + e
-    aegisub.log(a.."行code行\n"..b.."行template行\n"..c.."行karaoke行\n"..d.."行fx行\n\n"..f.."行模板行\n".."总行数为"..g.."行")
+    local e = a + b
+    local f = #subs - n + 1
+    aegisub.log(a.."行code行\n"..b.."行template行\n"..c.."行karaoke行\n"..d.."行fx行\n\n"..e.."行模板行\n".."总行数为"..f.."行")
 end
 
 aegisub.register_macro(script_name,script_description,lines_number)
