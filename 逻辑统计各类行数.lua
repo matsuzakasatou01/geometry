@@ -8,8 +8,7 @@ script_version = "1.0"
 function lines_number(subs)
     local n,a,b,c,d = 0,0,0,0,0
     for i = 1,#subs do
-        local l = subs[i]
-        if l.section == "[Events]" then
+        if subs[i].section == "[Events]" then
             break
         end
         n = n + 1
@@ -23,8 +22,7 @@ function lines_number(subs)
             end
         else
             for i = n+1,#subs do
-                local l = subs[i]
-                if l.effect == "fx" then
+                if subs[i].effect == "fx" then
                     if subs[#subs].effect == "fx" then
                         d = #subs - i + 1
                     else
@@ -48,7 +46,6 @@ function lines_number(subs)
                 c = c + 1
             end
             if l.effect == "fx" then
-                d = #subs - i + 1
                 break
             end
         end

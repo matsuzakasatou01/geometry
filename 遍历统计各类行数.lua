@@ -8,9 +8,8 @@ script_version = "1.0"
 function lines_number(subs)
     local n,a,b,c,d = 0,0,0,0,0
     for i = 1,#subs do
-        local l = subs[i]
         n = n + 1
-        if l.section == "[Events]" then
+        if subs[i].section == "[Events]" then
             break
         end
     end
