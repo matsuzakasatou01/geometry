@@ -24,6 +24,43 @@ function random_N(min,max,variance,expectation)--正态分布随机数发生器
     return (math.abs(expectation - min) < math.abs(expectation - max)) and min or max
 end
 
+function random_S(min,max,segments)--分段随机
+    local swidth = (max - min)/segments
+    local tbl = {}
+    for i = 1,segments do
+        local smin = min + (i - 1)*swidth
+        local value = round(smin + math.random()*swidth)
+        tbl[#tbl+1] = value
+    end
+    for i = #tbl,2,-1 do
+        local j = math.random(i)
+        tbl[i],tbl[j] = tbl[j],tbl[i]
+    end
+    return tbl
+end
+
+function random_P(min,max,step)--生成一个可指定步长的随机数
+    local cnt = math.floor((max - min)/step) + 1
+    return min + (math.random(cnt) - 1)*step
+end
+
+function reverse_color(color)--计算一种颜色的反色
+    local b,g,r = color:match("&H(%x%x)(%x%x)(%x%x)&")
+    b,g,r = 255-tonumber(b,16),255-tonumber(g,16),255-tonumber(r,16)
+    return ("&H%02X%02X%02X&"):format(b,g,r)
+end
+
+function gradient_color(c1,c2,pct,accel)--计算两种颜色的渐变色
+    pct = pct and (pct < 0 and 0 or pct > 1 and 1 or pct) or 0.5
+    accel = accel or 1
+    local b,g,r = c1:match("&H(%x%x)(%x%x)(%x%x)&")
+    local b1,g1,r1 = c2:match("&H(%x%x)(%x%x)(%x%x)&")
+    b,g,r = tonumber(b,16),tonumber(g,16),tonumber(r,16)
+    b1,g1,r1 = tonumber(b1,16),tonumber(g1,16),tonumber(r1,16)
+    local b2,g2,r2 = b+(b1-b)*pct^accel,g+(g1-g)*pct^accel,r+(r1-r)*pct^accel
+    return ("&H%02X%02X%02X&"):format(b2,g2,r2)
+end
+
 function circle(diameter,clockwise)--固定直径圆形，可指定路径方向
     clockwise = clockwise or 0
     local S = "m %.3f %.3f b %.3f %.3f %.3f %.3f %.3f %.3f b %.3f %.3f %.3f %.3f %.3f %.3f b %.3f %.3f %.3f %.3f %.3f %.3f b %.3f %.3f %.3f %.3f %.3f %.3f "
@@ -502,8 +539,7 @@ function disassemble(ass_shape)--拆解单m绘图
 end
 
 function part(tbl,level,mode)--随机显示表中一部分比例的绘图
-    level = level < 0 and 0 or level
-    level = level > 1 and 1 or level
+    level = level < 0 and 0 or level > 1 and 1 or level
     mode = mode or 0
     local result = {}
     for i = #tbl,2,-1 do
