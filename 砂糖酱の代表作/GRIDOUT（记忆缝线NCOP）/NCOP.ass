@@ -27,15 +27,15 @@ Style: OPJP,Source Han Serif SemiBold,80,&H00FFFFFF,&H000000FF,&H42413741,&H9B2D
 [Events]
 Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
 Comment: 0,0:00:00.00,0:00:00.00,OPJP,,0,0,0,声明,本特效模板由松坂さとう制作并基于CC BY-NC-SA 4.0协议共享。
-Comment: 0,0:00:00.00,0:00:00.00,OPJP,,0,0,0,code syl noblank,fxgroup.firstsyl=(syl.i==1)
-Comment: 0,0:00:00.00,0:00:00.00,OPJP,,0,0,0,code syl noblank,a=math.random(line.left+5,line.right-75) b=math.random(line.top+10,line.bottom-5)
+Comment: 0,0:00:00.00,0:00:00.00,OPJP,,0,0,0,code syl,fxgroup.firstsyl=(syl.i==1)
+Comment: 0,0:00:00.00,0:00:00.00,OPJP,,0,0,0,code line,a=_G.random_S(line.left+5,line.right-75,line.kara.n) b=_G.random_S(line.top+10,line.bottom-5,line.kara.n)
 Comment: 0,0:00:00.00,0:00:00.00,OPJP,,0,0,0,template syl noblank notext fxgroup firstsyl,{\p1\an7\pos(!$sleft-15!,!$stop+10!)\bord2\3c&H0000FF&\1a&HFF&\clip(!$lleft-10!,!$ltop+10!,!$lright+10!,!$lbottom-5!)}!_G.tessellation(_G.regular_hexagon(18),math.ceil($lwidth/14),10*3^0.5,6,15,5*3^0.5)!
-Comment: 0,0:00:00.00,0:00:00.00,OPJP,,0,0,0,template syl noblank,!maxloop(16)!!retime("preline",$fdur*(j-1),$fdur*j)!{\pos($sx,$sy)\bord3\blur2\clip(!_G.translate(_G.rectangle(math.random(20,40),math.random(20,40)),math.random($sleft+20,$sright-20),math.random($stop+20,$sbottom-20))!)}
-Comment: 0,0:00:00.00,0:00:00.00,OPJP,,0,0,0,template syl noblank,!maxloop(16)!!retime("postline",-$fdur*j,-$fdur*(j-1))!{\pos($sx,$sy)\bord3\blur2\clip(!_G.translate(_G.rectangle(math.random(20,40),math.random(20,40)),math.random($sleft+20,$sright-20),math.random($stop+20,$sbottom-20))!)}
+Comment: 0,0:00:00.00,0:00:00.00,OPJP,,0,0,0,template syl noblank,!maxloop(16)!!retime("preline",$fdur*(j-1),$fdur*j)!{\pos($sx,$sy)\bord3\blur2\clip(!_G.translate(_G.random_rectangle(20,40,20,40),math.random($sleft+20,$sright-20),math.random($stop+20,$sbottom-20))!)}
+Comment: 0,0:00:00.00,0:00:00.00,OPJP,,0,0,0,template syl noblank,!maxloop(16)!!retime("postline",-$fdur*j,-$fdur*(j-1))!{\pos($sx,$sy)\bord3\blur2\clip(!_G.translate(_G.random_rectangle(20,40,20,40),math.random($sleft+20,$sright-20),math.random($stop+20,$sbottom-20))!)}
 Comment: 0,0:00:00.00,0:00:00.00,OPJP,,0,0,0,template syl noblank,!retime("line",$fdur*16,-$fdur*16)!{\pos($sx,$sy)\bord3\blur2}
 Comment: 0,0:00:00.00,0:00:00.00,OPJP,,0,0,0,template syl noblank notext,!relayer(1)!!maxloop(16)!!retime("preline",$fdur*(j-1),$fdur*j)!{\p1\an7\pos(!math.random($lleft+40,$lright-40)!,!math.random($ltop+20,$lbottom-20)!)\c&HA3FFFD&\bord3\blur2\3c&H55F5FF&\1a&HA0&}!_G.ran_rou_rect(50,100,20,40,3)!
 Comment: 0,0:00:00.00,0:00:00.00,OPJP,,0,0,0,template syl noblank notext,!relayer(1)!!maxloop(16)!!retime("postline",-$fdur*j,-$fdur*(j-1))!{\p1\an7\pos(!math.random($lleft+40,$lright-40)!,!math.random($ltop+20,$lbottom-20)!)\c&HA3FFFD&\bord3\blur2\3c&H55F5FF&\1a&HA0&}!_G.ran_rou_rect(50,100,20,40,3)!
-Comment: 0,0:00:00.00,0:00:00.00,OPJP,,0,0,0,template syl noblank notext,!relayer(2)!!maxloop(math.ceil($ldur/$fdur))!!retime("preline",(j-1)/maxj*$ldur,j/maxj*$ldur)!{\p4\an7\pos(!a!,!b!)\bord0.2\3c&H8DE766&\blur1\fscx115\fscy115\c&H8DE766&}!_G.binary_digit(8)!
+Comment: 0,0:00:00.00,0:00:00.00,OPJP,,0,0,0,template syl noblank notext,!relayer(2)!!maxloop(math.ceil($ldur/$fdur))!!retime("preline",(j-1)/maxj*$ldur,j/maxj*$ldur)!{\p4\an7\pos(!a[$si]!,!b[$si]!)\bord0.2\3c&H8DE766&\blur1\fscx115\fscy115\c&H8DE766&}!_G.binary_digit(8)!
 Comment: 0,0:00:00.64,0:00:04.10,OPJP,,0,0,0,karaoke,{\kf43}ず{\kf43}っ{\kf43}と{\kf43}探{\kf43}し{\kf43}て{\kf43}い{\kf43}る
 Comment: 0,0:00:04.10,0:00:08.65,OPJP,,0,0,0,karaoke,{\kf45}星{\kf45}の{\kf45}光{\kf45}が{\kf45}摘{\kf45}ま{\kf45}れ{\kf45}て{\kf45}い{\kf45}く
 Comment: 0,0:00:09.02,0:00:12.36,OPJP,,0,0,0,karaoke,{\kf37}き{\kf37}っ{\kf37}と{\kf37}最{\kf37}初{\kf37}か{\kf37}ら{\kf37}も{\kf37}う
