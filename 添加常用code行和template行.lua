@@ -3,7 +3,7 @@ local get = aegisub.gettext
 script_name = get "添加常用code行和template行"
 script_description = get "添加常用code行和template行"
 script_author = "松坂さとう"
-script_version = "3.0"
+script_version = "4.0"
 
 function insert_s1(subs,sel)
     for i = 1,#sel do
@@ -148,6 +148,58 @@ function Auto3(subs,sel)
     return {}
 end
 
+function Yutils_line1(subs,sel)
+    for i = 1,#sel do
+        local line = subs[sel[i]]
+        line.comment = true
+        line.effect = "code line"
+        line.text = 'text=Yutils.decode.create_font(line.styleref.fontname,line.styleref.bold,line.styleref.italic,line.styleref.underline,line.styleref.strikeout,line.styleref.fontsize,line.styleref.scale_x,line.styleref.scale_y,line.styleref.spacing).text_to_shape(line.text_stripped)'
+        line.start_time = 0
+        line.end_time = 0
+        subs[-sel[i]] = line
+    end
+    return {}
+end
+
+function Yutils_line2(subs,sel)
+    for i = 1,#sel do
+        local line = subs[sel[i]]
+        line.comment = true
+        line.effect = "code line"
+        line.text = 'text=Yutils.decode.create_font(line.styleref.fontname,line.styleref.bold,line.styleref.italic,line.styleref.underline,line.styleref.strikeout,line.styleref.fontsize).text_to_shape(line.text_stripped)'
+        line.start_time = 0
+        line.end_time = 0
+        subs[-sel[i]] = line
+    end
+    return {}
+end
+
+function Yutils_syl1(subs,sel)
+    for i = 1,#sel do
+        local line = subs[sel[i]]
+        line.comment = true
+        line.effect = "code syl noblank"
+        line.text = 'text=Yutils.decode.create_font(syl.style.fontname,syl.style.bold,syl.style.italic,syl.style.underline,syl.style.strikeout,syl.style.fontsize,syl.style.scale_x,syl.style.scale_y,syl.style.spacing).text_to_shape(syl.text_stripped)'
+        line.start_time = 0
+        line.end_time = 0
+        subs[-sel[i]] = line
+    end
+    return {}
+end
+
+function Yutils_syl2(subs,sel)
+    for i = 1,#sel do
+        local line = subs[sel[i]]
+        line.comment = true
+        line.effect = "code syl noblank"
+        line.text = 'text=Yutils.decode.create_font(syl.style.fontname,syl.style.bold,syl.style.italic,syl.style.underline,syl.style.strikeout,syl.style.fontsize).text_to_shape(syl.text_stripped)'
+        line.start_time = 0
+        line.end_time = 0
+        subs[-sel[i]] = line
+    end
+    return {}
+end
+
 function fxgroup_code(subs,sel)
     for i = 1,#sel do
         local line = subs[sel[i]]
@@ -201,6 +253,10 @@ aegisub.register_macro(script_name.."/AutoTags系列/AutoTags",script_descriptio
 aegisub.register_macro(script_name.."/AutoTags系列/AutoTags1",script_description,Auto1)
 aegisub.register_macro(script_name.."/AutoTags系列/AutoTags2",script_description,Auto2)
 aegisub.register_macro(script_name.."/AutoTags系列/AutoTags3",script_description,Auto3)
+aegisub.register_macro(script_name.."/Yutils/line完整转绘图",script_description,Yutils_line1)
+aegisub.register_macro(script_name.."/Yutils/line省略转绘图",script_description,Yutils_line2)
+aegisub.register_macro(script_name.."/Yutils/syl完整转绘图",script_description,Yutils_syl1)
+aegisub.register_macro(script_name.."/Yutils/syl省略转绘图",script_description,Yutils_syl2)
 aegisub.register_macro(script_name.."/fxgroup",script_description,fxgroup_code)
 aegisub.register_macro(script_name.."/选中行修饰语后加all",script_description,add_all)
 aegisub.register_macro(script_name.."/选中行修饰语后加fxgroup",script_description,add_fxgroup)
