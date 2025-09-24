@@ -556,6 +556,25 @@ function part(tbl,level,mode)--随机显示表中一部分比例的绘图
     end
 end
 
+function overturn(ass_shape,line_number,x_incline,line,y_incline)--做密铺正六边形和菱形翻转效果
+    local tem = {}
+    local ass = {}
+    for i = 1,2*line_number do
+        ass[i] = {}
+        ass[i].x = round((x_incline/2)*(i-1),3)
+        if i % 2 == 1 then
+            ass[i].y = 0
+        else
+            ass[i].y = y_incline
+        end
+    end
+    for i = 1,math.ceil(line/2) do
+        tem[#tem+1] = translate(ass_shape,0,2*(i-1)*y_incline)
+    end
+    ass.s = table.concat(tem)
+    return ass
+end
+
 function arrange(ass_shape,line_number,x_incline,line,y_incline,first_proportion,last_proportion,line_x_incline,mode)
 --生成规律排列的绘图  参数:图形,单行个数,x偏移量,总行数,y偏移量,第一行缩放比例,最后一行缩放比例,偶数行初始x偏移量,模式
     line = line or 1
