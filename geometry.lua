@@ -562,11 +562,7 @@ function overturn(ass_shape,line_number,x_incline,line,y_incline)--做密铺正�
     for i = 1,2*line_number do
         ass[i] = {}
         ass[i].x = round((x_incline/2)*(i-1),3)
-        if i % 2 == 1 then
-            ass[i].y = 0
-        else
-            ass[i].y = y_incline
-        end
+        ass[i].y = ((i+1)%2)*y_incline
     end
     for i = 1,math.ceil(line/2) do
         tem[#tem+1] = translate(ass_shape,0,2*(i-1)*y_incline)
