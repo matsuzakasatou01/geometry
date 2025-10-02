@@ -686,3 +686,120 @@ function tessellation(ass_shape,line_number,x_incline,line,y_incline,line_x_incl
         return ass
     end
 end
+
+function close(ass_shape)--封闭绘图
+    local res = {}
+    if not string.find(ass_shape," $") then--如果绘图末尾没有半角空格就加一个
+        ass_shape = ass_shape.." "
+    end
+    for m in string.gmatch(ass_shape,"m[^m]+") do--对每个单m绘图进行操作
+        local start_point = string.match(m,"^m ([-.%d]+ [-.%d]+)")
+        local end_point = string.match(m,"([-.%d]+ [-.%d]+) $")
+        if start_point == end_point then
+            res[#res+1] = m
+        else
+            res[#res+1] = m.."l "..start_point.." "
+        end
+    end
+    return table.concat(res)
+end
+
+function topmost(ass_shape)--求全直线绘图的所有最顶端的点
+    local function standardize_l(shape)--标准化全直线绘图
+        local res = {}
+        for m in string.gmatch(shape,"m[^m]+") do
+            for l in string.gmatch(m,"[ml][- .%d]+") do--匹配所有ml命令段
+                if string.match(l,"[ml]") == "m" then
+                    res[#res+1] = l
+                elseif string.match(l,"[ml]") == "l" then
+                    local l_tbl = {}
+                    for pt in string.gmatch(l,"[-.%d]+ [-.%d]+") do--每个坐标对间加l命令
+                        l_tbl[#l_tbl+1] = "l "..pt.." "
+                    end
+                    res[#res+1] = table.concat(l_tbl)
+                end
+            end
+        end
+        return table.concat(res)
+    end
+    local function get_line(shape)--求全直线绘图的每条线段顶点坐标
+        local cur,res = {},{}
+        for seg in string.gmatch(shape,"[ml][^ml]+") do
+            local cmd = string.match(seg,"^([ml])")
+            local pt = {}
+            for num in string.gmatch(seg,"[-.%d]+") do--提取所有坐标
+                pt[#pt+1] = tonumber(num)
+            end
+            if cmd == "m" then
+                if #cur >= 4 then--先处理上一条路径
+                    for i = 1,#cur-3,2 do
+                        table.insert(res,{cur[i],cur[i+1],cur[i+2],cur[i+3]})
+                    end
+                end
+                cur = pt
+            elseif cmd == "l" then--延续当前路径
+                for _,num in ipairs(pt) do
+                    cur[#cur+1] = num
+                end
+            end
+        end
+        if #cur >= 4 then--处理最后一条路径
+            for i = 1,#cur-3,2 do
+                table.insert(res,{cur[i],cur[i+1],cur[i+2],cur[i+3]})
+            end
+        end
+        return res
+    end
+    local function bounding_x(shape)--求绘图所有坐标中x的最小值和最大值
+        local xmin,xmax = math.huge,-math.huge
+        local _ = string.gsub(shape,"([-.%d]+) [-.%d]+",
+        function (x)
+            xmin,xmax = math.min(xmin,x),math.max(xmax,x)--每次替换都会刷新最值
+            return ""
+        end)
+        return xmin,xmax
+    end
+    local function intersection_point(x1,y1,x2,y2,num)--求与y轴平行的直线与线段的交点
+        if (x1 <= num and x2 >= num) or (x1 >= num and x2 <= num) then
+            if math.abs(x1 - x2) < 1e-10 then
+                if math.abs(x1 - num) < 1e-10 then
+                    return {x = num,y = math.min(y1,y2)}--如果重合，要y值小的那个端点
+                else
+                    return nil
+                end
+            else
+                local t = (num - x1)/(x2 - x1)
+                if t >= 0 and t <= 1 then
+                    local y = y1 + t*(y2 - y1)
+                    return {x = num,y = round(y,3)}
+                else
+                    return nil
+                end
+            end
+        else
+            return nil
+        end
+    end
+    ass_shape = close(standardize_l(ass_shape))
+    local res = {}
+    local ass = get_line(ass_shape)
+    local xmin,xmax = bounding_x(ass_shape)
+    for i = math.ceil(xmin),math.floor(xmax) do
+        local tem = {}
+        for j = 1,#ass do
+            local a = intersection_point(ass[j][1],ass[j][2],ass[j][3],ass[j][4],i)
+            if a then--先判断是否有交点，避免出现空洞
+                tem[#tem+1] = a
+            end
+        end
+        if #tem >= 2 then
+            table.sort(tem,function(a,b)--按y值由小到大进行排序
+                return a.y < b.y
+            end)
+        end
+        if tem[1] then
+            res[#res+1] = tem[1]
+        end
+    end
+    return res
+end
