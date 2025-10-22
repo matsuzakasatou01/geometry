@@ -30,30 +30,28 @@ Comment: 0,0:00:00.00,0:00:00.00,OPJP,,0,0,0,声明,本特效模板由松坂さ�
 Comment: 0,0:00:00.00,0:00:00.00,OPJP,,0,0,0,code syl,fxgroup.firstsyl=(syl.i==1)
 Comment: 0,0:00:00.00,0:00:00.00,OPJP,,0,0,0,code line,a=_G.random_S(line.left+5,line.right-75,line.kara.n) b=_G.random_S(line.top+10,line.bottom-5,line.kara.n)
 Comment: 0,0:00:00.00,0:00:00.00,OPJP,,0,0,0,template syl noblank notext fxgroup firstsyl,{\p1\an7\pos(!$sleft-15!,!$stop+10!)\bord2\3c&H0000FF&\1a&HFF&\clip(!$lleft-10!,!$ltop+10!,!$lright+10!,!$lbottom-5!)}!_G.tessellation(_G.regular_hexagon(18),math.ceil($lwidth/14),10*3^0.5,6,15,5*3^0.5)!
-Comment: 0,0:00:00.00,0:00:00.00,OPJP,,0,0,0,template syl noblank,!maxloop(16)!!retime("preline",$fdur*(j-1),$fdur*j)!{\pos($sx,$sy)\bord3\blur2\clip(!_G.translate(_G.random_rectangle(20,40,20,40),math.random($sleft+20,$sright-20),math.random($stop+20,$sbottom-20))!)}
-Comment: 0,0:00:00.00,0:00:00.00,OPJP,,0,0,0,template syl noblank,!maxloop(16)!!retime("postline",-$fdur*j,-$fdur*(j-1))!{\pos($sx,$sy)\bord3\blur2\clip(!_G.translate(_G.random_rectangle(20,40,20,40),math.random($sleft+20,$sright-20),math.random($stop+20,$sbottom-20))!)}
 Comment: 0,0:00:00.00,0:00:00.00,OPJP,,0,0,0,template syl noblank,!retime("line",$fdur*16,-$fdur*16)!{\pos($sx,$sy)\bord3\blur2}
-Comment: 0,0:00:00.00,0:00:00.00,OPJP,,0,0,0,template syl noblank notext,!relayer(1)!!maxloop(16)!!retime("preline",$fdur*(j-1),$fdur*j)!{\p1\an7\pos(!math.random($lleft+40,$lright-40)!,!math.random($ltop+20,$lbottom-20)!)\c&HA3FFFD&\bord3\blur2\3c&H55F5FF&\1a&HA0&}!_G.ran_rou_rect(50,100,20,40,3)!
-Comment: 0,0:00:00.00,0:00:00.00,OPJP,,0,0,0,template syl noblank notext,!relayer(1)!!maxloop(16)!!retime("postline",-$fdur*j,-$fdur*(j-1))!{\p1\an7\pos(!math.random($lleft+40,$lright-40)!,!math.random($ltop+20,$lbottom-20)!)\c&HA3FFFD&\bord3\blur2\3c&H55F5FF&\1a&HA0&}!_G.ran_rou_rect(50,100,20,40,3)!
+Comment: 0,0:00:00.00,0:00:00.00,OPJP,,0,0,0,template syl noblank,!maxloop(32)!!retime("preline",j<17 and (j-1)*$fdur or $ldur-(j-16)*$fdur,j<17 and j*$fdur or $ldur-(j-17)*$fdur)!{\pos($sx,$sy)\bord3\blur2\clip(!_G.translate(_G.random_rectangle(20,40,20,40),math.random($sleft+20,$sright-20),math.random($stop+20,$sbottom-20))!)}
+Comment: 0,0:00:00.00,0:00:00.00,OPJP,,0,0,0,template syl noblank notext,!relayer(1)!!maxloop(32)!!retime("preline",j<17 and (j-1)*$fdur or $ldur-(j-16)*$fdur,j<17 and j*$fdur or $ldur-(j-17)*$fdur)!{\p1\an7\pos(!math.random($lleft+40,$lright-40)!,!math.random($ltop+20,$lbottom-20)!)\c&HA3FFFD&\bord3\blur2\3c&H55F5FF&\1a&HA0&}!_G.ran_rou_rect(50,100,20,40,3)!
 Comment: 0,0:00:00.00,0:00:00.00,OPJP,,0,0,0,template syl noblank notext,!relayer(2)!!maxloop(math.ceil($ldur/$fdur))!!retime("preline",(j-1)/maxj*$ldur,j/maxj*$ldur)!{\p4\an7\pos(!a[$si]!,!b[$si]!)\bord0.2\3c&H8DE766&\blur1\fscx115\fscy115\c&H8DE766&}!_G.binary_digit(8)!
-Comment: 0,0:00:00.64,0:00:04.10,OPJP,,0,0,0,karaoke,{\kf43}ず{\kf43}っ{\kf43}と{\kf43}探{\kf43}し{\kf43}て{\kf43}い{\kf43}る
-Comment: 0,0:00:04.10,0:00:08.65,OPJP,,0,0,0,karaoke,{\kf45}星{\kf45}の{\kf45}光{\kf45}が{\kf45}摘{\kf45}ま{\kf45}れ{\kf45}て{\kf45}い{\kf45}く
-Comment: 0,0:00:09.02,0:00:12.36,OPJP,,0,0,0,karaoke,{\kf37}き{\kf37}っ{\kf37}と{\kf37}最{\kf37}初{\kf37}か{\kf37}ら{\kf37}も{\kf37}う
-Comment: 0,0:00:12.36,0:00:19.53,OPJP,,0,0,0,karaoke,{\kf37}終{\kf37}わ{\kf37}り{\kf37}の{\kf37}影{\kf37}が{\kf37}僕{\kf37}た{\kf37}ち{\kf37}を{\kf37}夢{\kf37}の{\kf37}底{\kf37}か{\kf37}ら{\kf37}見{\kf37}て{\kf37}い{\kf37}た
-Comment: 0,0:00:20.33,0:00:24.45,OPJP,,0,0,0,karaoke,{\kf29}空{\kf29}っ{\kf29}ぽ{\kf29}に{\kf29}な{\kf29}っ{\kf29}た{\kf29}心{\kf29}を{\kf29}隠{\kf29}し{\kf29}持{\kf29}っ{\kf29}て
-Comment: 0,0:00:24.45,0:00:28.71,OPJP,,0,0,0,karaoke,{\kf30}悲{\kf30}し{\kf30}み{\kf30}の{\kf30}意{\kf30}味{\kf30}を{\kf30}考{\kf30}え{\kf30}続{\kf30}け{\kf30}て{\kf30}い{\kf30}る
-Comment: 0,0:00:28.71,0:00:32.34,OPJP,,0,0,0,karaoke,{\kf33}内{\kf33}側{\kf33}で{\kf33}爆{\kf33}せ{\kf33}た{\kf33}花{\kf33}火{\kf33}の{\kf33}光{\kf33}が
-Comment: 0,0:00:32.34,0:00:36.17,OPJP,,0,0,0,karaoke,{\kf34}僕{\kf34}ら{\kf34}の{\kf34}視{\kf34}界{\kf34}を{\kf34}汚{\kf34}し{\kf34}て{\kf34}い{\kf34}く
-Comment: 0,0:00:36.17,0:00:40.14,OPJP,,0,0,0,karaoke,{\kf33}繰{\kf33}り{\kf33}返{\kf33}す{\kf33} {\kf33}全{\kf33}て{\kf33}奪{\kf33}う{\kf33}よ{\kf33}う{\kf33}に
-Comment: 0,0:00:40.14,0:00:44.56,OPJP,,0,0,0,karaoke,{\kf34}あ{\kf34}て{\kf34}ど{\kf34}な{\kf34}く{\kf34}枝{\kf34}を{\kf34}伸{\kf34}ば{\kf34}し{\kf34}て{\kf34}い{\kf34}る
-Comment: 0,0:00:44.56,0:00:49.56,OPJP,,0,0,0,karaoke,{\kf33}踏{\kf33}み{\kf33}つ{\kf33}け{\kf33}た{\kf33}世{\kf33}界{\kf33}で{\kf33}淀{\kf33}む{\kf33}痛{\kf33}み{\kf33}を{\kf33}強{\kf33}く
-Comment: 0,0:00:49.56,0:00:52.19,OPJP,,0,0,0,karaoke,{\kf23}浮{\kf23}か{\kf23}ば{\kf23}せ{\kf23}て{\kf23} {\kf23}と{\kf23}め{\kf23}ど{\kf23}な{\kf23}く
-Comment: 0,0:00:52.19,0:00:55.36,OPJP,,0,0,0,karaoke,{\kf26}今{\kf26}こ{\kf26}こ{\kf26}で{\kf26}相{\kf26}対{\kf26}し{\kf26}て{\kf26}喪{\kf26}失{\kf26}し{\kf26}て
-Comment: 0,0:00:55.36,0:00:57.82,OPJP,,0,0,0,karaoke,{\kf20}何{\kf20}に{\kf20}も{\kf20}無{\kf20}く{\kf20}な{\kf20}っ{\kf20}て{\kf20}し{\kf20}ま{\kf20}っ{\kf20}た
-Comment: 0,0:00:57.82,0:01:01.66,OPJP,,0,0,0,karaoke,{\kf38}心{\kf38}は{\kf38}今{\kf38}宙{\kf38}を{\kf38}舞{\kf38}っ{\kf38}て{\kf38}い{\kf38}る
-Comment: 0,0:01:01.66,0:01:03.70,OPJP,,0,0,0,karaoke,{\kf22}根{\kf22}源{\kf22}は{\kf22}た{\kf22}だ{\kf22}相{\kf22}関{\kf22}し{\kf22}て
-Comment: 0,0:01:03.70,0:01:06.41,OPJP,,0,0,0,karaoke,{\kf30}満{\kf30}ち{\kf30}足{\kf30}り{\kf30}て{\kf30}光{\kf30}を{\kf30}成{\kf30}す
-Comment: 0,0:01:06.41,0:01:11.34,OPJP,,0,0,0,karaoke,{\kf30}こ{\kf30}の{\kf30}ま{\kf30}ま{\kf30}じ{\kf30}ゃ{\kf30}も{\kf30}う{\kf30}向{\kf30}か{\kf30}う{\kf30}先{\kf30}も{\kf30}消{\kf30}え{\kf30}る
-Comment: 0,0:01:12.96,0:01:16.30,OPJP,,0,0,0,karaoke,{\kf47}止{\kf47}ま{\kf47}ら{\kf47}ず{\kf47}癒{\kf47}え{\kf47}る
-Comment: 0,0:01:17.67,0:01:24.35,OPJP,,0,0,0,karaoke,{\kf44}気{\kf44}付{\kf44}か{\kf44}な{\kf44}い{\kf44}ほ{\kf44}ど{\kf44}に{\kf44}軽{\kf44}い{\kf44}心{\kf44}残{\kf44}り{\kf44}が{\kf44}今
+Comment: 0,0:00:00.70,0:00:04.10,OPJP,,0,0,0,karaoke,{\kf43}ず{\kf43}っ{\kf43}と{\kf43}探{\kf43}し{\kf43}て{\kf43}い{\kf43}る
+Comment: 0,0:00:04.10,0:00:08.91,OPJP,,0,0,0,karaoke,{\kf45}星{\kf45}の{\kf45}光{\kf45}が{\kf45}摘{\kf45}ま{\kf45}れ{\kf45}て{\kf45}い{\kf45}く
+Comment: 0,0:00:08.91,0:00:12.33,OPJP,,0,0,0,karaoke,{\kf37}き{\kf37}っ{\kf37}と{\kf37}最{\kf37}初{\kf37}か{\kf37}ら{\kf37}も{\kf37}う
+Comment: 0,0:00:12.33,0:00:19.53,OPJP,,0,0,0,karaoke,{\kf37}終{\kf37}わ{\kf37}り{\kf37}の{\kf37}影{\kf37}が{\kf37}僕{\kf37}た{\kf37}ち{\kf37}を{\kf37}夢{\kf37}の{\kf37}底{\kf37}か{\kf37}ら{\kf37}見{\kf37}て{\kf37}い{\kf37}た
+Comment: 0,0:00:20.33,0:00:24.46,OPJP,,0,0,0,karaoke,{\kf29}空{\kf29}っ{\kf29}ぽ{\kf29}に{\kf29}な{\kf29}っ{\kf29}た{\kf29}心{\kf29}を{\kf29}隠{\kf29}し{\kf29}持{\kf29}っ{\kf29}て
+Comment: 0,0:00:24.46,0:00:28.63,OPJP,,0,0,0,karaoke,{\kf30}悲{\kf30}し{\kf30}み{\kf30}の{\kf30}意{\kf30}味{\kf30}を{\kf30}考{\kf30}え{\kf30}続{\kf30}け{\kf30}て{\kf30}い{\kf30}る
+Comment: 0,0:00:28.63,0:00:32.14,OPJP,,0,0,0,karaoke,{\kf33}内{\kf33}側{\kf33}で{\kf33}爆{\kf33}せ{\kf33}た{\kf33}花{\kf33}火{\kf33}の{\kf33}光{\kf33}が
+Comment: 0,0:00:32.14,0:00:36.10,OPJP,,0,0,0,karaoke,{\kf34}僕{\kf34}ら{\kf34}の{\kf34}視{\kf34}界{\kf34}を{\kf34}汚{\kf34}し{\kf34}て{\kf34}い{\kf34}く
+Comment: 0,0:00:36.10,0:00:40.27,OPJP,,0,0,0,karaoke,{\kf33}繰{\kf33}り{\kf33}返{\kf33}す{\kf33} {\kf33}全{\kf33}て{\kf33}奪{\kf33}う{\kf33}よ{\kf33}う{\kf33}に
+Comment: 0,0:00:40.27,0:00:44.44,OPJP,,0,0,0,karaoke,{\kf34}あ{\kf34}て{\kf34}ど{\kf34}な{\kf34}く{\kf34}枝{\kf34}を{\kf34}伸{\kf34}ば{\kf34}し{\kf34}て{\kf34}い{\kf34}る
+Comment: 0,0:00:44.44,0:00:49.51,OPJP,,0,0,0,karaoke,{\kf33}踏{\kf33}み{\kf33}つ{\kf33}け{\kf33}た{\kf33}世{\kf33}界{\kf33}で{\kf33}淀{\kf33}む{\kf33}痛{\kf33}み{\kf33}を{\kf33}強{\kf33}く
+Comment: 0,0:00:49.51,0:00:52.16,OPJP,,0,0,0,karaoke,{\kf23}浮{\kf23}か{\kf23}ば{\kf23}せ{\kf23}て{\kf23} {\kf23}と{\kf23}め{\kf23}ど{\kf23}な{\kf23}く
+Comment: 0,0:00:52.16,0:00:55.41,OPJP,,0,0,0,karaoke,{\kf26}今{\kf26}こ{\kf26}こ{\kf26}で{\kf26}相{\kf26}対{\kf26}し{\kf26}て{\kf26}喪{\kf26}失{\kf26}し{\kf26}て
+Comment: 0,0:00:55.41,0:00:57.62,OPJP,,0,0,0,karaoke,{\kf20}何{\kf20}に{\kf20}も{\kf20}無{\kf20}く{\kf20}な{\kf20}っ{\kf20}て{\kf20}し{\kf20}ま{\kf20}っ{\kf20}た
+Comment: 0,0:00:57.62,0:01:01.75,OPJP,,0,0,0,karaoke,{\kf38}心{\kf38}は{\kf38}今{\kf38}宙{\kf38}を{\kf38}舞{\kf38}っ{\kf38}て{\kf38}い{\kf38}る
+Comment: 0,0:01:01.75,0:01:03.63,OPJP,,0,0,0,karaoke,{\kf22}根{\kf22}源{\kf22}は{\kf22}た{\kf22}だ{\kf22}相{\kf22}関{\kf22}し{\kf22}て
+Comment: 0,0:01:03.63,0:01:06.30,OPJP,,0,0,0,karaoke,{\kf30}満{\kf30}ち{\kf30}足{\kf30}り{\kf30}て{\kf30}光{\kf30}を{\kf30}成{\kf30}す
+Comment: 0,0:01:06.30,0:01:11.36,OPJP,,0,0,0,karaoke,{\kf30}こ{\kf30}の{\kf30}ま{\kf30}ま{\kf30}じ{\kf30}ゃ{\kf30}も{\kf30}う{\kf30}向{\kf30}か{\kf30}う{\kf30}先{\kf30}も{\kf30}消{\kf30}え{\kf30}る
+Comment: 0,0:01:13.05,0:01:16.35,OPJP,,0,0,0,karaoke,{\kf47}止{\kf47}ま{\kf47}ら{\kf47}ず{\kf47}癒{\kf47}え{\kf47}る
+Comment: 0,0:01:17.85,0:01:24.27,OPJP,,0,0,0,karaoke,{\kf44}気{\kf44}付{\kf44}か{\kf44}な{\kf44}い{\kf44}ほ{\kf44}ど{\kf44}に{\kf44}軽{\kf44}い{\kf44}心{\kf44}残{\kf44}り{\kf44}が{\kf44}今
 Comment: 0,0:01:25.47,0:01:27.46,OPJP,,0,0,0,karaoke,{\kf27}穴{\kf27}を{\kf27}空{\kf27}け{\kf27}て{\kf27}い{\kf27}る
