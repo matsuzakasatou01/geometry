@@ -61,6 +61,17 @@ function gradient_color(c1,c2,pct,accel)--计算两种颜色的渐变色
     return ("&H%02X%02X%02X&"):format(b2,g2,r2)
 end
 
+function extract(str)--提取AI2ASS转出的颜色和绘图
+    local color,shape = {},{}
+    for a in string.gmatch(str,"\\1c&H......&") do
+        color[#color+1] = string.match(a,"\\1c(&H......&)")
+    end
+    for b in string.gmatch(str,"m[^m]+{\\p0}") do
+        shape[#shape+1] = string.match(b,"(m[^m]+){\\p0}")
+    end
+    return color,shape
+end
+
 function circle(diameter,clockwise)--固定直径圆形，可指定路径方向
     clockwise = clockwise or 0
     local S = "m %.3f %.3f b %.3f %.3f %.3f %.3f %.3f %.3f b %.3f %.3f %.3f %.3f %.3f %.3f b %.3f %.3f %.3f %.3f %.3f %.3f b %.3f %.3f %.3f %.3f %.3f %.3f "
