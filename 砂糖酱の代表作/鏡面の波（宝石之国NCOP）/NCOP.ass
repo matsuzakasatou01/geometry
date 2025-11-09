@@ -27,27 +27,29 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
 Comment: 0,0:00:00.00,0:00:00.00,OPJP,,0,0,0,声明,本特效模板由松坂さとう制作并基于CC BY-NC-SA 4.0协议共享。
 Comment: 0,0:00:00.00,0:00:00.00,OPJP,,0,0,0,code once,c={"&HD9FF4A&"} c2={"&H1BD2FD&","&HF1F12B&","&HCE0CFB&","&HEF5403&"} c3={"&HF8F9FE&","&HA4FA6E&","&H72D34A&","&HC7B942&"}
 Comment: 0,0:00:00.00,0:00:00.00,OPJP,,0,0,0,code once,_,dia=_G.space.diamond(10,24,69,45,80,{},{})
-Comment: 0,0:00:00.00,0:00:00.00,OPJP,,0,0,0,code line,d=_G.space.freemove(dia,line.start_time,line.end_time,fdur,function(t) fsc=0.65 ang={5*t,80} axis={"z","x"} return{ang,axis,fsc} end,c)
+Comment: 0,0:00:00.00,0:00:00.00,OPJP,,0,0,0,code once,function color_brightness(color,pct) local b,g,r=color:match("&H(%x%x)(%x%x)(%x%x)&") b,g,r=math.min(255,tonumber(b,16)*pct),math.min(255,tonumber(g,16)*pct),math.min(255,tonumber(r,16)*pct) return ("&H%02X%02X%02X&"):format(b,g,r) end
+Comment: 0,0:00:00.00,0:00:00.00,OPJP,,0,0,0,code once,function color_alpha(color,pct) local b,g,r=color:match("&H(%x%x)(%x%x)(%x%x)&") local new=math.min(255,(tonumber(b,16)+tonumber(g,16)+tonumber(r,16))/3*pct) return ("&H%02X&"):format(new) end
+Comment: 0,0:00:00.00,0:00:00.00,OPJP,,0,0,0,code line,d=_G.space.freemove(dia,line.start_time,line.end_time,fdur,function(t) fsc=0.65 ang={5*t,85} axis={"z","x"} return{ang,axis,fsc} end,c)
 Comment: 0,0:00:00.00,0:00:00.00,OPJP,,0,0,0,code line,a,b=_G.polyc.rand_coor_rect(math.ceil((line.width+20)/10),math.ceil((line.height-5)/10),0,0,line.width+20,line.height-5) t=_G.polyc.delaunay(a,b)
-Comment: 0,0:00:00.00,0:00:00.00,OPJP,,0,0,0,code line,x=_G.tessellation(_G.regular_triangle(16),math.ceil(line.width/6.8),4*3^0.5,5,12,0,1,0,4,1)
+Comment: 0,0:00:00.00,0:00:00.00,OPJP,,0,0,0,code line,x=_G.tessellation(_G.regular_triangle(16),math.ceil(line.width/6.8),4*3^0.5,math.ceil(line.height/12),12,0,1,0,4,1)
 Comment: 0,0:00:00.00,0:00:00.00,OPJP,,0,0,0,code line,text=Yutils.decode.create_font(line.styleref.fontname,line.styleref.bold,line.styleref.italic,line.styleref.underline,line.styleref.strikeout,line.styleref.fontsize,line.styleref.scale_x,line.styleref.scale_y,line.styleref.spacing).text_to_shape(line.text_stripped)
 Comment: 0,0:00:00.00,0:00:00.00,OPJP,,0,0,0,template line notext,!maxloop(#t)!!retime("line",math.random(0,800),0)!{\fad(300,500)\p1\an7\bord0\move(!$lleft-10+t[j].x!,!$ltop+4+t[j].y!,!$lleft-10+t[j].x+math.random(-40,40)!,!$ltop+4+t[j].y+math.random(-40,40)!,!line.duration-800!,!line.duration!)\1c!c3[math.random(#c3)]!\alpha&H30&\t(!line.duration-800!,!line.duration!,\frx!math.random(360)!\fry!math.random(360)!\frz!math.random(360)!}!t[j].s!
 Comment: 0,0:00:00.00,0:00:00.00,OPJP,,0,0,0,template line all,
-Comment: 0,0:00:00.00,0:00:00.00,OPJP,,0,0,0,template line notext,!gloop(d.n)!!relayer(d[gi][gii].lay)!!retime("preline",(gii-1)*$ldur/gin,gii/gin*$ldur)!{\p1\an7\bord0.15\1a!_G.color_alpha(d[gi][gii].c,1.5)!\3a&H90&\pos($lcenter,!$lmiddle-65!)\c!_G.color_brightness(d[gi][gii].c,1.6)!\3c&H000000&}!d[gi][gii].s!
-Comment: 0,0:00:00.00,0:00:00.00,OPJP,,0,0,0,template line notext,!maxloop(#x)!{\p1\an7\bord0\pos($lleft,!$ltop+15!)\clip(!_G.translate(text,$lleft,$ltop)!)\1c!c2[math.random(#c2)]!\t(!remember("a",math.random(0,800))!,!recall.a+1!,\1a&HFF&\t(!$ldur-remember("b",math.random(0,800))-1!,!$ldur-recall.b!,\1a&H00&}!x[j]!
-Comment: 0,0:00:01.50,0:00:05.13,OPJP,,0,0,0,karaoke,眠りの手
-Comment: 0,0:00:05.13,0:00:12.44,OPJP,,0,0,0,karaoke,閉じ込められていた熱が
+Comment: 0,0:00:00.00,0:00:00.00,OPJP,,0,0,0,template line notext,!gloop(d.n)!!relayer(d[gi][gii].lay)!!retime("preline",(gii-1)*$ldur/gin,gii/gin*$ldur)!{\p1\an7\bord0.15\1a!color_alpha(d[gi][gii].c,1.5)!\3a&H90&\pos($lcenter,!$lmiddle+70!)\c!color_brightness(d[gi][gii].c,1.6)!\3c&H000000&}!d[gi][gii].s!
+Comment: 0,0:00:00.00,0:00:00.00,OPJP,,0,0,0,template line notext,!maxloop(#x)!{\p1\an7\bord0\pos($lleft,$ltop)\clip(!_G.translate(text,$lleft,$ltop)!)\1c!c2[math.random(#c2)]!\t(!remember("a",math.random(0,800))!,!recall.a+1!,\1a&HFF&\t(!$ldur-remember("b",math.random(0,800))-1!,!$ldur-recall.b!,\1a&H00&}!x[j]!
+Comment: 0,0:00:01.46,0:00:04.65,OPJP,,0,0,0,karaoke,眠りの手
+Comment: 0,0:00:05.13,0:00:12.18,OPJP,,0,0,0,karaoke,閉じ込められていた熱が
 Comment: 0,0:00:12.44,0:00:21.12,OPJP,,0,0,0,karaoke,水際に漂った その色
 Comment: 0,0:00:23.46,0:00:27.87,OPJP,,0,0,0,karaoke,行き先を忘れて
-Comment: 0,0:00:27.87,0:00:31.30,OPJP,,0,0,0,karaoke,日々に溶けた
-Comment: 0,0:00:31.30,0:00:34.48,OPJP,,0,0,0,karaoke,無数の粒が
-Comment: 0,0:00:34.48,0:00:39.31,OPJP,,0,0,0,karaoke,夜露 受け止める 器
-Comment: 0,0:00:39.31,0:00:44.36,OPJP,,0,0,0,karaoke,欠けたひとかけら探してる
-Comment: 0,0:00:44.36,0:00:49.56,OPJP,,0,0,0,karaoke,夕立ちが
+Comment: 0,0:00:27.87,0:00:31.20,OPJP,,0,0,0,karaoke,日々に溶けた
+Comment: 0,0:00:31.20,0:00:34.48,OPJP,,0,0,0,karaoke,無数の粒が
+Comment: 0,0:00:34.48,0:00:39.25,OPJP,,0,0,0,karaoke,夜露 受け止める 器
+Comment: 0,0:00:39.25,0:00:44.21,OPJP,,0,0,0,karaoke,欠けたひとかけら探してる
+Comment: 0,0:00:44.21,0:00:49.56,OPJP,,0,0,0,karaoke,夕立ちが
 Comment: 0,0:00:49.56,0:00:53.12,OPJP,,0,0,0,karaoke,名付けられた世界を
 Comment: 0,0:00:53.12,0:00:55.20,OPJP,,0,0,0,karaoke,剥がしたとき
-Comment: 0,0:00:55.20,0:01:01.72,OPJP,,0,0,0,karaoke,それは波の様に
-Comment: 0,0:01:01.72,0:01:07.17,OPJP,,0,0,0,karaoke,指の隙間をすり抜けて 消えて…
+Comment: 0,0:00:55.20,0:01:01.53,OPJP,,0,0,0,karaoke,それは波の様に
+Comment: 0,0:01:01.53,0:01:07.17,OPJP,,0,0,0,karaoke,指の隙間をすり抜けて 消えて…
 Comment: 0,0:01:07.17,0:01:12.15,OPJP,,0,0,0,karaoke,形を変え 繰り返す
 Comment: 0,0:01:12.15,0:01:14.75,OPJP,,0,0,0,karaoke,夢だけが
 Comment: 0,0:01:14.75,0:01:20.60,OPJP,,0,0,0,karaoke,私を繋いでいる
