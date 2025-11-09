@@ -61,6 +61,18 @@ function gradient_color(c1,c2,pct,accel)--计算两种颜色的渐变色
     return ("&H%02X%02X%02X&"):format(b2,g2,r2)
 end
 
+function color_brightness(color,pct)--控制颜色的亮度
+    local b,g,r = color:match("&H(%x%x)(%x%x)(%x%x)&")
+    b,g,r = math.min(255,tonumber(b,16)*pct),math.min(255,tonumber(g,16)*pct),math.min(255,tonumber(r,16)*pct)
+    return ("&H%02X%02X%02X&"):format(b,g,r)
+end
+
+function color_alpha(color,pct)--根据颜色设定透明度
+    local b,g,r = color:match("&H(%x%x)(%x%x)(%x%x)&")
+    local new = math.min(255,(tonumber(b,16)+tonumber(g,16)+tonumber(r,16))/3*pct)
+    return ("&H%02X&"):format(new)
+end
+
 function circle(diameter,clockwise)--固定直径圆形，可指定路径方向
     clockwise = clockwise or 0
     local S = "m %.3f %.3f b %.3f %.3f %.3f %.3f %.3f %.3f b %.3f %.3f %.3f %.3f %.3f %.3f b %.3f %.3f %.3f %.3f %.3f %.3f b %.3f %.3f %.3f %.3f %.3f %.3f "
