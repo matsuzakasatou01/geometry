@@ -28,7 +28,7 @@ Style: OPJP,Source Han Serif SemiBold,80,&H00FFFFFF,&H000000FF,&H42413741,&H9B2D
 Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
 Comment: 0,0:00:00.00,0:00:00.00,OPJP,,0,0,0,声明,本特效模板由松坂さとう制作并基于CC BY-NC-SA 4.0协议共享。
 Comment: 0,0:00:00.00,0:00:00.00,OPJP,,0,0,0,code syl,fxgroup.firstsyl=(syl.i==1)
-Comment: 0,0:00:00.00,0:00:00.00,OPJP,,0,0,0,code line,a=_G.random_S(line.left+5,line.right-75,line.kara.n) b=_G.random_S(line.top+10,line.bottom-5,line.kara.n)
+Comment: 0,0:00:00.00,0:00:00.00,OPJP,,0,0,0,code line,math.randomseed(math.ceil(os.time()/1e5)) a=_G.random_S(line.left+5,line.right-75,line.kara.n) b=_G.random_S(line.top+10,line.bottom-5,line.kara.n)
 Comment: 0,0:00:00.00,0:00:00.00,OPJP,,0,0,0,template syl noblank notext fxgroup firstsyl,{\p1\an7\pos(!$sleft-15!,!$stop+10!)\bord2\3c&H0000FF&\1a&HFF&\clip(!$lleft-10!,!$ltop+10!,!$lright+10!,!$lbottom-5!)}!_G.tessellation(_G.regular_hexagon(18),math.ceil($lwidth/15.5),10*3^0.5,5,15,5*3^0.5)!
 Comment: 0,0:00:00.00,0:00:00.00,OPJP,,0,0,0,template syl noblank,!retime("line",$fdur*16,-$fdur*16)!{\pos($sx,$sy)\bord3\blur2}
 Comment: 0,0:00:00.00,0:00:00.00,OPJP,,0,0,0,template syl noblank,!maxloop(32)!!retime("preline",j<17 and (j-1)*$fdur or $ldur-(j-16)*$fdur,j<17 and j*$fdur or $ldur-(j-17)*$fdur)!{\pos($sx,$sy)\bord3\blur2\clip(!_G.translate(_G.random_rectangle(20,40,20,40),math.random($sleft+20,$sright-20),math.random($stop+20,$sbottom-20))!)}
