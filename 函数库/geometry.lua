@@ -200,8 +200,8 @@ function ran_rou_rect(l_min,l_max,h_min,h_max,rx,ry,clockwise)--随机范围长�
     clockwise = clockwise or 0
     local S = "m %.3f %.3f b %.3f %.3f %.3f %.3f %.3f %.3f l %.3f %.3f b %.3f %.3f %.3f %.3f %.3f %.3f l %.3f %.3f b %.3f %.3f %.3f %.3f %.3f %.3f l %.3f %.3f b %.3f %.3f %.3f %.3f %.3f %.3f l %.3f %.3f "
     local c = 1-4/3*(2^0.5-1)
-    local b_rx=rx*c
-    local b_ry=ry*c
+    local b_rx = rx*c
+    local b_ry = ry*c
     if clockwise == 0 then
         return string.format(S,-a,-b+ry,-a,-b+b_ry,-a+b_rx,-b,-a+rx,-b,a-rx,-b,a-b_rx,-b,a,-b+b_ry,a,-b+ry,a,b-ry,a,b-b_ry,a-b_rx,b,a-rx,b,-a+rx,b,-a+b_rx,b,-a,b-b_ry,-a,b-ry,-a,-b+ry)
     elseif clockwise == 1 then
@@ -477,6 +477,38 @@ function binary_digit(digit)--生成指定位数的随机二进制数字绘图
     return table.concat(num)
 end
 
+function sector(r,s_ang,e_ang,clockwise)--生成扇形
+    local function quarter(radius,s_angle,e_angle)
+        local angle = e_angle - s_angle
+        s_angle,angle,e_angle = math.rad(s_angle-90),math.rad(angle),math.rad(e_angle-90)
+        local x0 = math.cos(s_angle)*radius
+        local y0 = math.sin(s_angle)*radius
+        local x3 = math.cos(e_angle)*radius
+        local y3 = math.sin(e_angle)*radius
+        local a = math.tan(angle/4)*4/3
+        local x1 = x0 - a*y0
+        local y1 = y0 + a*x0
+        local x2 = x3 + a*y3
+        local y2 = y3 - a*x3
+        return string.format("b %s %s %s %s %s %s ",round(x1,3),round(y1,3),round(x2,3),round(y2,3),round(x3,3),round(y3,3))
+    end
+    clockwise = clockwise or 0
+    s_ang = s_ang and s_ang*(-1)^clockwise or 0
+    e_ang = e_ang and e_ang*(-1)^clockwise or 360
+    local ang = (e_ang - s_ang)*(-1)^clockwise
+    if 0 < ang and ang <= 90 then
+        return "m "..tostring(round(r*math.cos(math.rad(s_ang-90)),3)).." "..tostring(round(r*math.sin(math.rad(s_ang-90)),3)).." "..quarter(r,s_ang,e_ang).."l 0 0 "
+    elseif 90 < ang and ang <= 180 then
+        return "m "..tostring(round(r*math.cos(math.rad(s_ang-90)),3)).." "..tostring(round(r*math.sin(math.rad(s_ang-90)),3)).." "..quarter(r,s_ang,s_ang+90*(-1)^clockwise)..quarter(r,s_ang+90*(-1)^clockwise,e_ang).."l 0 0 "
+    elseif 180 < ang and ang <= 270 then
+        return "m "..tostring(round(r*math.cos(math.rad(s_ang-90)),3)).." "..tostring(round(r*math.sin(math.rad(s_ang-90)),3)).." "..quarter(r,s_ang,s_ang+90*(-1)^clockwise)..quarter(r,s_ang+90*(-1)^clockwise,s_ang+180*(-1)^clockwise)..quarter(r,s_ang+180*(-1)^clockwise,e_ang).."l 0 0 "
+    elseif 270 < ang and ang < 360 then
+        return "m "..tostring(round(r*math.cos(math.rad(s_ang-90)),3)).." "..tostring(round(r*math.sin(math.rad(s_ang-90)),3)).." "..quarter(r,s_ang,s_ang+90*(-1)^clockwise)..quarter(r,s_ang+90*(-1)^clockwise,s_ang+180*(-1)^clockwise)..quarter(r,s_ang+180*(-1)^clockwise,s_ang+270*(-1)^clockwise)..quarter(r,s_ang+270*(-1)^clockwise,e_ang).."l 0 0 "
+    elseif ang == 360 then
+        return circle(2*r)
+    end
+end
+
 function clip_blinds(length,height,num,pct,angle,x,y,direction,mode)--生成百叶窗绘图，用于clip效果
     pct = pct < 0 and 0 or pct > 1 and 1 or pct
     angle = angle or 0
@@ -548,6 +580,14 @@ function disassemble(ass_shape)--拆解单m绘图
         ass[#ass+1] = string.match(m,"(m[^m]+)")
     end
     return ass
+end
+
+function ring(ass_shape,n)--旋转绘图并连接
+    local ass = {ass_shape}
+    for i = 2,n do
+        ass[#ass+1] = spin(ass_shape,0,0,(i-1)*360/n)
+    end
+    return table.concat(ass)
 end
 
 function part(tbl,level,mode)--随机显示表中一部分比例的绘图
