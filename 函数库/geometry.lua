@@ -73,6 +73,16 @@ function color_alpha(color,pct)--根据颜色设定透明度
     return ("&H%02X&"):format(new)
 end
 
+function timing(num,func,...)--函数测速
+    func(...)
+    local start_time = os.clock()
+    for _ = 1,num do
+        func(...)
+    end
+    local time = round(os.clock() - start_time,3)
+    return time,round(time/num,6)
+end
+
 function circle(diameter,clockwise)--固定直径圆形，可指定路径方向
     clockwise = clockwise or 0
     local S = "m %.3f %.3f b %.3f %.3f %.3f %.3f %.3f %.3f b %.3f %.3f %.3f %.3f %.3f %.3f b %.3f %.3f %.3f %.3f %.3f %.3f b %.3f %.3f %.3f %.3f %.3f %.3f "
@@ -124,7 +134,7 @@ end
 
 function square(length,clockwise)--固定边长正方形，可指定路径方向
     clockwise = clockwise or 0
-    local S = "m %.1f %.1f l %.1f %.1f l %.1f %.1f l %.1f %.1f "
+    local S = "m %.2f %.2f l %.2f %.2f l %.2f %.2f l %.2f %.2f "
     local a = length
     if clockwise == 0 then
         return string.format(S,-a/2,-a/2,a/2,-a/2,a/2,a/2,-a/2,a/2)
@@ -590,6 +600,22 @@ function ring(ass_shape,n)--旋转绘图并连接
     return table.concat(ass)
 end
 
+function reverse_tbl(tbl)--反转表中元素顺序
+    local res = {}
+    for i = #tbl,1,-1 do
+        res[#res+1] = tbl[i]
+    end
+    return res
+end
+
+function shuffle(tbl)--打乱表中元素顺序
+    for i = #tbl,2,-1 do
+        local j = math.random(i)
+        tbl[i],tbl[j] = tbl[j],tbl[i]
+    end
+    return tbl
+end
+
 function part(tbl,level,mode)--随机显示表中一部分比例的绘图
     level = level < 0 and 0 or level > 1 and 1 or level
     mode = mode or 0
@@ -737,6 +763,238 @@ function tessellation(ass_shape,line_number,x_incline,line,y_incline,line_x_incl
     elseif mode == 1 then
         return ass
     end
+end
+
+function Zpix(shape,width,height)--返回字体所有可能的像素点坐标表和零矩阵
+    local function fullhalf_parity(ass_shape,wid,hei)
+        local xmin,xmax = math.huge,-math.huge
+        local _ = string.gsub(ass_shape,"([-.%d]+) [-.%d]+",
+        function (x)
+            xmin,xmax = math.min(xmin,x),math.max(xmax,x)
+        end)
+        local full = round(xmax) > hei*0.55
+        local odd = round((xmax-xmin)/wid*(full and 12 or 6))%2 ~= 0
+        return full,odd
+    end
+    local res,matrix = {},{}
+    local full,odd = fullhalf_parity(shape,width,height)
+    for i = 1,11 do
+        matrix[i] = {}
+        if full then
+            if odd then
+                for j = 1,11 do
+                    res[#res+1] = {x = j*width/12 + width/24,y = i*height/12 - height/24}
+                    matrix[i][j] = 0
+                end
+            else
+                for j = 1,10 do
+                    res[#res+1] = {x = (j+1)*width/12,y = i*height/12 - height/24}
+                    matrix[i][j] = 0
+                end
+            end
+        else
+            if odd then
+                for j = 1,5 do
+                    res[#res+1] = {x = j*width/6 + width/12,y = i*height/12 - height/24}
+                    matrix[i][j] = 0
+                end
+            else
+                for j = 1,4 do
+                    res[#res+1] = {x = (j+1)*width/6,y = i*height/12 - height/24}
+                    matrix[i][j] = 0
+                end
+            end
+        end
+    end
+    return res,matrix
+end
+
+function FOT_DotMincho12_Std_M(shape,width,height)--返回字体所有可能的像素点坐标表和零矩阵
+    local function fullhalf_parity(ass_shape,wid,hei)
+        local xmin,xmax = math.huge,-math.huge
+        local _ = string.gsub(ass_shape,"([-.%d]+) [-.%d]+",
+        function (x)
+            xmin,xmax = math.min(xmin,x),math.max(xmax,x)
+        end)
+        local full = xmax > hei/2
+        local odd = round((xmax-xmin)/wid*(full and 12 or 6))%2 ~= 0
+        return full,odd
+    end
+    local res,matrix = {},{}
+    local full,odd = fullhalf_parity(shape,width,height)
+    for i = 1,11 do
+        matrix[i] = {}
+        if full then
+            if odd then
+                for j = 1,11 do
+                    res[#res+1] = {x = j*width/12,y = i*height/12}
+                    matrix[i][j] = 0
+                end
+            else
+                for j = 1,10 do
+                    res[#res+1] = {x = j*width/12 + width/24,y = i*height/12}
+                    matrix[i][j] = 0
+                end
+            end
+        else
+            if odd then
+                for j = 1,5 do
+                    res[#res+1] = {x = j*width/6,y = i*height/12}
+                    matrix[i][j] = 0
+                end
+            else
+                for j = 1,6 do
+                    res[#res+1] = {x = j*width/6 - width/12,y = i*height/12}
+                    matrix[i][j] = 0
+                end
+            end
+        end
+    end
+    return res,matrix
+end
+
+function pt_in_str_l_shape(ass_shape,pt_x,pt_y)--判断点是否包含在全直线绘图内
+    local function sgn(n)
+        return n > 0 and 1 or (n < 0 and -1 or 0)
+    end
+    local function line_isect(x1,y1,x2,y2,y)
+        local top,bottom = math.min(y1,y2),math.max(y1,y2)
+        if y >= top and y < bottom and bottom - top > 1e-4 then
+            return x1 + ((x2-x1)/(y2-y1))*(y-y1)
+        end
+    end
+    local cnt = 0
+    for m in string.gmatch(ass_shape,"m[^m]+") do
+        local pt = {}
+        for x,y in string.gmatch(m,"([-.%d]+) ([-.%d]+)") do
+            pt[#pt+1] = {x,y}
+        end
+        if pt[1][1] ~= pt[#pt][1] or pt[1][2] ~= pt[#pt][2] then
+            pt[#pt+1] = {pt[1][1],pt[1][2]}
+        end
+        for i = 1,#pt-1 do
+            local x = line_isect(pt[i][1],pt[i][2],pt[i+1][1],pt[i+1][2],pt_y)
+            if x then
+                if x <= pt_x then
+                    cnt = cnt + sgn(pt[i+1][2]-pt[i][2])
+                end
+            end
+        end
+    end
+    return cnt ~= 0
+end
+
+function tbl_pt_in_str_l_shape(ass_shape,tbl,matrix)--移除表中不包含在全直线绘图内的点并返回结果和二值矩阵
+    if matrix then
+        for i = #tbl,1,-1 do
+            if not pt_in_str_l_shape(ass_shape,tbl[i].x,tbl[i].y) then
+                table.remove(tbl,i)
+            else
+                matrix[math.ceil(i / #matrix[1])][(i-1) % #matrix[1] + 1] = 1
+            end
+        end
+    else
+        for i = #tbl,1,-1 do
+            if not pt_in_str_l_shape(ass_shape,tbl[i].x,tbl[i].y) then
+                table.remove(tbl,i)
+            end
+        end
+    end
+    return tbl,matrix
+end
+
+function plies(matrix)--根据二值矩阵计算每个像素点下有几个空位
+    local cnt,res = {},{}
+    for i = 1,#matrix[1] do
+        cnt[i] = 0
+    end
+    for i = #matrix,1,-1 do
+        for j = #matrix[i],1,-1 do
+            if matrix[i][j] == 1 then
+                table.insert(res,1,cnt[j])
+            else
+                cnt[j] = cnt[j] + 1
+            end
+        end
+    end
+    return res
+end
+
+function isolated_point(matrix)--根据二值矩阵判断孤立像素点并返回索引表
+    local res = {}
+    local cnt = 0
+    for i = 1,#matrix do
+        local up = i > 1 and matrix[i-1]
+        local down = i < #matrix and matrix[i+1]
+        for j = 1,#matrix[i] do
+            if matrix[i][j] == 1 then
+                cnt = cnt + 1
+                if not ((j > 1 and matrix[i][j-1] == 1) or (j < #matrix[1] and matrix[i][j+1] == 1) or (up and up[j] == 1) or (down and down[j] == 1)) then
+                    res[#res+1] = cnt
+                end
+            end
+        end
+    end
+    return res
+end
+
+function blob(matrix)--查找二值矩阵的连通域
+    local visited,id,components = {},{},{}
+    local cnt = 0
+    for i = 1,#matrix do
+        visited[i],id[i] = {},{}
+        for j = 1,#matrix[i] do
+            if matrix[i][j] == 1 then
+                cnt = cnt + 1
+                id[i][j] = cnt
+            end
+        end
+    end
+    for i = 1,#matrix do
+        for j = 1,#matrix[i] do
+            if matrix[i][j] == 1 and not visited[i][j] then
+                local indices = {id[i][j]}
+                local queue = {{i,j}}
+                visited[i][j] = true
+                while #queue > 0 do
+                    local current = table.remove(queue,1)
+                    local ci,cj = current[1],current[2]
+                    for _,dir in ipairs({{0,1},{1,0},{-1,0},{0,-1}}) do
+                        local ni,nj = ci + dir[1],cj + dir[2]
+                        if ni >= 1 and ni <= #matrix and nj >= 1 and nj <= #matrix[i] then
+                            if matrix[ni][nj] == 1 and not visited[ni][nj] then
+                                visited[ni][nj] = true
+                                table.insert(queue,{ni,nj})
+                                table.insert(indices,id[ni][nj])
+                            end
+                        end
+                    end
+                end
+                table.insert(components,indices)
+            end
+        end
+    end
+    return components
+end
+
+function num_in_tbl(tbl,num)--查找给定数字是否在表中
+    for i = 1,#tbl do
+        if tbl[i] == num then
+            return true
+        end
+    end
+    return false
+end
+
+function num_in_nested(tbl,num)--查找给定数字在嵌套表的第几个表里
+    for i = 1,#tbl do
+        for j = 1,#tbl[i] do
+            if tbl[i][j] == num then
+                return i
+            end
+        end
+    end
+    return nil
 end
 
 function close(ass_shape)--封闭绘图
