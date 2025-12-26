@@ -3,7 +3,7 @@ local get = aegisub.gettext
 script_name = get "添加常用code行和template行"
 script_description = get "添加常用code行和template行"
 script_author = "松坂さとう"
-script_version = "4.0"
+script_version = "4.1"
 
 function insert_s1(subs,sel)
     for i = 1,#sel do
@@ -153,7 +153,7 @@ function Yutils_line1(subs,sel)
         local line = subs[sel[i]]
         line.comment = true
         line.effect = "code line"
-        line.text = 'text=Yutils.decode.create_font(line.styleref.fontname,line.styleref.bold,line.styleref.italic,line.styleref.underline,line.styleref.strikeout,line.styleref.fontsize,line.styleref.scale_x,line.styleref.scale_y,line.styleref.spacing).text_to_shape(line.text_stripped)'
+        line.text = 'text=Yutils.decode.create_font(line.styleref.fontname,line.styleref.bold,line.styleref.italic,line.styleref.underline,line.styleref.strikeout,line.styleref.fontsize,line.styleref.scale_x/100,line.styleref.scale_y/100,line.styleref.spacing).text_to_shape(line.text_stripped)'
         line.start_time = 0
         line.end_time = 0
         subs[-sel[i]] = line
@@ -179,7 +179,7 @@ function Yutils_syl1(subs,sel)
         local line = subs[sel[i]]
         line.comment = true
         line.effect = "code syl noblank"
-        line.text = 'text=Yutils.decode.create_font(syl.style.fontname,syl.style.bold,syl.style.italic,syl.style.underline,syl.style.strikeout,syl.style.fontsize,syl.style.scale_x,syl.style.scale_y,syl.style.spacing).text_to_shape(syl.text_stripped)'
+        line.text = 'text=Yutils.decode.create_font(syl.style.fontname,syl.style.bold,syl.style.italic,syl.style.underline,syl.style.strikeout,syl.style.fontsize,syl.style.scale_x/100,syl.style.scale_y/100,syl.style.spacing).text_to_shape(syl.text_stripped)'
         line.start_time = 0
         line.end_time = 0
         subs[-sel[i]] = line
