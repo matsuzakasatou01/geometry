@@ -357,6 +357,20 @@ function note(x)--七个音符，可指定任意一个
     end
 end
 
+function rect_pos(x1,y1,x2,y2)--矩形边界定位
+    local x,y,n = math.random(x1,x2),math.random(y1,y2),math.random(4)
+    if n == 1 then
+        x = x1
+    elseif n == 2 then
+        x = x2
+    elseif n == 3 then
+        y = y1
+    elseif n == 4 then
+        y = y2
+    end
+    return x,y
+end
+
 function translate(ass_shape,x_incline,y_incline)--平移绘图
     x_incline = x_incline or 0
     y_incline = y_incline or 0
@@ -959,7 +973,7 @@ function blob(matrix)--查找二值矩阵的连通域
                 while #queue > 0 do
                     local current = table.remove(queue,1)
                     local ci,cj = current[1],current[2]
-                    for _,dir in ipairs({{0,1},{1,0},{-1,0},{0,-1}}) do
+                    for _,dir in ipairs({{0,1},{1,0},{0,-1},{-1,0}}) do
                         local ni,nj = ci + dir[1],cj + dir[2]
                         if ni >= 1 and ni <= #matrix and nj >= 1 and nj <= #matrix[i] then
                             if matrix[ni][nj] == 1 and not visited[ni][nj] then
