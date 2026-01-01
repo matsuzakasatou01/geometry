@@ -3,7 +3,7 @@ local get = aegisub.gettext
 script_name = get "添加常用code行和template行"
 script_description = get "添加常用code行和template行"
 script_author = "松坂さとう"
-script_version = "4.1"
+script_version = "5.0"
 
 function insert_s1(subs,sel)
     for i = 1,#sel do
@@ -62,7 +62,7 @@ function insert_l2(subs,sel)
         local line = subs[sel[i]]
         line.comment = true
         line.effect = "template syl noblank notext"
-        line.text = ""
+        line.text = "{\\p1\\an7\\fscx100\\fscy100\\bord0\\pos()}"
         line.start_time = 0
         line.end_time = 0
         subs[-sel[i]] = line
@@ -88,7 +88,7 @@ function insert_l4(subs,sel)
         local line = subs[sel[i]]
         line.comment = true
         line.effect = "template line notext"
-        line.text = ""
+        line.text = "{\\p1\\an7\\fscx100\\fscy100\\bord0\\pos()}"
         line.start_time = 0
         line.end_time = 0
         subs[-sel[i]] = line
