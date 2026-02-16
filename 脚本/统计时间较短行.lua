@@ -1,9 +1,9 @@
 local get = aegisub.gettext
 
 script_name = get "统计时间较短行"
-script_description = get "统计时间较短行"
+script_description = get "统计时间较短行并检测中日文时间是否完全一致"
 script_author = "松坂さとう"
-script_version = "1.0"
+script_version = "2.0"
 
 function karaoke_duration(subs)
     local n = 0
@@ -44,6 +44,11 @@ function karaoke_duration(subs)
         end
         for i = 1,#res do
             text = text.."\n#"..tostring(res[i][1][1]).."  ".."#"..tostring(res[i][1][2]).."      "..tostring(res[i].time).."ms"
+        end
+        for i = 1,#info,2 do
+            if info[i].time ~= info[i+1].time then
+                text = text.."\n\n中日文时间不一致，请把日文时间粘贴到中文上"
+            end
         end
     else
         for i = 1,#info do
