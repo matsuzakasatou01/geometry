@@ -212,14 +212,14 @@ function ran_rou_rect(l_min,l_max,h_min,h_max,rx,ry,clockwise)--随机范围长�
     rx = rx or math.min(a*2/5,b*2/5)
     ry = ry or rx
     clockwise = clockwise or 0
-    local S = "m %.3f %.3f b %.3f %.3f %.3f %.3f %.3f %.3f l %.3f %.3f b %.3f %.3f %.3f %.3f %.3f %.3f l %.3f %.3f b %.3f %.3f %.3f %.3f %.3f %.3f l %.3f %.3f b %.3f %.3f %.3f %.3f %.3f %.3f l %.3f %.3f "
+    local S = "m %s %s b %s %s %s %s %s %s l %s %s b %s %s %s %s %s %s l %s %s b %s %s %s %s %s %s l %s %s b %s %s %s %s %s %s l %s %s "
     local c = 1-4/3*(2^0.5-1)
     local b_rx = rx*c
     local b_ry = ry*c
     if clockwise == 0 then
-        return string.format(S,-a,-b+ry,-a,-b+b_ry,-a+b_rx,-b,-a+rx,-b,a-rx,-b,a-b_rx,-b,a,-b+b_ry,a,-b+ry,a,b-ry,a,b-b_ry,a-b_rx,b,a-rx,b,-a+rx,b,-a+b_rx,b,-a,b-b_ry,-a,b-ry,-a,-b+ry)
+        return string.format(S,round(-a,3),round(-b+ry,3),round(-a,3),round(-b+b_ry,3),round(-a+b_rx,3),round(-b,3),round(-a+rx,3),round(-b,3),round(a-rx,3),round(-b,3),round(a-b_rx,3),round(-b,3),round(a,3),round(-b+b_ry,3),round(a,3),round(-b+ry,3),round(a,3),round(b-ry,3),round(a,3),round(b-b_ry,3),round(a-b_rx,3),round(b,3),round(a-rx,3),round(b,3),round(-a+rx,3),round(b,3),round(-a+b_rx,3),round(b,3),round(-a,3),round(b-b_ry,3),round(-a,3),round(b-ry,3),round(-a,3),round(-b+ry,3))
     elseif clockwise == 1 then
-        return string.format(S,-a,b-ry,-a,b-b_ry,-a+b_rx,b,-a+rx,b,a-rx,b,a-b_rx,b,a,b-b_ry,a,b-ry,a,-b+ry,a,-b+b_ry,a-b_rx,-b,a-rx,-b,-a+rx,-b,-a+b_rx,-b,-a,-b+b_ry,-a,-b+ry,-a,b-ry)
+        return string.format(S,round(-a,3),round(b-ry,3),round(-a,3),round(b-b_ry,3),round(-a+b_rx,3),round(b,3),round(-a+rx,3),round(b,3),round(a-rx,3),round(b,3),round(a-b_rx,3),round(b,3),round(a,3),round(b-b_ry,3),round(a,3),round(b-ry,3),round(a,3),round(-b+ry,3),round(a,3),round(-b+b_ry,3),round(a-b_rx,3),round(-b,3),round(a-rx,3),round(-b,3),round(-a+rx,3),round(-b,3),round(-a+b_rx,3),round(-b,3),round(-a,3),round(-b+b_ry,3),round(-a,3),round(-b+ry,3),round(-a,3),round(b-ry,3))
     end
 end
 
@@ -239,18 +239,18 @@ end
 function parallelogram(length,height,incline,directivity,clockwise)--固定长高平行四边形，可指定倾斜量、倾斜方向和路径方向
     directivity = directivity or 1
     clockwise = clockwise or 0
-    local S = "m %.1f %.1f l %.1f %.1f l %.1f %.1f l %.1f %.1f "
+    local S = "m %s %s l %s %s l %s %s l %s %s "
     local a = length
     local b = height
     local c = incline
     if clockwise == 0 and directivity == 0 then
-        return string.format(S,-a/2-c,-b/2,a/2-c,-b/2,a/2+c,b/2,-a/2+c,b/2)
+        return string.format(S,round(-a/2-c,3),round(-b/2,3),round(a/2-c,3),round(-b/2,3),round(a/2+c,3),round(b/2,3),round(-a/2+c,3),round(b/2,3))
     elseif clockwise == 0 and directivity == 1 then
-        return string.format(S,-a/2+c,-b/2,a/2+c,-b/2,a/2-c,b/2,-a/2-c,b/2)
+        return string.format(S,round(-a/2+c,3),round(-b/2,3),round(a/2+c,3),round(-b/2,3),round(a/2-c,3),round(b/2,3),round(-a/2-c,3),round(b/2,3))
     elseif clockwise == 1 and directivity == 0 then
-        return string.format(S,-a/2-c,-b/2,-a/2+c,b/2,a/2+c,b/2,a/2-c,-b/2)
+        return string.format(S,round(-a/2-c,3),round(-b/2,3),round(-a/2+c,3),round(b/2,3),round(a/2+c,3),round(b/2,3),round(a/2-c,3),round(-b/2,3))
     elseif clockwise == 1 and directivity == 1 then
-        return string.format(S,-a/2+c,-b/2,-a/2-c,b/2,a/2-c,b/2,a/2+c,-b/2)
+        return string.format(S,round(-a/2+c,3),round(-b/2,3),round(-a/2-c,3),round(b/2,3),round(a/2-c,3),round(b/2,3),round(a/2+c,3),round(-b/2,3))
     end
 end
 
@@ -409,8 +409,8 @@ function translate(ass_shape,x_incline,y_incline)--平移绘图
     y_incline = y_incline or 0
     local shape = string.gsub(ass_shape,"([-.%d]+) ([-.%d]+)",
     function (x,y)
-        x = tonumber(x) + x_incline
-        y = tonumber(y) + y_incline
+        x = round(tonumber(x)+x_incline,3)
+        y = round(tonumber(y)+y_incline,3)
         return string.format("%s %s",x,y)
     end)
     return shape
@@ -423,8 +423,8 @@ function zoom(ass_shape,x_zoom,y_zoom,zoom_center,zoom_middle)--缩放绘图
     zoom_middle = zoom_middle or 0
     local shape = string.gsub(ass_shape,"([-.%d]+) ([-.%d]+)",
     function (x,y)
-        x = zoom_center + (tonumber(x)-zoom_center)*x_zoom/100
-        y = zoom_middle + (tonumber(y)-zoom_middle)*y_zoom/100
+        x = round(zoom_center+(tonumber(x)-zoom_center)*x_zoom/100,3)
+        y = round(zoom_middle+(tonumber(y)-zoom_middle)*y_zoom/100,3)
         return string.format("%s %s",x,y)
     end)
     return shape
@@ -440,8 +440,8 @@ function spin(ass_shape,x_angle,y_angle,z_angle,spin_center,spin_middle)--旋转
     function (x,y)
         x = spin_center + (tonumber(x)-spin_center)*math.cos(math.rad(y_angle))
         y = spin_middle + (tonumber(y)-spin_middle)*math.cos(math.rad(x_angle))
-        local new_x = spin_center + (x-spin_center)*math.cos(math.rad(-z_angle)) - (y-spin_middle)*math.sin(math.rad(-z_angle))
-        local new_y = spin_middle + (x-spin_center)*math.sin(math.rad(-z_angle)) + (y-spin_middle)*math.cos(math.rad(-z_angle))
+        local new_x = round(spin_center+(x-spin_center)*math.cos(math.rad(-z_angle))-(y-spin_middle)*math.sin(math.rad(-z_angle)),3)
+        local new_y = round(spin_middle+(x-spin_center)*math.sin(math.rad(-z_angle))+(y-spin_middle)*math.cos(math.rad(-z_angle)),3)
         return string.format("%s %s",new_x,new_y)
     end)
     return shape
@@ -454,8 +454,8 @@ function translate_tbl(ass_table,x_incline,y_incline)--平移绘图表中的每�
     for i = 1,#ass_table do
         local shape = string.gsub(ass_table[i],"([-.%d]+) ([-.%d]+)",
         function (x,y)
-            x = tonumber(x) + x_incline
-            y = tonumber(y) + y_incline
+            x = round(tonumber(x)+x_incline,3)
+            y = round(tonumber(y)+y_incline,3)
             return string.format("%s %s",x,y)
         end)
         ass[#ass+1] = shape
@@ -472,8 +472,8 @@ function zoom_tbl(ass_table,x_zoom,y_zoom,zoom_center,zoom_middle)--缩放绘图
     for i = 1,#ass_table do
         local shape = string.gsub(ass_table[i],"([-.%d]+) ([-.%d]+)",
         function (x,y)
-            x = zoom_center + (tonumber(x)-zoom_center)*x_zoom/100
-            y = zoom_middle + (tonumber(y)-zoom_middle)*y_zoom/100
+            x = round(zoom_center+(tonumber(x)-zoom_center)*x_zoom/100,3)
+            y = round(zoom_middle+(tonumber(y)-zoom_middle)*y_zoom/100,3)
             return string.format("%s %s",x,y)
         end)
         ass[#ass+1] = shape
@@ -493,8 +493,8 @@ function spin_tbl(ass_table,x_angle,y_angle,z_angle,spin_center,spin_middle)--�
         function (x,y)
             x = spin_center + (tonumber(x)-spin_center)*math.cos(math.rad(y_angle))
             y = spin_middle + (tonumber(y)-spin_middle)*math.cos(math.rad(x_angle))
-            local new_x = spin_center + (x-spin_center)*math.cos(math.rad(-z_angle)) - (y-spin_middle)*math.sin(math.rad(-z_angle))
-            local new_y = spin_middle + (x-spin_center)*math.sin(math.rad(-z_angle)) + (y-spin_middle)*math.cos(math.rad(-z_angle))
+            local new_x = round(spin_center+(x-spin_center)*math.cos(math.rad(-z_angle))-(y-spin_middle)*math.sin(math.rad(-z_angle)),3)
+            local new_y = round(spin_middle+(x-spin_center)*math.sin(math.rad(-z_angle))+(y-spin_middle)*math.cos(math.rad(-z_angle)),3)
             return string.format("%s %s",new_x,new_y)
         end)
         ass[#ass+1] = shape
@@ -583,11 +583,24 @@ function clip_blinds(length,height,num,pct,angle,x,y,direction,mode)--生成百�
             ass[#ass+1] = translate(rectangle(wid*pct,len),-len/2 + (i - 1/2)*wid)
         end
     end
-    ass = round_tbl(translate_tbl(spin_tbl(ass,0,0,angle),x,y),2)
+    ass = translate_tbl(spin_tbl(ass,0,0,angle),x,y)
     if mode == 0 then
         return table.concat(ass)
     elseif mode == 1 then
         return ass
+    end
+end
+
+local function link(length1,length2,clockwise)
+    length2 = length2 or length1
+    clockwise = clockwise or 0
+    local S = "m %.3f %.3f b %.3f %.3f %.3f %.3f %.3f %.3f l %.3f %.3f b %.3f %.3f %.3f %.3f %.3f %.3f "
+    local a = length1/2
+    local b = length2/2
+    if clockwise == 0 then
+        return string.format(S,-a,-b,-a,-b-a*4/3,a,-b-a*4/3,a,-b,a,b,a,b+a*4/3,-a,b+a*4/3,-a,b)
+    elseif clockwise == 1 then
+        return string.format(S,-a,b,-a,b+a*4/3,a,b+a*4/3,a,b,a,-b,a,-b-a*4/3,-a,-b-a*4/3,-a,-b)
     end
 end
 
@@ -596,18 +609,6 @@ function chain(num,x_length,y_length,width,first)--生成直线锁链绘图
     y_length = y_length or 20
     width = width or 5
     first = first or 0
-    local function link(length1,length2,clockwise)
-        length2 = length2 or length1
-        clockwise = clockwise or 0
-        local S = "m %.3f %.3f b %.3f %.3f %.3f %.3f %.3f %.3f l %.3f %.3f b %.3f %.3f %.3f %.3f %.3f %.3f "
-        local a = length1/2
-        local b = length2/2
-        if clockwise == 0 then
-            return string.format(S,-a,-b,-a,-b-a*4/3,a,-b-a*4/3,a,-b,a,b,a,b+a*4/3,-a,b+a*4/3,-a,b)
-        elseif clockwise == 1 then
-            return string.format(S,-a,b,-a,b+a*4/3,a,b+a*4/3,a,b,a,-b,a,-b-a*4/3,-a,-b-a*4/3,-a,-b)
-        end
-    end
     local O = link(x_length,y_length)..link(x_length - width*2,y_length,1)
     local I = link(width,x_length + y_length - width*2)
     local ass = {}
@@ -629,6 +630,87 @@ function chain(num,x_length,y_length,width,first)--生成直线锁链绘图
         end
     end
     return table.concat(ass)
+end
+
+function chains_entwined(tbl,xscale,x_length,y_length,width,first,tbl2)--做锁链缠绕效果
+    xscale = xscale or 1
+    x_length = x_length or 30
+    y_length = y_length or 20
+    width = width or 5
+    first = first or 0
+    local O = link(x_length,y_length)..link(x_length - width*2,y_length,1)
+    local I = link(width,x_length + y_length - width*2)
+    local ass1 = {}
+    local ass2 = {}
+    if first == 0 then
+        for i = 1,#tbl do
+            if i % 2 == 1 then
+                if math.cos(math.rad(tbl[i].x/xscale)) >= 0 then
+                    ass1[#ass1+1] = translate(spin(O,0,0,tbl[i].angle-90),tbl[i].x,tbl[i].y)
+                else
+                    ass2[#ass2+1] = translate(spin(O,0,0,tbl[i].angle-90),tbl[i].x,tbl[i].y)
+                end
+            else
+                if math.cos(math.rad(tbl[i].x/xscale)) >= 0 then
+                    ass1[#ass1+1] = translate(spin(I,0,0,tbl[i].angle-90),tbl[i].x,tbl[i].y)
+                else
+                    ass2[#ass2+1] = translate(spin(I,0,0,tbl[i].angle-90),tbl[i].x,tbl[i].y)
+                end
+            end
+        end
+    elseif first == 1 then
+        for i = 1,#tbl do
+            if i % 2 == 1 then
+                if math.cos(math.rad(tbl[i].x/xscale)) >= 0 then
+                    ass1[#ass1+1] = translate(spin(I,0,0,tbl[i].angle-90),tbl[i].x,tbl[i].y)
+                else
+                    ass2[#ass2+1] = translate(spin(I,0,0,tbl[i].angle-90),tbl[i].x,tbl[i].y)
+                end
+            else
+                if math.cos(math.rad(tbl[i].x/xscale)) >= 0 then
+                    ass1[#ass1+1] = translate(spin(O,0,0,tbl[i].angle-90),tbl[i].x,tbl[i].y)
+                else
+                    ass2[#ass2+1] = translate(spin(O,0,0,tbl[i].angle-90),tbl[i].x,tbl[i].y)
+                end
+            end
+        end
+    end
+    if tbl2 then
+        if first == 0 then
+            for i = 1,#tbl2 do
+                if i % 2 == 1 then
+                    if -math.cos(math.rad(tbl2[i].x/xscale)) >= 0 then
+                        ass1[#ass1+1] = translate(spin(O,0,0,tbl2[i].angle-90),tbl2[i].x,tbl2[i].y)
+                    else
+                        ass2[#ass2+1] = translate(spin(O,0,0,tbl2[i].angle-90),tbl2[i].x,tbl2[i].y)
+                    end
+                else
+                    if -math.cos(math.rad(tbl2[i].x/xscale)) >= 0 then
+                        ass1[#ass1+1] = translate(spin(I,0,0,tbl2[i].angle-90),tbl2[i].x,tbl2[i].y)
+                    else
+                        ass2[#ass2+1] = translate(spin(I,0,0,tbl2[i].angle-90),tbl2[i].x,tbl2[i].y)
+                    end
+                end
+            end
+        elseif first == 1 then
+            for i = 1,#tbl2 do
+                if i % 2 == 1 then
+                    if -math.cos(math.rad(tbl2[i].x/xscale)) >= 0 then
+                        ass1[#ass1+1] = translate(spin(I,0,0,tbl2[i].angle-90),tbl2[i].x,tbl2[i].y)
+                    else
+                        ass2[#ass2+1] = translate(spin(I,0,0,tbl2[i].angle-90),tbl2[i].x,tbl2[i].y)
+                    end
+                else
+                    if -math.cos(math.rad(tbl2[i].x/xscale)) >= 0 then
+                        ass1[#ass1+1] = translate(spin(O,0,0,tbl2[i].angle-90),tbl2[i].x,tbl2[i].y)
+                    else
+                        ass2[#ass2+1] = translate(spin(O,0,0,tbl2[i].angle-90),tbl2[i].x,tbl2[i].y)
+                    end
+                end
+            end
+        end
+    end
+    return {table.concat(ass1),table.concat(ass2)}
 end
 
 function disassemble(ass_shape)--拆解单m绘图
@@ -812,51 +894,7 @@ function tessellation(ass_shape,line_number,x_incline,line,y_incline,line_x_incl
     end
 end
 
-function Zpix(shape,width,height)--返回字体所有可能的像素点坐标表和零矩阵
-    local function fullhalf_parity(ass_shape,wid,hei)
-        local xmin,xmax = math.huge,-math.huge
-        local _ = string.gsub(ass_shape,"([-.%d]+) [-.%d]+",
-        function (x)
-            xmin,xmax = math.min(xmin,x),math.max(xmax,x)
-        end)
-        local full = round(xmax) > hei*0.55
-        local odd = round((xmax-xmin)/wid*(full and 12 or 6))%2 ~= 0
-        return full,odd
-    end
-    local res,matrix = {},{}
-    local full,odd = fullhalf_parity(shape,width,height)
-    for i = 1,11 do
-        matrix[i] = {}
-        if full then
-            if odd then
-                for j = 1,11 do
-                    res[#res+1] = {x = j*width/12 + width/24,y = i*height/12 - height/24}
-                    matrix[i][j] = 0
-                end
-            else
-                for j = 1,10 do
-                    res[#res+1] = {x = (j+1)*width/12,y = i*height/12 - height/24}
-                    matrix[i][j] = 0
-                end
-            end
-        else
-            if odd then
-                for j = 1,5 do
-                    res[#res+1] = {x = j*width/6 + width/12,y = i*height/12 - height/24}
-                    matrix[i][j] = 0
-                end
-            else
-                for j = 1,4 do
-                    res[#res+1] = {x = (j+1)*width/6,y = i*height/12 - height/24}
-                    matrix[i][j] = 0
-                end
-            end
-        end
-    end
-    return res,matrix
-end
-
-function FOT_DotMincho12_Std_M(shape,width,height)--返回字体所有可能的像素点坐标表和零矩阵
+function FOT_DotMincho12_Std_M(shape,width,height,stairs)--返回字体所有可能的像素点坐标表和零矩阵
     local function fullhalf_parity(ass_shape,wid,hei)
         local xmin,xmax = math.huge,-math.huge
         local _ = string.gsub(ass_shape,"([-.%d]+) [-.%d]+",
@@ -867,32 +905,192 @@ function FOT_DotMincho12_Std_M(shape,width,height)--返回字体所有可能的�
         local odd = round((xmax-xmin)/wid*(full and 12 or 6))%2 ~= 0
         return full,odd
     end
+    stairs = stairs or 0
     local res,matrix = {},{}
     local full,odd = fullhalf_parity(shape,width,height)
+    local rho1,rho2 = parallelogram(height/6/3^0.5,height/12,height/24/3^0.5),parallelogram(height/6/3^0.5,height/12,height/24/3^0.5,0)
     for i = 1,11 do
         matrix[i] = {}
         if full then
             if odd then
-                for j = 1,11 do
-                    res[#res+1] = {x = j*width/12,y = i*height/12}
-                    matrix[i][j] = 0
+                if stairs == 1 then
+                    if i % 2 == 1 then
+                        for j = 1,11 do
+                            res[#res+1] = {x = round(j*width/12,3),y = round(i*height/12,3),c = "&HFFFFFF&",s = rho1}
+                            matrix[i][j] = 0
+                        end
+                    else
+                        for j = 1,11 do
+                            res[#res+1] = {x = round(j*width/12,3),y = round(i*height/12,3),c = "&H808080&",s = rho2}
+                            matrix[i][j] = 0
+                        end
+                    end
+                else
+                    for j = 1,11 do
+                        res[#res+1] = {x = round(j*width/12,3),y = round(i*height/12,3)}
+                        matrix[i][j] = 0
+                    end
                 end
             else
-                for j = 1,10 do
-                    res[#res+1] = {x = j*width/12 + width/24,y = i*height/12}
-                    matrix[i][j] = 0
+                if stairs == 1 then
+                    if i % 2 == 1 then
+                        for j = 1,10 do
+                            res[#res+1] = {x = round(j*width/12 + width/24,3),y = round(i*height/12,3),c = "&HFFFFFF&",s = rho1}
+                            matrix[i][j] = 0
+                        end
+                    else
+                        for j = 1,10 do
+                            res[#res+1] = {x = round(j*width/12 + width/24,3),y = round(i*height/12,3),c = "&H808080&",s = rho2}
+                            matrix[i][j] = 0
+                        end
+                    end
+                else
+                    for j = 1,10 do
+                        res[#res+1] = {x = round(j*width/12 + width/24,3),y = round(i*height/12,3)}
+                        matrix[i][j] = 0
+                    end
                 end
             end
         else
             if odd then
-                for j = 1,5 do
-                    res[#res+1] = {x = j*width/6,y = i*height/12}
-                    matrix[i][j] = 0
+                if stairs == 1 then
+                    if i % 2 == 1 then
+                        for j = 1,5 do
+                            res[#res+1] = {x = round(j*width/6,3),y = round(i*height/12,3),c = "&HFFFFFF&",s = rho1}
+                            matrix[i][j] = 0
+                        end
+                    else
+                        for j = 1,5 do
+                            res[#res+1] = {x = round(j*width/6,3),y = round(i*height/12,3),c = "&H808080&",s = rho2}
+                            matrix[i][j] = 0
+                        end
+                    end
+                else
+                    for j = 1,5 do
+                        res[#res+1] = {x = round(j*width/6,3),y = round(i*height/12,3)}
+                        matrix[i][j] = 0
+                    end
                 end
             else
-                for j = 1,6 do
-                    res[#res+1] = {x = j*width/6 - width/12,y = i*height/12}
-                    matrix[i][j] = 0
+                if stairs == 1 then
+                    if i % 2 == 1 then
+                        for j = 1,6 do
+                            res[#res+1] = {x = round(j*width/6 - width/12,3),y = round(i*height/12,3),c = "&HFFFFFF&",s = rho1}
+                            matrix[i][j] = 0
+                        end
+                    else
+                        for j = 1,6 do
+                            res[#res+1] = {x = round(j*width/6 - width/12,3),y = round(i*height/12,3),c = "&H808080&",s = rho2}
+                            matrix[i][j] = 0
+                        end
+                    end
+                else
+                    for j = 1,6 do
+                        res[#res+1] = {x = round(j*width/6 - width/12,3),y = round(i*height/12,3)}
+                        matrix[i][j] = 0
+                    end
+                end
+            end
+        end
+    end
+    return res,matrix
+end
+
+function Zpix(shape,width,height,stairs)--返回字体所有可能的像素点坐标表和零矩阵
+    local function fullhalf_parity(ass_shape,wid,hei)
+        local xmin,xmax = math.huge,-math.huge
+        local _ = string.gsub(ass_shape,"([-.%d]+) [-.%d]+",
+        function (x)
+            xmin,xmax = math.min(xmin,x),math.max(xmax,x)
+        end)
+        local full = round(xmax) > hei*0.55
+        local odd = round((xmax-xmin)/wid*(full and 12 or 6))%2 ~= 0
+        return full,odd
+    end
+    stairs = stairs or 0
+    local res,matrix = {},{}
+    local full,odd = fullhalf_parity(shape,width,height)
+    local rho1,rho2 = parallelogram(height/6/3^0.5,height/12,height/24/3^0.5),parallelogram(height/6/3^0.5,height/12,height/24/3^0.5,0)
+    for i = 1,11 do
+        matrix[i] = {}
+        if full then
+            if odd then
+                if stairs == 1 then
+                    if i % 2 == 1 then
+                        for j = 1,11 do
+                            res[#res+1] = {x = round(j*width/12 + width/24,3),y = round(i*height/12 - width/24,3),c = "&HFFFFFF&",s = rho1}
+                            matrix[i][j] = 0
+                        end
+                    else
+                        for j = 1,11 do
+                            res[#res+1] = {x = round(j*width/12 + width/24,3),y = round(i*height/12 - width/24,3),c = "&H808080&",s = rho2}
+                            matrix[i][j] = 0
+                        end
+                    end
+                else
+                    for j = 1,11 do
+                        res[#res+1] = {x = round(j*width/12 + width/24,3),y = round(i*height/12 - width/24,3)}
+                        matrix[i][j] = 0
+                    end
+                end
+            else
+                if stairs == 1 then
+                    if i % 2 == 1 then
+                        for j = 1,10 do
+                            res[#res+1] = {x = round((j+1)*width/12,3),y = round(i*height/12 - height/24,3),c = "&HFFFFFF&",s = rho1}
+                            matrix[i][j] = 0
+                        end
+                    else
+                        for j = 1,10 do
+                            res[#res+1] = {x = round((j+1)*width/12,3),y = round(i*height/12 - height/24,3),c = "&H808080&",s = rho2}
+                            matrix[i][j] = 0
+                        end
+                    end
+                else
+                    for j = 1,10 do
+                        res[#res+1] = {x = round((j+1)*width/12,3),y = round(i*height/12 - height/24,3)}
+                        matrix[i][j] = 0
+                    end
+                end
+            end
+        else
+            if odd then
+                if stairs == 1 then
+                    if i % 2 == 1 then
+                        for j = 1,5 do
+                            res[#res+1] = {x = round(j*width/6 + width/12,3),y = round(i*height/12 - height/24,3),c = "&HFFFFFF&",s = rho1}
+                            matrix[i][j] = 0
+                        end
+                    else
+                        for j = 1,5 do
+                            res[#res+1] = {x = round(j*width/6 + width/12,3),y = round(i*height/12 - height/24,3),c = "&H808080&",s = rho2}
+                            matrix[i][j] = 0
+                        end
+                    end
+                else
+                    for j = 1,5 do
+                        res[#res+1] = {x = round(j*width/6 + width/12,3),y = round(i*height/12 - height/24,3)}
+                        matrix[i][j] = 0
+                    end
+                end
+            else
+                if stairs == 1 then
+                    if i % 2 == 1 then
+                        for j = 1,4 do
+                            res[#res+1] = {x = round((j+1)*width/6,3),y = round(i*height/12 - height/24,3),c = "&HFFFFFF&",s = rho1}
+                            matrix[i][j] = 0
+                        end
+                    else
+                        for j = 1,4 do
+                            res[#res+1] = {x = round((j+1)*width/6,3),y = round(i*height/12 - height/24,3),c = "&H808080&",s = rho2}
+                            matrix[i][j] = 0
+                        end
+                    end
+                else
+                    for j = 1,4 do
+                        res[#res+1] = {x = round((j+1)*width/6,3),y = round(i*height/12 - height/24,3)}
+                        matrix[i][j] = 0
+                    end
                 end
             end
         end
