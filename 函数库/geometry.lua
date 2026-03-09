@@ -83,6 +83,61 @@ function timing(num,func,...)--函数测速
     return time,round(time/num,6)
 end
 
+function mergesort(list,comp)--归并排序
+    if type(list) ~= "table" then
+        error('bad argument #1 to "mergesort" (table expected,got '..type(list)..')',2)
+    end
+    comp = comp or function(a,b) return a < b end
+    if list[1] ~= nil and list[2] ~= nil then
+        local result = comp(list[1],list[2])
+        if type(result) ~= "boolean" then
+            error('comparison function must return boolean',2)
+        end
+    end
+    if #list <= 1 then
+        return list
+    end
+    local temp = {}
+    local function merge(arr,left,mid,right)
+        for i = left,right do
+            temp[i] = arr[i]
+        end
+        local i,j,k = left,mid + 1,left
+        while i <= mid and j <= right do
+            if comp(temp[i],temp[j]) then
+                arr[k] = temp[i]
+                i = i + 1
+            else
+                if comp(temp[j],temp[i]) then
+                    arr[k] = temp[j]
+                    j = j + 1
+                else
+                    arr[k] = temp[i]
+                    i = i + 1
+                end
+            end
+            k = k + 1
+        end
+        while i <= mid do
+            arr[k] = temp[i]
+            k = k + 1
+            i = i + 1
+        end
+    end
+    local size = 1
+    while size < #list do
+        for left = 1,#list,size*2 do
+            local mid = math.min(left + size - 1,#list)
+            local right = math.min(left + size*2 - 1,#list)
+            if mid < right then
+                merge(list,left,mid,right)
+            end
+        end
+        size = size*2
+    end
+    return list
+end
+
 function circle(diameter,clockwise)--固定直径圆形，可指定路径方向
     clockwise = clockwise or 0
     local S = "m %.3f %.3f b %.3f %.3f %.3f %.3f %.3f %.3f b %.3f %.3f %.3f %.3f %.3f %.3f b %.3f %.3f %.3f %.3f %.3f %.3f b %.3f %.3f %.3f %.3f %.3f %.3f "
