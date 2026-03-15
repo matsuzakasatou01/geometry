@@ -1,4 +1,4 @@
-function round(num,decimal)--保留指定小数位数
+function round(num,decimal)--保留指定位数小数
     decimal = decimal or 0
     local mult = 10^decimal
     return math.floor(num*mult + 0.5)/mult
