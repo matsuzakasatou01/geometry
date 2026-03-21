@@ -121,7 +121,7 @@
 
 #### 1. 三つ葉の結びめ（来自风平浪静的明天NCED3）
 
-**模板平均运行时间：0.015秒。**
+**模板平均运行时间：0.012秒。**
 
 这个模板不需要加载任何函数库，但是需要加载[VSFilterMod滤镜](https://github.com/qwe7989199/aegisub_scripts/tree/master/VSFilterMod_bin)
 
@@ -134,13 +134,11 @@
 
 #### 2. GRIDOUT（记忆缝线NCOP）
 
-**模板平均运行时间：1.4秒。**
+**模板平均运行时间：1.45秒。**
 
 - **这个算是我自认为做得最好的作品**
 
 需要加载 `geometry` 函数库，加载方法不再赘述。
-
-执行模板得出的随机效果以十万秒（1天3小时46分40秒）为周期。（为了解决行宽度相同的行上下句衔接时因跨秒产生随机数不同的问题而设定这个周期。）
 
 如果你没有导入过os模块，就在 `os.time()` 前加个 `_G.` 。
 
@@ -154,7 +152,7 @@ fdur = aegisub.ms_from_frame(101) and (aegisub.ms_from_frame(101) - aegisub.ms_f
 
 #### 3. 鏡面の波（宝石之国NCOP）
 
-**模板平均运行时间：7秒。**
+**模板平均运行时间：6.9秒。**
 
 需要加载 `geometry` 、[Yutils](https://github.com/Youka/Yutils/blob/T1/src/Yutils.lua) 还有多华宫前辈的 [3D库-space](https://github.com/WitchCraftWorks66/StupidAss/blob/main/3D%E7%9B%B8%E5%85%B3/%E5%87%BD%E6%95%B0%E5%BA%93/b%E7%AB%99BV1zK4y1Q76i/space.lua) 和 [多边形库-polyc](https://github.com/WitchCraftWorks66/StupidAss/blob/main/%E5%A4%9A%E8%BE%B9%E5%BD%A2%E5%BA%93/ployc%E4%BC%98%E5%8C%96%E6%9B%B4%E6%96%B0%E7%89%88/polyc.lua) 。
 
@@ -236,8 +234,13 @@ tenv.gloop =
 里面有：
 
 - 我的Aegisub（函数库和脚本都已经配置好了）
+
+  *注：`include` 这个文件夹里的 `karaskel-auto4.lua` 的第67~79行被我注释掉了，所以它在执行自动化后不会再生成假名样式。如果你希望生成，就把这块代码取消注释。*
+
 - 界面配置文件
+
 - 快捷键配置文件
+
 - 各种手册文档
 
 **注意！！！如果你想用我的配置文件，一定要先备份自己的配置文件！！！**
