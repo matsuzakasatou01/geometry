@@ -3,7 +3,7 @@ local get = aegisub.gettext
 script_name = get "执行自动化并统计耗时"
 script_description = get "执行自动化并统计耗时"
 script_author = "松坂さとう"
-script_version = "1.0"
+script_version = "1.1"
 
 function apply_time(subs,sel)
     local script_path = debug.getinfo(1,"S").source
@@ -24,12 +24,12 @@ function apply_time(subs,sel)
         aegisub.log("加载 kara-templater.lua 失败: "..tostring(err))
         return subs
     end
-    local start_time = os.clock()
     chunk()
+    local start_time = os.clock()
     macro_apply_templates(subs,sel)
     local elapsed_time = os.clock() - start_time
     aegisub.log(string.format("本次模板执行耗时: %.3f 秒",elapsed_time))
     return subs
 end
 
-aegisub.register_macro(script_name, script_description, apply_time)
+aegisub.register_macro(script_name,script_description,apply_time)
