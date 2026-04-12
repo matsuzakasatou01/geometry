@@ -811,6 +811,23 @@ function disassemble(ass_shape)--拆解单m绘图
     return ass
 end
 
+function polygon_area(ass_shape)--计算全直线绘图面积
+    local area = 0
+    for m in ass_shape:gmatch("m[^m]+") do
+        local pt = {}
+        local s = 0
+        for x,y in m:gmatch("([-.%d]+) ([-.%d]+)") do
+            pt[#pt+1] = {x,y}
+        end
+        for i = 1,#pt do
+            local idx = i==#pt and 1 or i+1
+            s = s + pt[i][1]*pt[idx][2] - pt[i][2]*pt[idx][1]
+        end
+        area = area + s/2
+    end
+    return math.abs(area)
+end
+
 function ring(ass_shape,n)--旋转绘图并连接
     local ass = {ass_shape}
     for i = 2,n do
