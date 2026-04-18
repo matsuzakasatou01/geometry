@@ -1,7 +1,7 @@
 local get = aegisub.gettext
 
 script_name = get "判断上下句时间是否连续"
-script_description = get "定义每种样式的时间连续性判断表"
+script_description = get "定义时间连续性判断表"
 script_author = "松坂さとう"
 script_version = "1.0"
 
