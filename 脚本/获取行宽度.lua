@@ -8,7 +8,6 @@ script_version = "1.0"
 include("karaskel.lua")
 
 local function styles_widths(subs,mode)
-    mode = mode or 0
     local function tbl_to_str(tbl)
         local parts = {}
         for k,v in pairs(tbl) do
@@ -33,12 +32,12 @@ local function styles_widths(subs,mode)
     local res = {}
     for i = 1,#subs do
         local line = subs[i]
+        n = n + 1
         if line.section == "[Events]" then
             break
         end
-        n = n + 1
     end
-    for i = n+1,#subs do
+    for i = n,#subs do
         local line = subs[i]
         if line.effect == "fx" then
             break
@@ -65,7 +64,7 @@ local function styles_widths(subs,mode)
             arr[#arr+1] = arr[#arr]
         end
     end
-    for i = n+1,#subs do
+    for i = n,#subs do
         local line = subs[i]
         if line.effect:find("^template") or line.effect == "" then
             line.comment = true
@@ -73,7 +72,7 @@ local function styles_widths(subs,mode)
             line.text = tbl_to_str(res)
             line.start_time = 0
             line.end_time = 0
-            subs[-n-1] = line
+            subs[-n] = line
             break
         end
         if line.effect == "code once" then
