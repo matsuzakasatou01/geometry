@@ -3,7 +3,7 @@ local get = aegisub.gettext
 script_name = get "判断上下句时间是否连续"
 script_description = get "定义时间连续性判断表"
 script_author = "松坂さとう"
-script_version = "1.0"
+script_version = "1.1"
 
 function style_time(subs)
     local function tbl_to_str(tbl)
@@ -25,10 +25,10 @@ function style_time(subs)
     local m = n
     for i = n,#subs do
         local line = subs[i]
-        m = m + 1
         if line.effect == "" or line.effect == "karaoke" then
             break
         end
+        m = m + 1
     end
     local style = subs[m].style
     for i = m,#subs do
