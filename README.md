@@ -148,15 +148,13 @@
 
 需要加载 `geometry` 函数库，加载方法不再赘述。
 
-如果你没有导入过os模块，就在 `os.time()` 前加个 `_G.` 。
-
 这里面的逐帧用的是我自己添加的内联变量 `$fdur` ,你可以在 `autoload` 这个文件夹里的 `kara-templater.lua` 里的 `varctx` 这个表里加一句
 
 ```lua
 fdur = aegisub.ms_from_frame(101) and (aegisub.ms_from_frame(101) - aegisub.ms_from_frame(1))/100 or 1001/24
 ```
 
-如果你不想加的话，就把所有 `$fdur` 都显式地替换为 `(1001/24)` ,这是帧率为23.976时一帧的持续时间。
+如果你不想加的话，就把所有 `$fdur` 都显式地替换为 `(1001/24)` ，这是帧率为23.976时一帧的持续时间。
 
 #### 3. 鏡面の波（宝石之国NCOP）
 
