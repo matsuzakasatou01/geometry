@@ -4,7 +4,7 @@
 
 ## 函数库
 
-图形库 `geometry` ，顾名思义就是“几何”。支持生成几何图形，还能对图形进行复杂的操作。从简单的矩形、菱形到复杂的数学公式、分子结构式，它都能绘制。在此基础上，它还额外提供了随机数类、颜色类等常用函数。
+图形库 `geometry` ，顾名思义就是「几何」。支持生成几何图形，还能对图形进行复杂的操作。从简单的矩形、菱形到复杂的数学公式、分子结构式，它都能绘制。在此基础上，它还额外提供了随机数类、颜色类等常用函数。
 
 里面的函数大体上可以分为三类：
 
@@ -18,7 +18,7 @@
 
 1. 把 `geometry.lua` 放进Aegisub中的 `\automation\include` 这个文件夹里，例如 `C:\Program Files (x86)\Aegisub-3.3.3-win64\automation\include` 。
 2. 然后在同样是 `include` 这个文件夹里的 `utils-auto4.lua` 里加一句 `require('geometry')` 即可。
-3. 如果你的Aeg是开启状态，在应用模板前，点击“自动化”→“自动化(A)…”→“重新扫描自动载入文件夹(S)”，重新加载函数库。
+3. 如果你的Aeg是开启状态，在应用模板前，点击「自动化」→「自动化(A)…」→「重新扫描自动载入文件夹(S)」，重新加载函数库。
 
 ## 脚本
 
@@ -69,7 +69,7 @@
   
 - 判断上下句时间是否连续
 
-  会在第一行前面插入一行code行，定义时间连续性判断表，0 为不连续，1 为连续。如果已经应用过脚本，会直接修改原行。所有样式的时间必须完全一致，建议先用“统计时间较短行”脚本检查。
+  会在第一行前面插入一行code行，定义时间连续性判断表，0 为不连续，1 为连续。如果已经应用过脚本，会直接修改原行。所有样式的时间必须完全一致，建议先用「统计时间较短行」脚本检查。
 
 ### 对选中行生效
 
@@ -102,13 +102,13 @@
 加载脚本的方法：
 
 1. 把脚本放进Aegisub中的 `\automation\autoload` 这个文件夹里，例如 `C:\Program Files (x86)\Aegisub-3.3.3-win64\automation\autoload` 。
-2. 如果你的Aeg是开启状态，在使用脚本前，点击点击“自动化”→“自动化(A)…”→“重新扫描自动载入文件夹(S)”，重新加载脚本。
+2. 如果你的Aeg是开启状态，在使用脚本前，点击「自动化」→「自动化(A)…」→「重新扫描自动载入文件夹(S)」，重新加载脚本。
 
 **为你所使用的脚本配置快捷键能更加省时省力**。
 
 配置快捷键的方法：
 
-1. Alt+O，“界面”→“热键”→“默认”→“新建”。
+1. Alt+O，「界面」→「热键」→「默认」→「新建」。
 2. 点击 `Hotkey` ，按下你要使用的按键，接着在中间的 `Command` 里写 `automation/lua/` ，然后下拉点击你要选择的脚本即可。
 
 如果懒得配，你可以直接用我的快捷键配置，下载链接在文末的杂项里。也可以修改配置文件，修改完后需要重启Aegisub才会生效。快捷键配置文件的路径为 `C:\Users\你的用户名\AppData\Roaming\Aegisub\hotkey.json` 。
@@ -119,9 +119,9 @@
 
 分为 **砂糖酱の代表作** 和 **给组里做的特效** 。
 
-如果还不会自动化，可以先看[我的B站教程](https://www.bilibili.com/video/BV1KmGTzmEp5?vd_source=6df8fb6687b936d34db1b244f6a15be5)
+如果还不会自动化，可以先看 [我的B站教程](https://www.bilibili.com/video/BV1KmGTzmEp5?vd_source=6df8fb6687b936d34db1b244f6a15be5)
 
-模板平均运行时间均使用“执行自动化并统计耗时”脚本计算得出。
+模板平均运行时间均使用「执行自动化并统计耗时」脚本计算得出。
 
 ### 砂糖酱の代表作
 
@@ -131,12 +131,12 @@
 
 **模板平均运行时间：0.012秒。**
 
-这个模板不需要加载任何函数库，但是需要加载[VSFilterMod滤镜](https://github.com/qwe7989199/aegisub_scripts/tree/master/VSFilterMod_bin)
+这个模板不需要加载任何函数库，但是需要加载 [VSFilterMod滤镜](https://github.com/qwe7989199/aegisub_scripts/tree/master/VSFilterMod_bin)
 
 加载VSFilterMod滤镜的方法：
 
 1. 把dll放进 `csri` 这个文件夹中，例如：`C:\Program Files (x86)\Aegisub-3.3.3-win64\csri` 。
-2. Alt+O，“高级”→“视频”→“字幕来自”，选择 `CSRI/vsfiltermod_textsub` 。
+2. Alt+O，「高级」→「视频」→「字幕来自」，选择 `CSRI/vsfiltermod_textsub` 。
 
 把 `1.png` 直接放进D盘即可，如果想放别的地方就改一下模板里的路径。
 
@@ -148,7 +148,7 @@
 
 需要加载 `geometry` 函数库，加载方法不再赘述。
 
-这里面的逐帧用的是我自己添加的内联变量 `$fdur` ,你可以在 `autoload` 这个文件夹里的 `kara-templater.lua` 里的 `varctx` 这个表里加一句
+这里面的逐帧用的是我自己添加的内联变量 `$fdur` ，你可以在 `autoload` 这个文件夹里的 `kara-templater.lua` 里的 `varctx` 这个表里加一句
 
 ```lua
 fdur = aegisub.ms_from_frame(101) and (aegisub.ms_from_frame(101) - aegisub.ms_from_frame(1))/100 or 1001/24
@@ -219,7 +219,7 @@ tenv.gloop =
 	end
 ```
 
-它是一个分组循环的函数，具体用法可以看[多华宫前辈的教程](https://www.bilibili.com/video/BV1mv411i7Rm?vd_source=6df8fb6687b936d34db1b244f6a15be5)
+它是一个分组循环的函数，具体用法可以看 [多华宫前辈的教程](https://www.bilibili.com/video/BV1mv411i7Rm?vd_source=6df8fb6687b936d34db1b244f6a15be5)
 
 把它加在 `kara-templater.lua` 中的 `apply_templates` 这个函数的 `tenv.maxloop` 后面即可。
 
@@ -239,7 +239,7 @@ tenv.gloop =
 
 需要加载 `geometry` 、[Yutils](https://github.com/Youka/Yutils/blob/T1/src/Yutils.lua) 和 split（由多华宫前辈的拆字算法整理而成，可以在我的Aegisub中找到它）。
 
-`code once`中定义的两个表是行宽度信息，可以用“获取行宽度”脚本获得。
+`code once` 中定义的两个表是行宽度信息，可以用「获取行宽度」脚本获得。
 
 效果思路可见 [我的B站专栏](https://b23.tv/JsOoOnz)
 
@@ -247,7 +247,7 @@ tenv.gloop =
 
 ### 我的Aegisub
 
-[阿里云盘链接](https://www.alipan.com/s/sbKkXdQmPVM)，**不定期更新。**
+[阿里云盘链接](https://www.alipan.com/s/sbKkXdQmPVM) ，**不定期更新。**
 
 里面有：
 
