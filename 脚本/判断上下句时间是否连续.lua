@@ -3,9 +3,9 @@ local get = aegisub.gettext
 script_name = get "判断上下句时间是否连续"
 script_description = get "定义时间连续性判断表"
 script_author = "松坂さとう"
-script_version = "1.1"
+script_version = "2.0"
 
-function style_time(subs)
+local function style_time(subs,mode)
     local function tbl_to_str(tbl)
         local parts = {}
         for _,arr in ipairs(tbl) do
@@ -13,8 +13,11 @@ function style_time(subs)
         end
         return "bool_time={"..table.concat(parts,",").."}"
     end
+    local function tbl_to_str2(tbl)
+        return "bool_time={"..table.concat(tbl,",").."}"
+    end
     local n = 0
-    local res = {}
+    local res,result = {},{}
     for i = 1,#subs do
         local line = subs[i]
         n = n + 1
@@ -51,12 +54,21 @@ function style_time(subs)
             res[i+1][1] = 0
         end
     end
+    if mode == 1 then
+        for i = 1,#res do
+            result[i] = res[i][1]
+        end
+    end
     for i = n,#subs do
         local line = subs[i]
         if line.effect:find("^template") or line.effect == "" then
+            if mode == 0 then
+                line.text = tbl_to_str(res)
+            elseif mode == 1 then
+                line.text = tbl_to_str2(result)
+            end
             line.comment = true
             line.effect = "code once"
-            line.text = tbl_to_str(res)
             line.start_time = 0
             line.end_time = 0
             subs[-n] = line
@@ -64,7 +76,11 @@ function style_time(subs)
         end
         if line.effect == "code once" then
             if line.text:find("bool_time") then
-                line.text = tbl_to_str(res)
+                if mode == 0 then
+                    line.text = tbl_to_str(res)
+                elseif mode == 1 then
+                    line.text = tbl_to_str2(result)
+                end
                 subs[i] = line
                 break
             end
@@ -72,4 +88,13 @@ function style_time(subs)
     end
 end
 
-aegisub.register_macro(script_name,script_description,style_time)
+function zero(subs)
+    return style_time(subs,0)
+end
+
+function one(subs)
+    return style_time(subs,1)
+end
+
+aegisub.register_macro(script_name.."/前向判断",script_description,one)
+aegisub.register_macro(script_name.."/双向判断",script_description,zero)

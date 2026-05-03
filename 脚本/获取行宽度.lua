@@ -3,7 +3,7 @@ local get = aegisub.gettext
 script_name = get "获取行宽度"
 script_description = get "定义每种样式的行宽度表"
 script_author = "松坂さとう"
-script_version = "1.0"
+script_version = "2.0"
 
 include("karaskel.lua")
 
@@ -56,9 +56,17 @@ local function styles_widths(subs,mode)
     if mode == 1 then
         for _,arr in pairs(res) do
             table.insert(arr,1,0)
-            arr[#arr+1] = 0
         end
     elseif mode == 2 then
+        for _,arr in pairs(res) do
+            table.insert(arr,1,arr[1])
+        end
+    elseif mode == 3 then
+        for _,arr in pairs(res) do
+            table.insert(arr,1,0)
+            arr[#arr+1] = 0
+        end
+    elseif mode == 4 then
         for _,arr in pairs(res) do
             table.insert(arr,1,arr[1])
             arr[#arr+1] = arr[#arr]
@@ -97,6 +105,16 @@ function two(subs)
     return styles_widths(subs,2)
 end
 
+function three(subs)
+    return styles_widths(subs,3)
+end
+
+function four(subs)
+    return styles_widths(subs,4)
+end
+
 aegisub.register_macro(script_name.."/获取原宽度表",script_description,zero)
-aegisub.register_macro(script_name.."/用 0 填充首尾",script_description,one)
-aegisub.register_macro(script_name.."/用首尾元素填充首尾",script_description,two)
+aegisub.register_macro(script_name.."/前向判断/用 0 填充首部",script_description,one)
+aegisub.register_macro(script_name.."/前向判断/用首部元素填充首部",script_description,two)
+aegisub.register_macro(script_name.."/双向判断/用 0 填充首尾",script_description,three)
+aegisub.register_macro(script_name.."/双向判断/用首尾元素填充首尾",script_description,four)
