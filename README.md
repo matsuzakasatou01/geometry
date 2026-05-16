@@ -239,9 +239,34 @@ tenv.gloop =
 
 需要加载 `geometry` 、[Yutils](https://github.com/Youka/Yutils/blob/T1/src/Yutils.lua) 和 split（由多华宫前辈的拆字算法整理而成，可以在我的Aegisub中找到它）。
 
-`code once` 中定义的两个表是行宽度信息，可以用「获取行宽度」脚本获得。
+效果思路可见 [我的B站专栏](https://b23.tv/JsOoOnz) ，不过专栏里是6行模板的版本，现已简化至3行。
 
-效果思路可见 [我的B站专栏](https://b23.tv/JsOoOnz)
+模板中的 `line.prev` 和 `line.next` 是我在 `kara-templater.lua` 里添加的字段，作用分别是是获取前一行数据和获取后一行数据。你可以在 `apply_templates` 这个函数里最后的whlie循环里的 `karaskel.preproc_line(subs,meta,styles,l)` 和 `if apply_line(meta,styles,subs,l,templates,tenv) then` 这两行间添加以下代码
+
+```lua
+if i == 1 then
+    l.prev = nil
+else
+    l.prev = subs[i-1]
+    if l.prev.class == "dialogue" and ((l.prev.effect == "" and not l.prev.comment) or l.prev.effect:match("[Kk]araoke")) then
+        l.prev.i = i - 1
+        karaskel.preproc_line(subs,meta,styles,l.prev)
+    else
+        l.prev = nil
+    end
+end
+if i == n then
+    l.next = nil
+else
+    l.next = subs[i+1]
+    if l.next.class == "dialogue" and ((l.next.effect == "" and not l.next.comment) or l.next.effect:match("[Kk]araoke")) then
+        l.next.i = i + 1
+        karaskel.preproc_line(subs,meta,styles,l.next)
+    else
+        l.next = nil
+    end
+end
+```
 
 ## 杂项
 
