@@ -852,6 +852,29 @@ function shuffle(tbl)--打乱表中元素顺序
     return tbl
 end
 
+function divide(tbl,n)--将绘图随机均分成n组
+    if type(tbl) == "string" then
+        tbl = disassemble(tbl)
+    end
+    tbl = shuffle(tbl)
+    local res = {}
+    local base_size = math.floor(#tbl/n)
+    local rem = #tbl % n
+    local idx = 1
+    for i = 1,n do
+        local group_size = base_size + (i <= rem and 1 or 0)
+        if group_size > 0 then
+            local group = {}
+            for j = idx,idx+group_size-1 do
+                group[#group+1] = tbl[j]
+            end
+            res[#res+1] = table.concat(group)
+            idx = idx + group_size
+        end
+    end
+    return res
+end
+
 function part(tbl,level,mode)--随机显示表中一部分比例的绘图
     level = level < 0 and 0 or level > 1 and 1 or level
     mode = mode or 0
