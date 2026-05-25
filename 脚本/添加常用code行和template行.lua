@@ -3,7 +3,7 @@ local get = aegisub.gettext
 script_name = get "添加常用code行和template行"
 script_description = get "添加常用code行和template行"
 script_author = "松坂さとう"
-script_version = "5.0"
+script_version = "5.1"
 
 function insert_s1(subs,sel)
     for i = 1,#sel do
@@ -49,7 +49,7 @@ function insert_l1(subs,sel)
         local line = subs[sel[i]]
         line.comment = true
         line.effect = "template syl noblank"
-        line.text = ""
+        line.text = "{\\pos($sx,$sy)}"
         line.start_time = 0
         line.end_time = 0
         subs[-sel[i]] = line
@@ -216,7 +216,7 @@ end
 function add_all(subs,sel)
     for _,i in ipairs(sel) do
         local line = subs[i]
-        if string.find(line.effect,"^code") or string.find(line.effect,"^template") and not string.find(line.effect," all%s*$") then
+        if rsting.find(line.effect,"^code") or string.find(line.effect,"^template") and not string.find(line.effect," all%s*$") then
             line.effect = string.gsub(line.effect,"%s*$","").." all"
         end
         subs[i] = line
