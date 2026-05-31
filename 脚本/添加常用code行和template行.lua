@@ -3,7 +3,7 @@ local get = aegisub.gettext
 script_name = get "添加常用code行和template行"
 script_description = get "添加常用code行和template行"
 script_author = "松坂さとう"
-script_version = "5.1"
+script_version = "5.11"
 
 function insert_s1(subs,sel)
     for i = 1,#sel do
@@ -216,7 +216,7 @@ end
 function add_all(subs,sel)
     for _,i in ipairs(sel) do
         local line = subs[i]
-        if rsting.find(line.effect,"^code") or string.find(line.effect,"^template") and not string.find(line.effect," all%s*$") then
+        if string.find(line.effect,"^code") or string.find(line.effect,"^template") and not string.find(line.effect," all%s*$") then
             line.effect = string.gsub(line.effect,"%s*$","").." all"
         end
         subs[i] = line
