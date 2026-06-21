@@ -3,7 +3,7 @@ local get = aegisub.gettext
 script_name = get "添加平均kf标签"
 script_description = get "给选中行添加平均kf标签"
 script_author = "松坂さとう"
-script_version = "1.0"
+script_version = "1.1"
 
 include("unicode.lua")
 
@@ -17,7 +17,7 @@ function add_kf(subs,sel)
 		local syl_n = unicode.len(l.text)
 		l.duration = l.end_time - l.start_time
 		local kf_value = math.floor(l.duration/10/syl_n)
-		for char in string.gmatch(l.text,"[%z\x01-\x7F\xC2-\xFD][\x80-\xBF]*") do
+		for char in string.gmatch(l.text,"[%z\1-\127\194-\244][\128-\191]*") do
 			text = text..string.format("{\\kf%d}",kf_value)..char
 		end
 		l.text = text
