@@ -14,7 +14,7 @@
 
 **每个函数的用法在手册中均有详细说明。**
 
-加载函数库的方法：
+安装函数库的方法：
 
 1. 把 `geometry.lua` 放进Aegisub中的 `\automation\include` 这个文件夹里，例如 `C:\Program Files (x86)\Aegisub-3.3.3-win64\automation\include` 。
 2. 然后在同样是 `include` 这个文件夹里的 `utils-auto4.lua` 里加一句 `require('geometry')` 即可。
@@ -150,7 +150,7 @@
 
 *注：对所选行生效的脚本需要先选中需要选中的行。*
 
-加载脚本的方法：
+安装脚本的方法：
 
 1. 把脚本放进Aegisub中的 `\automation\autoload` 这个文件夹里，例如 `C:\Program Files (x86)\Aegisub-3.3.3-win64\automation\autoload` 。
 2. 如果你的Aeg是开启状态，在使用脚本前，点击「自动化」→「自动化(A)…」→「重新扫描自动载入文件夹(S)」，重新加载脚本。
@@ -184,7 +184,7 @@
 
 **模板平均运行时间：0.012秒。**
 
-这个模板不需要加载任何函数库，但是需要加载 [VSFilterMod滤镜](https://github.com/qwe7989199/aegisub_scripts/tree/master/VSFilterMod_bin)
+这个模板不需要安装任何函数库，但是需要加载 [VSFilterMod滤镜](https://github.com/qwe7989199/aegisub_scripts/tree/master/VSFilterMod_bin)
 
 加载VSFilterMod滤镜的方法：
 
@@ -199,7 +199,7 @@
 
 - **这个算是我自认为做得最好的作品**
 
-需要加载 `geometry` 函数库，加载方法不再赘述。
+需要安装 `geometry` 函数库。
 
 这里面的逐帧用的是我自己添加的内联变量 `$fdur` ，你可以在 `autoload` 这个文件夹里的 `kara-templater.lua` 里的 `varctx` 这个表里加一句
 
@@ -213,7 +213,7 @@ fdur = aegisub.ms_from_frame(101) and (aegisub.ms_from_frame(101) - aegisub.ms_f
 
 **模板平均运行时间：2秒。**
 
-需要加载 `geometry` 、[Yutils](https://github.com/Youka/Yutils/blob/T1/src/Yutils.lua) 还有多华宫前辈的 [3D库-space](https://github.com/WitchCraftWorks66/StupidAss/blob/main/3D%E7%9B%B8%E5%85%B3/%E5%87%BD%E6%95%B0%E5%BA%93/b%E7%AB%99BV1zK4y1Q76i/space.lua) 和 [多边形库-polyc](https://github.com/WitchCraftWorks66/StupidAss/blob/main/%E5%A4%9A%E8%BE%B9%E5%BD%A2%E5%BA%93/ployc%E4%BC%98%E5%8C%96%E6%9B%B4%E6%96%B0%E7%89%88/polyc.lua) 。
+需要安装 `geometry` 、[Yutils](https://github.com/Youka/Yutils/blob/T1/src/Yutils.lua) 还有多华宫前辈的 [3D库-space](https://github.com/WitchCraftWorks66/StupidAss/blob/main/3D%E7%9B%B8%E5%85%B3/%E5%87%BD%E6%95%B0%E5%BA%93/b%E7%AB%99BV1zK4y1Q76i/space.lua) 和 [多边形库-polyc](https://github.com/WitchCraftWorks66/StupidAss/blob/main/%E5%A4%9A%E8%BE%B9%E5%BD%A2%E5%BA%93/ployc%E4%BC%98%E5%8C%96%E6%9B%B4%E6%96%B0%E7%89%88/polyc.lua) 。
 
 这里面的 `fdur` 与上面的内联变量 `$fdur` 不同，它是像 `j` 和 `maxj` 那样的全局变量（相对于模板执行环境而言）。你可以在 `kara-templater.lua` 里的 `apply_templates` 这个函数里加一句
 
@@ -276,7 +276,7 @@ tenv.gloop =
 
 把它加在 `kara-templater.lua` 中的 `apply_templates` 这个函数的 `tenv.maxloop` 后面即可。
 
-如果不想加，可以在code行中定义它，也可以用我的Aegisub。
+如果不想加，可以在code行中定义它，也可以用 [我的Aegisub](###我的Aegisub) 。
 
 ### 给组里做的特效
 
@@ -351,7 +351,9 @@ end
 
 简洁的、运行速度快的、成品体积小的。
 
-比如常用的函数可以放进自己的函数库里，这样就不用在code行里定义，模板看上去就简洁了；如果日文和中文的模板一样就用all修饰语等等。[简化模板的技巧](https://b23.tv/mIyhsHb)
+比如常用的函数可以放进自己的函数库里，这样就不用在code行里定义，模板看上去就简洁了；如果日文和中文的模板一样就用all修饰语等等。
+
+[简化模板的技巧](https://b23.tv/mIyhsHb)
 
 至于运行速度，则可以优化函数、优化模板。用更快、更简单的方法实现相同的效果；去掉多余的操作等等。
 
