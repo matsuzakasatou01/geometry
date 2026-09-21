@@ -276,7 +276,7 @@ tenv.gloop =
 
 把它加在 `kara-templater.lua` 中的 `apply_templates` 这个函数的 `tenv.maxloop` 后面即可。
 
-如果不想加，可以在code行中定义它，也可以用 [我的Aegisub](###我的Aegisub) 。
+如果不想加，可以在code行中定义它，也可以用 [我的Aegisub](#aegisub) 。
 
 ### 给组里做的特效
 
@@ -324,6 +324,8 @@ end
 ```
 
 ## 杂项
+
+<a id="aegisub"></a>
 
 ### 我的Aegisub
 
