@@ -1,12 +1,12 @@
-script_name = "样式助手"
-script_description = "辅助设置样式（支持中日韩字体）"
+script_name = "双语样式匹配工具"
+script_description = "根据参考样式计算目标样式的参数，使之在视觉上与参考样式相匹配（支持中日韩字体）"
 script_author = "松坂さとう"
 script_version = "1.0"
 
 include("karaskel.lua")
 local OK,Yutils = pcall(require,"Yutils")
 
-function styles_helper(subs)
+function match_bilingual_styles(subs)
     local function aegisub_exit(condition,log,...)
         if condition then
             if log then
@@ -503,4 +503,4 @@ function styles_helper(subs)
     aegisub.set_undo_point(script_name.."："..result.source_style.." → "..result.target_style)
 end
 
-aegisub.register_macro(script_name,script_description,styles_helper)
+aegisub.register_macro(script_name,script_description,match_bilingual_styles)
