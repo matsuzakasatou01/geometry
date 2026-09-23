@@ -72,8 +72,12 @@
 
   
 
-  **致谢：感谢 MingYSub 的 [Ming](https://github.com/oborozuk1) 。Ming 佬不仅帮我测试了脚本，还提出了许多宝贵的意见。如果没有 Ming 佬的帮助，这个脚本肯定不会像现在这样完善。顺便一提，我就是看了 Ming 佬给北宇治做的败犬女主 OP 特效才入坑特效字幕的。**
+  此脚本更详细的说明和演示请见 [B站教程](https://www.bilibili.com/video/BV1kAhq69Eii?vd_source=6df8fb6687b936d34db1b244f6a15be5) 。
 
+  
+  
+  **致谢：感谢 MingYSub 的 [Ming](https://github.com/oborozuk1) 。Ming 佬不仅帮我测试了脚本，还提出了许多宝贵的意见。如果没有 Ming 佬的帮助，这个脚本肯定不会像现在这样完善。顺便一提，我就是看了 Ming 佬给北宇治做的败犬女主 OP 特效才入坑特效字幕的。**
+  
   
 
 ### 对所有行生效
@@ -184,9 +188,9 @@
 
 **模板平均运行时间：0.012秒。**
 
-这个模板不需要安装任何函数库，但是需要加载 [VSFilterMod滤镜](https://github.com/qwe7989199/aegisub_scripts/tree/master/VSFilterMod_bin)
+这个模板不需要安装任何函数库，但是需要挂载 [VSFilterMod滤镜](https://github.com/qwe7989199/aegisub_scripts/tree/master/VSFilterMod_bin)
 
-加载VSFilterMod滤镜的方法：
+挂载VSFilterMod滤镜的方法：
 
 1. 把dll放进 `csri` 这个文件夹中，例如：`C:\Program Files (x86)\Aegisub-3.3.3-win64\csri` 。
 2. Alt+O，「高级」→「视频」→「字幕来自」，选择 `CSRI/vsfiltermod_textsub` 。
@@ -292,7 +296,7 @@ tenv.gloop =
 
 **模板平均运行时间：1秒。**
 
-需要加载 `geometry` 、[Yutils](https://github.com/Youka/Yutils/blob/T1/src/Yutils.lua) 和 split（由多华宫前辈的拆字算法整理而成，可以在我的Aegisub中找到它）。
+需要安装 `geometry` 、[Yutils](https://github.com/Youka/Yutils/blob/T1/src/Yutils.lua) 和 split（由多华宫前辈的拆字算法整理而成，可以在我的Aegisub中找到它）。
 
 效果思路可见 [我的B站专栏](https://b23.tv/JsOoOnz) ，不过专栏里是6行模板的版本，现已简化至3行。
 
