@@ -1,7 +1,7 @@
 script_name = "双语样式匹配工具"
 script_description = "根据参考样式计算目标样式的参数，使之在视觉上与参考样式相匹配（支持中日韩字体）"
 script_author = "松坂さとう"
-script_version = "1.0"
+script_version = "1.01"
 
 include("karaskel.lua")
 local OK,Yutils = pcall(require,"Yutils")
@@ -356,7 +356,7 @@ function match_bilingual_styles(subs)
     margin_offset = math.min(0.2*margin,max_margin)
     local function find_style(style)
         for i,line in ipairs(subs) do
-            if line.class == "style" and line.name == style then
+            if line.name == style then
                 return i
             end
         end
