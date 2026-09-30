@@ -1,7 +1,7 @@
 script_name = "双语样式匹配工具"
 script_description = "根据参考样式计算目标样式的参数，使之在视觉上与参考样式相匹配（支持中日韩字体）"
 script_author = "松坂さとう"
-script_version = "1.01"
+script_version = "1.1"
 
 include("karaskel.lua")
 local OK,Yutils = pcall(require,"Yutils")
@@ -443,9 +443,9 @@ function match_bilingual_styles(subs)
     if target_spacing < 0 then
         local dlg_cfg = {
             {
-                class = "textbox",
-                text = string.format("目标样式字间距计算结果为负值，可从以下两种方案中选择进行调整：\n方案一：参考样式字间距调大 %s\n方案二：目标样式字幕行添加标签 \\fsp%s（仅在没有特效模板行时可选）\n\n注：此错误通常是因为参考样式字体侧边距过小或目标样式字体侧边距过大",source_spacing,target_spacing),
-                x = 0,y = 0,width = 46,height = 7,
+                class = "label",
+                label = string.format("目标样式字间距计算结果为负值，可以从以下两种方案中选择进行调整：\n方案一：参考样式字间距调大 %s\n方案二：目标样式字幕行添加标签 \\fsp%s（仅在没有特效模板行时可选）\n\n注：此错误通常是因为参考样式字体侧边距过小或目标样式字体侧边距过大",source_spacing,target_spacing),
+                x = 0,y = 0,width = 1,height = 1,
             }
         }
         local btn = aegisub.dialog.display(
