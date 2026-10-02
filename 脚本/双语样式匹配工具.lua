@@ -213,7 +213,7 @@ function match_bilingual_styles(subs)
     if not same_align then
         if not check_align(source.align,target.align) then
             if source.align % 2 == 1 and source.align ~= 5 then
-                if source.align == 1 or source.align == 3 then
+                if source.align < 5 then
                     aegisub.log("目标样式的对齐方式必须为 7 或 9")
                 else
                     aegisub.log("目标样式的对齐方式必须为 1 或 3")
