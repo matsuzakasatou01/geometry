@@ -435,7 +435,7 @@ function match_bilingual_styles(subs)
     end
     local have_template = false
     for i = real_first,math.min(real_first+99,#subs) do
-        if string.find(subs[i].effect,"^template") then
+        if string.lower(string.headtail(subs[i].effect)) == "template" then
             have_template = true
             break
         end
