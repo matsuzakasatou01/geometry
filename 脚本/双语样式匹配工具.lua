@@ -109,7 +109,7 @@ function match_bilingual_styles(subs)
             min = 25,
             max = 400,
             hint = "目标样式平均字面框面积 / 参考样式平均字面框面积\n底部对齐推荐值为 250 ，顶部对齐推荐值为 40\n仅在参考样式和目标样式对齐方式相同且为底部或顶部对齐时生效",
-            x = 1, y = 2, width = 1, height = 1,
+            x = 1,y = 2,width = 1,height = 1
         },
         {
             class = "label",
@@ -128,7 +128,7 @@ function match_bilingual_styles(subs)
             min = -1,
             max = 2^31-1,
             hint = "设定参考样式字幕行的层数，-1 表示不修改层数\n仅在参考样式和目标样式对齐方式相同且为底部或顶部对齐且没有特效模板行时生效",
-            x = 1, y = 3, width = 1, height = 1,
+            x = 1,y = 3,width = 1,height = 1
         },
         {
             class = "label",
@@ -142,7 +142,7 @@ function match_bilingual_styles(subs)
             min = -1,
             max = 2^31-1,
             hint = "设定目标样式字幕行的层数，-1 表示不修改层数\n仅在参考样式和目标样式对齐方式相同且为底部或顶部对齐且没有特效模板行时生效",
-            x = 1, y = 4, width = 1, height = 1,
+            x = 1,y = 4,width = 1,height = 1
         },
         {
             class = "checkbox",
@@ -445,7 +445,7 @@ function match_bilingual_styles(subs)
             {
                 class = "label",
                 label = string.format("目标样式字间距计算结果为负值，可以从以下两种方案中选择进行调整：\n方案一：参考样式字间距调大 %s\n方案二：目标样式字幕行添加标签 \\fsp%s（仅在没有特效模板行时可选）\n\n注：此错误通常是因为参考样式字体侧边距过小或目标样式字体侧边距过大",source_spacing,target_spacing),
-                x = 0,y = 0,width = 1,height = 1,
+                x = 0,y = 0,width = 1,height = 1
             }
         }
         local btn = aegisub.dialog.display(
