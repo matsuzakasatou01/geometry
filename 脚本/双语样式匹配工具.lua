@@ -325,7 +325,7 @@ function match_bilingual_styles(subs)
     local new_fontsize = Yutils.math.round(source.fontsize * source_wids / target_wids * area_coefficient)
     local new_fscy = Yutils.math.round(source.scale_y * target_wids / source_wids * source_heis / target_heis)
     local transition_font = Yutils.decode.create_font(target.fontname,target.bold,target.italic,target.underline,target.strikeout,new_fontsize,source.scale_x/100,new_fscy/100,source.spacing)
-    local temporary_target = util.copy(target)
+    local temporary_target = table.copy(target)
     temporary_target.fontsize = new_fontsize
     temporary_target.scale_x = source.scale_x
     temporary_target.scale_y = new_fscy
@@ -500,7 +500,7 @@ function match_bilingual_styles(subs)
             subs[i] = line
         end
     end
-    aegisub.set_undo_point(script_name.."："..result.source_style.." → "..result.target_style)
+    aegisub.set_undo_point(script_name.."："..result.source_style.." -> "..result.target_style)
 end
 
 aegisub.register_macro(script_name,script_description,match_bilingual_styles)
