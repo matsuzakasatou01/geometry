@@ -1,7 +1,7 @@
 script_name = "双语样式匹配工具"
 script_description = "根据参考样式计算目标样式的参数，使之在视觉上与参考样式相匹配（支持中日韩字体）"
 script_author = "松坂さとう"
-script_version = "1.1"
+script_version = "1.12"
 
 include("karaskel.lua")
 local OK,Yutils = pcall(require,"Yutils")
@@ -290,7 +290,7 @@ function match_bilingual_styles(subs)
             local cmd = {}
             for mlb in string.gmatch(m,"[mlb][- .%d]+") do
                 local pt = {}
-                for num in string.gmatch(mlb,"([-.%d]+)") do
+                for num in string.gmatch(mlb,"[-.%d]+") do
                     pt[#pt+1] = tonumber(num)
                 end
                 cmd[#cmd+1] = pt
