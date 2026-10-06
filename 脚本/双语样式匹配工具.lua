@@ -1,7 +1,7 @@
 script_name = "双语样式匹配工具"
 script_description = "根据参考样式计算目标样式的参数，使之在视觉上与参考样式相匹配（支持中日韩字体）"
 script_author = "松坂さとう"
-script_version = "1.2"
+script_version = "1.21"
 
 include("karaskel.lua")
 local OK,Yutils = pcall(require,"Yutils")
@@ -204,7 +204,7 @@ function match_bilingual_styles(subs)
         local map = {[1]={1,7,9},[2]={2,8},[3]={3,7,9},[4]={4,6},[5]={5},[6]={4,6},[7]={1,3,7},[8]={2,8},[9]={1,3,9}}
         for i = 1,#map[s] do
             if map[s][i] == t then
-                return true
+                return true,""
             end
         end
         return false,table.concat(map[s]," 或 ")
