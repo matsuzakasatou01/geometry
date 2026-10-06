@@ -1,7 +1,7 @@
 script_name = "双语样式匹配工具"
 script_description = "根据参考样式计算目标样式的参数，使之在视觉上与参考样式相匹配（支持中日韩字体）"
 script_author = "松坂さとう"
-script_version = "1.12"
+script_version = "1.2"
 
 include("karaskel.lua")
 local OK,Yutils = pcall(require,"Yutils")
@@ -200,32 +200,20 @@ function match_bilingual_styles(subs)
     end
     aegisub_exit(check_language(result.source_style) and check_language(result.target_style) and not check_object(result.source_style,result.target_style),"目标样式除语言标识外应与参考样式相同")
     local source,target = styles[result.source_style],styles[result.target_style]
-    local same_align = source.align == target.align and (source.align <= 3 or source.align >= 7)
     local function check_align(s,t)
-        local map = {[1]={7,9},[2]={8},[3]={7,9},[4]={6},[5]={5},[6]={4},[7]={1,3},[8]={2},[9]={1,3}}
+        local map = {[1]={1,7,9},[2]={2,8},[3]={3,7,9},[4]={4,6},[5]={5},[6]={4,6},[7]={1,3,7},[8]={2,8},[9]={1,3,9}}
         for i = 1,#map[s] do
             if map[s][i] == t then
                 return true
             end
         end
-        return false
+        return false,table.concat(map[s]," 或 ")
     end
-    if not same_align then
-        if not check_align(source.align,target.align) then
-            if source.align % 2 == 1 and source.align ~= 5 then
-                if source.align < 5 then
-                    aegisub.log("目标样式的对齐方式必须为 7 或 9")
-                else
-                    aegisub.log("目标样式的对齐方式必须为 1 或 3")
-                end
-            else
-                aegisub.log("目标样式的对齐方式必须为 %d",10 - source.align)
-            end
-            aegisub.cancel()
-        end
-        result.area_ratio = 100
-    end
-    local area_coefficient = (result.area_ratio / 100) ^ 0.5
+    local ok,message = check_align(source.align,target.align)
+    aegisub_exit(not ok,"目标样式的对齐方式必须为 "..message)
+    local same_align = source.align == target.align and (source.align <= 3 or source.align >= 7)
+    result.area_ratio = same_align and result.area_ratio or 100
+    local length_ratio = (result.area_ratio / 100) ^ 0.5
     local text = {"二","十","人","三","上","川","口","日","月","夕","水","木","田","白","目","生","血","米","自","者","夜","走","青","雨","品","星","高","音","夏","重"}
     local long_text = table.concat(text)
     local source_font = Yutils.decode.create_font(source.fontname,source.bold,source.italic,source.underline,source.strikeout,source.fontsize,source.scale_x/100,source.scale_y/100,source.spacing)
@@ -322,7 +310,7 @@ function match_bilingual_styles(subs)
         source_heis = source_heis + source_bounding[i].h
         target_heis = target_heis + h
     end
-    local new_fontsize = Yutils.math.round(source.fontsize * source_wids / target_wids * area_coefficient)
+    local new_fontsize = Yutils.math.round(source.fontsize * source_wids / target_wids * length_ratio)
     local new_fscy = Yutils.math.round(source.scale_y * target_wids / source_wids * source_heis / target_heis)
     local transition_font = Yutils.decode.create_font(target.fontname,target.bold,target.italic,target.underline,target.strikeout,new_fontsize,source.scale_x/100,new_fscy/100,source.spacing)
     local temporary_target = table.copy(target)
@@ -336,9 +324,8 @@ function match_bilingual_styles(subs)
     local source_body_width,source_body_height = aegisub.text_extents(source,text[1])
     local target_body_width,target_body_height = aegisub.text_extents(temporary_target,text[1])
     for i = 1,#text do
-        local w = real_bounding(standardize(transition_font.text_to_shape(text[i])))
         source_x = source_x + source_body_width - source_bounding[i].w
-        target_x = target_x + target_body_width - w
+        target_x = target_x + target_body_width - real_bounding(standardize(transition_font.text_to_shape(text[i])))
     end
     local margin,max_margin,margin_offset = 0,0,0
     if source.align >= 7 then
@@ -423,9 +410,9 @@ function match_bilingual_styles(subs)
             spacing_offset = -abs_spacing_offset
         end
     end
-    local spacing = source.spacing + ((source_x*area_coefficient - target_x) / #text + spacing_offset*area_coefficient) / source.scale_x * 100
+    local spacing = source.spacing + ((source_x*length_ratio - target_x) / #text + spacing_offset*length_ratio) / source.scale_x * 100
     local target_spacing = Yutils.math.round(spacing,1)
-    local source_spacing = same_align and -math.floor(spacing/area_coefficient*10)/10 or -target_spacing
+    local source_spacing = same_align and -math.floor(spacing/length_ratio*10)/10 or -target_spacing
     local real_first = 0
     for i,line in ipairs(subs) do
         if line.section == "[Events]" then
@@ -464,9 +451,9 @@ function match_bilingual_styles(subs)
                 if line.effect == "fx" then
                     break
                 end
-                if line.style == result.target_style then
-                    if string.find(line.text,"\\fsp") then
-                        line.text = string.gsub(line.text,"\\fsp[-.%d]+",string.format("\\fsp%s",target_spacing),1)
+                if not line.comment and line.style == result.target_style then
+                    if string.find(line.text,"\\ *fsp") then
+                        line.text = string.gsub(line.text,"\\ *fsp *[-.%d]+",string.format("\\fsp%s",target_spacing))
                     else
                         if string.find(line.text,"^{") then
                             line.text = string.gsub(line.text,"^{",string.format("{\\fsp%s",target_spacing))
@@ -492,10 +479,12 @@ function match_bilingual_styles(subs)
             if line.effect == "fx" then
                 break
             end
-            if line.style == result.source_style then
-                line.layer = keep_source_layer and line.layer or result.source_layer
-            elseif line.style == result.target_style then
-                line.layer = keep_target_layer and line.layer or result.target_layer
+            if not line.comment then
+                if line.style == result.source_style then
+                    line.layer = keep_source_layer and line.layer or result.source_layer
+                elseif line.style == result.target_style then
+                    line.layer = keep_target_layer and line.layer or result.target_layer
+                end
             end
             subs[i] = line
         end
