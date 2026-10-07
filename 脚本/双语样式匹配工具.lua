@@ -1,7 +1,7 @@
 script_name = "双语样式匹配工具"
 script_description = "根据参考样式计算目标样式的参数，使之在视觉上与参考样式相匹配（支持中日韩字体）"
 script_author = "松坂さとう"
-script_version = "1.21"
+script_version = "1.3"
 
 include("karaskel.lua")
 local OK,Yutils = pcall(require,"Yutils")
@@ -17,6 +17,7 @@ function match_bilingual_styles(subs)
     end
     aegisub_exit(not OK,"请先安装 Yutils 库\nhttps://github.com/Youka/Yutils/blob/T1/src/Yutils.lua")
     local meta,styles = karaskel.collect_head(subs)
+    aegisub_exit(not meta.playresy,"请先打开视频")
     local style_names = {}
     for name in pairs(styles) do
         if type(name) == "string" and string.find(name,"%S") and name ~= "n" and not string.find(name,"-furigana$") then
@@ -254,24 +255,18 @@ function match_bilingual_styles(subs)
                     min_val,max_val = math.min(min_val,val),math.max(max_val,val)
                 end
             end
-            if math.abs(a) < 1e-10 then
-                if math.abs(b) > 1e-10 then
+            if math.abs(a) < 1e-9 then
+                if math.abs(b) > 1e-9 then
                     update_extreme(-c / b)
                 end
                 return min_val,max_val
             end
             local delta = b^2 - 4*a*c
             if delta < 0 then
-                if delta > -1e-10 then
-                    delta = 0
-                else
-                    return min_val,max_val
-                end
+                return min_val,max_val
             end
-            local t1 = (-b + delta^0.5) / (2*a)
-            local t2 = (-b - delta^0.5) / (2*a)
-            update_extreme(t1)
-            update_extreme(t2)
+            update_extreme((-b + delta^0.5) / (2*a))
+            update_extreme((-b - delta^0.5) / (2*a))
             return min_val,max_val
         end
         string.gsub(ass_shape,"m[^m]+",function(m)
@@ -300,15 +295,13 @@ function match_bilingual_styles(subs)
         return xmax-xmin,ymax-ymin,ymin,ymax
     end
     for i = 1,#text do
-        local w,h = real_bounding(standardize(source_font.text_to_shape(text[i])))
-        source_bounding[#source_bounding+1] = {w = w,h = h}
-    end
-    for i = 1,#text do
-        local w,h = real_bounding(standardize(target_font.text_to_shape(text[i])))
-        source_wids = source_wids + source_bounding[i].w
-        target_wids = target_wids + w
-        source_heis = source_heis + source_bounding[i].h
-        target_heis = target_heis + h
+        local sw,sh = real_bounding(standardize(source_font.text_to_shape(text[i])))
+        local tw,th = real_bounding(standardize(target_font.text_to_shape(text[i])))
+        source_bounding[i] = {w = sw,h = sh}
+        source_wids = source_wids + sw
+        target_wids = target_wids + tw
+        source_heis = source_heis + sh
+        target_heis = target_heis + th
     end
     local new_fontsize = Yutils.math.round(source.fontsize * source_wids / target_wids * length_ratio)
     local new_fscy = Yutils.math.round(source.scale_y * target_wids / source_wids * source_heis / target_heis)
@@ -320,27 +313,21 @@ function match_bilingual_styles(subs)
     temporary_target.spacing = source.spacing
     local _,_,y0,y1 = real_bounding(standardize(source_font.text_to_shape(long_text)))
     local _,_,y2,y3 = real_bounding(standardize(transition_font.text_to_shape(long_text)))
-    local source_x,target_x = 0,0
     local source_body_width,source_body_height = aegisub.text_extents(source,text[1])
     local target_body_width,target_body_height = aegisub.text_extents(temporary_target,text[1])
-    for i = 1,#text do
-        source_x = source_x + source_body_width - source_bounding[i].w
-        target_x = target_x + target_body_width - real_bounding(standardize(transition_font.text_to_shape(text[i])))
-    end
-    local margin,max_margin,margin_offset = 0,0,0
+    local margin,margin_offset = 0,0
     if source.align >= 7 then
         margin = source.margin_t + y0
     elseif source.align <= 3 then
         margin = source.margin_t + source_body_height - y1
     end
     aegisub_exit(margin < 0,"参考样式字幕边缘到视频边缘的距离不能为负值\n请把垂直边距至少调大 %d",-math.floor(margin))
-    if meta.playresy then
-        max_margin = tonumber(meta.playresy)/216
-    else
-        aegisub.log("请先打开视频")
-        aegisub.cancel()
+    margin_offset = math.min(0.2*margin,tonumber(meta.playresy)/216)
+    local source_x,target_x = 0,0
+    for i = 1,#text do
+        source_x = source_x + source_body_width - source_bounding[i].w
+        target_x = target_x + target_body_width - real_bounding(standardize(transition_font.text_to_shape(text[i])))
     end
-    margin_offset = math.min(0.2*margin,max_margin)
     local function find_style(style)
         for i,line in ipairs(subs) do
             if line.name == style then
