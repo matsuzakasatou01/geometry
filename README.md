@@ -39,7 +39,7 @@
 
   用途：根据参考样式计算目标样式的参数，使之在视觉上与参考样式相匹配。
 
-  依赖 [Yutils](https://github.com/Youka/Yutils/blob/T1/src/Yutils.lua) ，使用前需要先安装该库（如果仅用于此脚本加载，则不需要在 `utils-auto4.lua` 中加载）；支持中日韩字体。
+  依赖 [Yutils](https://github.com/Youka/Yutils/blob/T1/src/Yutils.lua) ，使用前需要先安装该库；支持中日韩字体。
 
   
 
