@@ -1,7 +1,7 @@
 script_name = "双语样式匹配工具"
 script_description = "根据参考样式计算目标样式的参数，使之在视觉上与参考样式相匹配（支持中日韩字体）"
 script_author = "松坂さとう"
-script_version = "2.1.0"
+script_version = "3.0.0"
 
 include("karaskel.lua")
 local OK,Yutils = pcall(require,"Yutils")
@@ -58,15 +58,9 @@ function match_bilingual_styles(subs)
             table.insert(lang_style_names,style_names[i])
         end
     end
-    local function find_default_style(styles_tbl,mode)
+    local function find_default_style(styles_tbl,priority_list)
         if #styles_tbl < 2 then
             return nil
-        end
-        local priority_list = {}
-        if mode == "source" then
-            priority_list = {"JP","KR","TW","HK","CN"}
-        elseif mode == "target" then
-            priority_list = {"CN","HK","TW","KR","JP"}
         end
         for _,lang in ipairs(priority_list) do
             for _,style in ipairs(styles_tbl) do
@@ -86,7 +80,7 @@ function match_bilingual_styles(subs)
             class = "dropdown",
             name = "source_style",
             items = style_names,
-            value = find_default_style(lang_style_names,"source") or style_names[1],
+            value = find_default_style(lang_style_names,{"JP","KR","TW","HK","CN"}) or style_names[1],
             hint = "参考样式需要设置好全部参数\n并且当样式名列表中包含 JP/KR/TW/HK/CN 语言标识的样式数量 ≥2 时，会按照语言优先级选择默认值\n当参考样式和目标样式对齐方式相同且为底部或顶部对齐时，保证参考样式更靠近画面边缘",
             x = 1,y = 0,width = 1,height = 1
         },
@@ -99,7 +93,7 @@ function match_bilingual_styles(subs)
             class = "dropdown",
             name = "target_style",
             items = style_names,
-            value = find_default_style(lang_style_names,"target") or style_names[2],
+            value = find_default_style(lang_style_names,{"CN","HK","TW","KR","JP"}) or style_names[2],
             hint = "目标样式需要设置好以下参数：样式名、字体、粗体、斜体、对齐方式和编码\n并且当样式名列表中包含 CN/HK/TW/KR/JP 语言标识的样式数量 ≥2 时，会按照语言优先级选择默认值\n当参考样式和目标样式对齐方式相同且为底部或顶部对齐时，保证目标样式更靠近画面中心",
             x = 1,y = 1,width = 1,height = 1
         },
@@ -155,7 +149,6 @@ function match_bilingual_styles(subs)
             label = "复制颜色",
             name = "copy_colors",
             value = true,
-            hint = "只在边框样式为 1 时生效",
             x = 0,y = 5,width = 1,height = 1
         },
         {
@@ -163,7 +156,6 @@ function match_bilingual_styles(subs)
             label = "计算边框阴影",
             name = "calculate_outline_and_shadow",
             value = true,
-            hint = "只在边框样式为 1 时生效",
             x = 1,y = 5,width = 1,height = 1
         },
         {
@@ -201,24 +193,23 @@ function match_bilingual_styles(subs)
     aegisub_exit(button ~= "确定")
     aegisub_exit(result.source_style == result.target_style,"目标样式不能与参考样式相同")
     local both_lang = check_language(result.source_style) and check_language(result.target_style)
-    local function check_object(a,b)
-        local function strip_lang(s)
-            return s:upper():gsub("CN",""):gsub("TW",""):gsub("HK",""):gsub("JP",""):gsub("KR","")
-        end
-        return strip_lang(a) == strip_lang(b)
+    local function strip_lang(style)
+        return style:upper():gsub("JP",""):gsub("KR",""):gsub("TW",""):gsub("HK",""):gsub("CN","")
     end
-    aegisub_exit(both_lang and not check_object(result.source_style,result.target_style),"目标样式除语言标识外应与参考样式相同")
+    aegisub_exit(both_lang and strip_lang(result.source_style) ~= strip_lang(result.target_style),"目标样式除语言标识外应与参考样式相同")
     local source,target = styles[result.source_style],styles[result.target_style]
+    aegisub_exit(source.underline,"参考样式不能开启下划线")
+    aegisub_exit(source.strikeout,"参考样式不能开启删除线")
     aegisub_exit(source.fontsize == 0,"参考样式字号不能为 0")
     aegisub_exit(source.margin_l < 0,"参考样式左边距不能小于 0")
     aegisub_exit(source.margin_r < 0,"参考样式右边距不能小于 0")
     aegisub_exit(source.scale_x == 0,"参考样式水平缩放不能为 0")
     aegisub_exit(source.scale_y == 0,"参考样式垂直缩放不能为 0")
+    aegisub_exit(source.borderstyle ~= 1,"参考样式的边框样式必须为 1")
     aegisub_exit(not source.italic and target.italic,"参考样式未开启斜体时，目标样式也不能开启斜体")
-    source.italic = target.italic
-    local source_font = Yutils.decode.create_font(source.fontname,source.bold,source.italic,false,false,source.fontsize,source.scale_x/100,source.scale_y/100)
+    local source_font = Yutils.decode.create_font(source.fontname,source.bold,false,false,false,source.fontsize,source.scale_x/100,source.scale_y/100)
     aegisub_exit(source_font.text_to_shape("一") == "","参考样式字号过大")
-    local target_font = Yutils.decode.create_font(target.fontname,target.bold,source.italic,false,false,source.fontsize,source.scale_x/100,source.scale_y/100)
+    local target_font = Yutils.decode.create_font(target.fontname,target.bold,false,false,false,source.fontsize,source.scale_x/100,source.scale_y/100)
     aegisub_exit(target_font.text_to_shape("一") == "","参考样式字号过大")
     local function check_align(s,t)
         local map = {[1]={1,7,9},[2]={2,8},[3]={3,7,9},[4]={},[5]={5},[6]={},[7]={1,3,7},[8]={2,8},[9]={1,3,9}}
@@ -234,6 +225,11 @@ function match_bilingual_styles(subs)
     end
     local ok,message = check_align(source.align,target.align)
     aegisub_exit(not ok,message)
+    aegisub_exit(source.align == 5 and source.margin_l == source.margin_r,"对齐方式为 5 时，参考样式左右边距不能相等")
+    local source_at = string.find(source.fontname,"^@")
+    aegisub_exit(source.align == 5 == not source_at,source_at and "参考样式字体名称不能以 @ 开头" or "对齐方式为 5 时，参考样式字体名称必须以 @ 开头")
+    aegisub_exit(source_at ~= string.find(target.fontname,"^@"),source_at and "对齐方式为 5 时，目标样式字体名称必须以 @ 开头" or "目标样式字体名称不能以 @ 开头")
+    aegisub_exit(source.angle % 360 ~= (source_at and 270 or 0),source_at and "对齐方式为 5 时，参考样式旋转角度必须为 -90 或 270" or "参考样式旋转角度必须为 -360 或 0 或 360")
     local text = {"二","十","三","上","川","口","日","月","夕","木","田","白","目","生","血","自","走","品","星","重"}
     local long_text = table.concat(text)
     local function real_bounding(ass_shape)
@@ -288,18 +284,22 @@ function match_bilingual_styles(subs)
         return xmax-xmin,ymax-ymin,ymin,ymax
     end
     local _,_,y0,y1 = real_bounding(source_font.text_to_shape(long_text))
+    source.italic = false
     local source_body_width,source_body_height = aegisub.text_extents(source,text[1])
-    local margin = 0
+    local margin,check_margin = 0,0
     if source.align >= 7 then
         margin = source.margin_t + y0
+        check_margin = margin - source.outline
     elseif source.align <= 3 then
         margin = source.margin_t + source_body_height - y1
+        check_margin = margin - source.outline - source.shadow
     end
-    aegisub_exit(margin < 0,"参考样式字幕边缘到视频边缘的距离不能为负值\n请把垂直边距至少调大 %d",-math.floor(margin))
+    aegisub_exit(check_margin < 0,"参考样式字幕边缘到视频边缘的距离不能为负值\n请把垂直边距至少调大 %d",-math.floor(check_margin))
     local same_align = source.align == target.align and (source.align <= 3 or source.align >= 7)
-    result.area_ratio = same_align and result.area_ratio or 100
-    local length_ratio = (result.area_ratio / 100) ^ 0.5
-    local source_wids,source_heis,target_wids,target_heis,source_x,target_x = 0,0,0,0,0,0
+    local area_ratio = same_align and result.area_ratio/100 or 1
+    local length_ratio = area_ratio ^ 0.5
+    local source_wids,source_heis,target_wids,target_heis = 0,0,0,0
+    local source_x = source_body_width * #text
     for i = 1,#text do
         local sw,sh = real_bounding(source_font.text_to_shape(text[i]))
         local tw,th = real_bounding(target_font.text_to_shape(text[i]))
@@ -307,23 +307,25 @@ function match_bilingual_styles(subs)
         target_wids = target_wids + tw
         source_heis = source_heis + sh
         target_heis = target_heis + th
-        source_x = source_x + source_body_width - sw
+        source_x = source_x - sw
     end
     local new_fontsize = Yutils.math.round(source.fontsize * source_wids / target_wids * length_ratio)
     aegisub_exit(new_fontsize == 0,"参考样式字号过小或面积比值过小")
     local new_scale_y = Yutils.math.round(source.scale_y * target_wids / source_wids * source_heis / target_heis)
     aegisub_exit(new_scale_y == 0,"参考样式垂直缩放过小")
-    local transition_font = Yutils.decode.create_font(target.fontname,target.bold,source.italic,false,false,new_fontsize,source.scale_x/100,new_scale_y/100)
+    local transition_font = Yutils.decode.create_font(target.fontname,target.bold,false,false,false,new_fontsize,source.scale_x/100,new_scale_y/100)
     aegisub_exit(transition_font.text_to_shape("一") == "","参考样式字号过大或面积比值过大")
-    local temporary_target = table.copy(source)
-    temporary_target.fontname = target.fontname
-    temporary_target.bold = target.bold
+    local temporary_target = table.copy(target)
+    temporary_target.italic = false
     temporary_target.fontsize = new_fontsize
+    temporary_target.scale_x = source.scale_x
     temporary_target.scale_y = new_scale_y
+    temporary_target.spacing = source.spacing
     local _,_,y2,y3 = real_bounding(transition_font.text_to_shape(long_text))
     local target_body_width,target_body_height = aegisub.text_extents(temporary_target,text[1])
+    local target_x = target_body_width * #text
     for i = 1,#text do
-        target_x = target_x + target_body_width - real_bounding(transition_font.text_to_shape(text[i]))
+        target_x = target_x - real_bounding(transition_font.text_to_shape(text[i]))
     end
     local function find_style(style)
         for i,line in ipairs(subs) do
@@ -335,56 +337,74 @@ function match_bilingual_styles(subs)
     local target_index = find_style(result.target_style)
     local target_line = subs[target_index]
     target_line.fontsize = new_fontsize
-    target_line.underline = source.underline
-    target_line.strikeout = source.strikeout
-    if source.borderstyle ~= 1 or result.copy_colors then
+    target_line.underline = false
+    target_line.strikeout = false
+    if result.copy_colors then
         target_line.color1 = source.color1
         target_line.color2 = source.color2
         target_line.color3 = source.color3
         target_line.color4 = source.color4
     end
+    if result.calculate_outline_and_shadow then
+        local border_scale = area_ratio ^ (1/6)
+        target_line.outline = Yutils.math.round(source.outline * border_scale,1)
+        target_line.shadow = Yutils.math.round(source.shadow * border_scale,1)
+    end
     if same_align then
         target_line.margin_l = source.margin_l
         target_line.margin_r = source.margin_r
-        local distance = (y1 - y0 + y3 - y2) / 6
-        if source.align <= 3 then
-            target_line.margin_t = Yutils.math.round(source.margin_t + distance + source_body_height - y0 - target_body_height + y3)
+        local distance = (y1 - y0 + y3 - y2) * 0.15
+        local function alpha_coefficient(color)
+            local _,_,_,alpha = extract_color(color)
+            return (1-(alpha/255)^2)*0.5
+        end
+        local outline = source.outline * alpha_coefficient(source.color3) + target_line.outline * alpha_coefficient(target_line.color3)
+        if source.align >= 7 then
+            target_line.margin_t = Yutils.math.round(source.margin_t + distance + y1 - y2 + outline + source.shadow*alpha_coefficient(source.color4))
         else
-            target_line.margin_t = Yutils.math.round(source.margin_t + distance + y1 - y2)
+            target_line.margin_t = Yutils.math.round(source.margin_t + distance + source_body_height - y0 - target_body_height + y3 + outline + target_line.shadow*alpha_coefficient(target_line.color4))
         end
     else
-        local swap_lr = false
-        if source.align == 2 or source.align == 8 then
-            swap_lr = result.swap_lr_margin
+        local head_offset = y0 - target_body_height + y3
+        local tail_offset = source_body_height - y1 - y2
+        if source.align == 5 then
+            local shadow = 4*(source.shadow + target_line.shadow)
+            if source.margin_l < source.margin_r then
+                target_line.margin_l = source.margin_r - head_offset + shadow
+                target_line.margin_r = source.margin_l
+            else
+                target_line.margin_l = source.margin_r
+                target_line.margin_r = source.margin_l - tail_offset - shadow
+            end
         else
-            swap_lr = math.abs(source.align - target.align) ~= 6
-        end
-        if swap_lr then
-            target_line.margin_l = source.margin_r
-            target_line.margin_r = source.margin_l
-        else
-            target_line.margin_l = source.margin_l
-            target_line.margin_r = source.margin_r
+            local swap_lr = false
+            if source.align == 2 or source.align == 8 then
+                swap_lr = result.swap_lr_margin
+            else
+                swap_lr = source.align + target.align == 10
+            end
+            if swap_lr then
+                target_line.margin_l = source.margin_r
+                target_line.margin_r = source.margin_l
+            else
+                target_line.margin_l = source.margin_l
+                target_line.margin_r = source.margin_r
+            end
         end
         local margin_offset = math.min(0.2*margin,tonumber(meta.playresy)/216)
         if source.align >= 7 then
-            target_line.margin_t = Yutils.math.round(source.margin_t + y0 - target_body_height + y3 + margin_offset)
+            target_line.margin_t = Yutils.math.round(source.margin_t + head_offset + margin_offset)
         elseif source.align <= 3 then
-            target_line.margin_t = Yutils.math.round(source.margin_t + source_body_height - y1 - y2 - margin_offset)
+            target_line.margin_t = Yutils.math.round(source.margin_t + tail_offset - margin_offset)
         else
             target_line.margin_t = source.margin_t
         end
     end
-    if source.borderstyle ~= 1 or result.calculate_outline_and_shadow then
-        local border_scale = (result.area_ratio / 100) ^ (1/6)
-        target_line.outline = Yutils.math.round(source.outline * border_scale,1)
-        target_line.shadow = Yutils.math.round(source.shadow * border_scale,1)
-    end
-    target_line.borderstyle = source.borderstyle
+    target_line.borderstyle = 1
     target_line.scale_x = source.scale_x
     target_line.scale_y = new_scale_y
     target_line.angle = source.angle
-    local spacing_offset,abs_spacing_offset = 0,source_wids / #text / 60
+    local spacing_offset,abs_spacing_offset = 0,source_wids / #text * 0.015
     if both_lang then
         if check_language(result.source_style,"jk") and check_language(result.target_style,"c") then
             spacing_offset = abs_spacing_offset
@@ -398,17 +418,21 @@ function match_bilingual_styles(subs)
             spacing_offset = -abs_spacing_offset
         end
     end
-    local spacing = source.spacing + ((source_x*length_ratio - target_x) / #text + spacing_offset*length_ratio) / source.scale_x * 100
-    local target_spacing = Yutils.math.round(spacing,1)
-    local source_spacing = same_align and -math.floor(spacing/length_ratio*10)/10 or -target_spacing
+    local spacing = ((source_x*length_ratio - target_x) / #text + spacing_offset*length_ratio) / source.scale_x * 100
+    local target_spacing = Yutils.math.round(source.spacing + spacing,1)
+    local change_source_layer,change_target_layer = result.source_layer ~= -1,result.target_layer ~= -1
+    local need_layer_processing = same_align and (change_source_layer or change_target_layer)
     local have_template = false
-    for i = real_first,math.min(real_first+99,#subs) do
-        if subs[i].effect:headtail():lower() == "template" then
-            have_template = true
-            break
+    if target_spacing < 0 or need_layer_processing then
+        for i = real_first,math.min(real_first+99,#subs) do
+            if subs[i].effect:headtail():lower() == "template" then
+                have_template = true
+                break
+            end
         end
     end
     if target_spacing < 0 then
+        local source_spacing = same_align and -math.floor((source.spacing + spacing / length_ratio)*10)/10 or -target_spacing
         local dlg_cfg = {
             {
                 class = "label",
@@ -434,7 +458,12 @@ function match_bilingual_styles(subs)
                     break
                 end
                 if not line.comment and line.style == result.target_style then
-                    local new_text,replaced = string.gsub(line.text,"\\ *fsp *[-.%d]+",fsp_tag)
+                    local replaced = 0
+                    local new_text = string.gsub(line.text,"{[^{}]-}",function(block)
+                        local new_block,n = string.gsub(block,"\\ *fsp *[-.%d]+",fsp_tag)
+                        replaced = replaced + n
+                        return new_block
+                    end)
                     if replaced > 0 then
                         line.text = new_text
                     elseif string.find(line.text,"^{") then
@@ -453,8 +482,7 @@ function match_bilingual_styles(subs)
         target_line.spacing = target_spacing
     end
     subs[target_index] = target_line
-    local change_source_layer,change_target_layer = result.source_layer ~= -1,result.target_layer ~= -1
-    if same_align and not have_template and (change_source_layer or change_target_layer) then
+    if need_layer_processing and not have_template then
         for i = real_first,#subs do
             local line = subs[i]
             if line.effect == "fx" then
