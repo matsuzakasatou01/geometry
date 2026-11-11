@@ -1,7 +1,7 @@
 script_name = "双语样式匹配工具"
 script_description = "根据参考样式计算目标样式的参数，使之在视觉上与参考样式相匹配（支持中日韩字体）"
 script_author = "松坂さとう"
-script_version = "4.0.0"
+script_version = "4.0.1"
 
 include("karaskel.lua")
 local OK,Yutils = pcall(require,"Yutils")
@@ -202,6 +202,7 @@ function match_bilingual_styles(subs)
     aegisub_exit(source.strikeout,"参考样式不能开启删除线")
     aegisub_exit(source.fontsize == 0,"参考样式字号不能为 0")
     aegisub_exit(source.encoding ~= 1,"参考样式编码必须为 1")
+    aegisub_exit(source.angle ~= 0,"参考样式旋转角度必须为 0")
     aegisub_exit(source.margin_l < 0,"参考样式左边距不能小于 0")
     aegisub_exit(source.margin_r < 0,"参考样式右边距不能小于 0")
     aegisub_exit(source.scale_x == 0,"参考样式水平缩放不能为 0")
@@ -209,7 +210,6 @@ function match_bilingual_styles(subs)
     aegisub_exit(source.borderstyle ~= 1,"参考样式的边框样式必须为 1")
     aegisub_exit(string.find(source.fontname,"^@"),"参考样式字体名称不能以 @ 开头")
     aegisub_exit(string.find(target.fontname,"^@"),"目标样式字体名称不能以 @ 开头")
-    aegisub_exit(source.angle % 360 ~= 0,"参考样式旋转角度必须为 -360 或 0 或 360")
     aegisub_exit(not source.italic and target.italic,"参考样式未开启斜体时，目标样式也不能开启斜体")
     local source_font = Yutils.decode.create_font(source.fontname,source.bold,false,false,false,source.fontsize,source.scale_x/100,source.scale_y/100)
     aegisub_exit(source_font.text_to_shape("一") == "","参考样式字号过大")
@@ -459,7 +459,7 @@ function match_bilingual_styles(subs)
     target_line.borderstyle = 1
     target_line.scale_x = source.scale_x
     target_line.scale_y = new_scale_y
-    target_line.angle = source.angle
+    target_line.angle = 0
     target_line.encoding = 1
     subs[target_index] = target_line
     if need_layer_processing and not have_template then
