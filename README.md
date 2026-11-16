@@ -41,10 +41,12 @@
 
   依赖 [Yutils](https://github.com/Youka/Yutils/blob/T1/src/Yutils.lua) ，使用前需要先安装该库；支持中日韩字体。
 
+  不同字体的样式想要在视觉上相匹配，需要精细调整，使用此脚本可以快速计算好字号、边距、边框、阴影、缩放、间距等参数，省时省力地设置出相匹配的样式。
+
   <br>
 
   先解释各个参数：
-
+  
   1. 参考样式：参考样式需要设置好全部参数；并且当样式名列表中包含 `JP/KR/TW/HK/CN` 语言标识的样式数量 ≥2 时，会按照语言优先级选择默认值；当参考样式和目标样式对齐方式相同（下文简称为：设置正文样式）时，保证参考样式更靠近画面边缘。
   2. 目标样式：目标样式需要设置好样式名、字体、粗体、斜体、对齐方式；并且当样式名列表中包含 `CN/HK/TW/KR/JP` 语言标识的样式数量 ≥2 时，会按照语言优先级选择默认值；当设置正文样式时，保证目标样式更靠近画面中心。
   3. 对应语言：参考样式语言 -> 目标样式语言；参考样式和目标样式都含有语言标识时不生效；所有合法样式都含有语言标识时不显示。
@@ -57,8 +59,20 @@
 
   <br>
 
+  使用步骤：
+  
+  1. 设置好参考样式的所有参数。
+  2. 设置好目标样式需要设置的参数。
+  3. 设置好脚本的参数并应用。
+  
+  <br>
+  
+  https://github.com/user-attachments/assets/51ef5e1c-12e3-4a6a-89ae-897acf32a9ca
+  
+  <br>
+  
   脚本允许的对齐方式组合
-
+  
   | 参考样式 | 目标样式  |
   | :------: | :-------: |
   |    1     | 1 / 7 / 9 |
@@ -83,22 +97,38 @@
   注意事项：
   
   1. 此处的“样式”特指 ASS 样式。
+  
+     *注：不包括 SSA 样式和 ASS2 样式。*
+  
   2. 最终效果与字体匹配度有关，请务必选择匹配度高的字体。
+  
   3. 不支持西文字体，也不保证中日韩字体在英文下的匹配效果。
+  
   4. 脚本不会检查字体是否为中日韩字体。
+  
   5. 不支持非 1 边框样式及竖排文字。
+  
+     *注：不支持竖排文字是因为部分字体在不同字幕滤镜下会有不同的位置偏移，无法保证匹配效果。*
+  
   6. 两种样式交替反复应用脚本会累积系统误差，单方向反复应用则不会。
+  
   7. 如果按钮乱码，就是低版本 Aegisub 的 Bug ，请升级版本。
+  
   8. 添加/修改 fsp 标签、修改层数时会跳过注释行。
+  
   9. 修改层数的功能默认是关闭的，设置正文样式时不要忘记分层。
+  
   10. 计算出的参数小数位数以官方版样式编辑器为准。
+  
   11. 参考样式的阴影数值不宜超过：字体平均笔画粗细的一半加上边框宽度。
+  
   12. 与原版 `kara-templater.lua` 的 50 行规则不同，此脚本判断是否有特效模板行会在前 **100** 行中寻找 template 行。
+  
   13. 脚本允许参考样式开启斜体同时目标样式关闭斜体。如果参考样式字体和目标样式字体的斜体倾斜程度不一致，推荐目标样式关闭斜体，后续用剪切变换标签进行调整。
   
   <br>
   
-  此脚本更详细的说明和演示请见 [B站教程](https://www.bilibili.com/video/BV1kAhq69Eii?vd_source=6df8fb6687b936d34db1b244f6a15be5) 。由于视频介绍的是初版脚本，部分内容已经过时，仅供参考。视频与文档的内容如果不一致，以此文档为准。
+  此脚本更详细的说明请见 [B站教程](https://www.bilibili.com/video/BV1kAhq69Eii?vd_source=6df8fb6687b936d34db1b244f6a15be5) ，包括使用方法和代码讲解。视频与文档的内容如果不一致，以此文档为准。
   
   <br>
   
@@ -120,7 +150,7 @@
   
   - 垂直边距：当设置正文样式时，会以参考样式和目标样式总高度的 15% 为基础，并且加上边框阴影数值的一半作为样式间隔；当设置一上一下的对齐方式时，会引入视觉补偿以保证字幕边缘到画面边缘视觉上的距离相等。
   
-    *视觉补偿（以目标样式为底部对齐为例）：`+math.min(margin/5,tonumber(meta.playresy)/216)`*
+    *视觉补偿（以目标样式为底部对齐为例）：`+ math.min(margin/5,tonumber(meta.playresy)/216)`*
   
   - 边框、阴影：根据 `计算边框阴影` 判断是否计算。保证视觉上的粗细和大小相等。
   
@@ -134,13 +164,13 @@
   
   - 旋转：设为 0 。
   
-  - 字间距：根据字体侧边距、`面积比值` 和 `对应语言（如果有的话）` 计算，并引入视觉补偿。保证视觉上的字间距符合 `面积比值` 。
+  - 字间距：根据字体侧边距、`面积比值` 和 `对应语言（如果有的话）`计算，并引入视觉补偿。保证视觉上的字间距符合 `面积比值` 。
   
     *视觉补偿：参考样式字体字面框宽度的 1.5%*
   
   <br>
   
-  **致谢：感谢 MingYSub 的 [Ming](https://github.com/oborozuk1) 。Ming 佬不仅帮我测试了脚本，还提出了许多宝贵的意见。如果没有 Ming 佬的帮助，这个脚本肯定不会像现在这样完善。顺便一提，我就是看了 Ming 佬给北宇治做的败犬女主 OP 特效才入坑特效字幕的。**
+  **致谢：感谢 [MingYSub](https://github.com/MingYSub) 的 [Ming](https://github.com/oborozuk1) 。Ming 佬不仅帮我测试了初版脚本，还提出了许多宝贵的意见。多亏了 Ming 佬的帮助，脚本的初期开发才得以顺利推进。顺便一提，我就是看了 Ming 佬给北宇治做的败犬女主 OP 特效才入坑特效字幕的。**
   
   <br>
 
@@ -288,52 +318,52 @@ tenv.fdur = aegisub.ms_from_frame(101) and (aegisub.ms_from_frame(101) - aegisub
 `gloop` 这个函数也是多华宫前辈写的。
 
 ```lua
-tenv.gloop =
-    function(differ_loop,rand_num)
-        local cnt = {0}
-        if type(differ_loop) == "number" then
-            if tenv.j == 1 then
-                tenv.maxloop(differ_loop)
-                tenv.num = {}
-                tenv.gi = 1
-                tenv.gn = 1
-                tenv.gin = differ_loop
-            end
-            tenv.gii = tenv.j
-        elseif type(differ_loop[1]) == "table" then
-            if tenv.j == 1 then
-                tenv.gn = differ_loop[1][1]
-                tenv.gin = differ_loop[1][2]
-                tenv.num = {} tenv.maxloop(tenv.gn*tenv.gin)
-            end
-            tenv.gi = math.ceil(tenv.j/tenv.gin)
-            tenv.gii = tenv.j % tenv.gin == 0 and tenv.gin or tenv.j % tenv.gin
-        else
-            for i = 1,#differ_loop do
-                cnt[i + 1] = cnt[i] + differ_loop[i]
-            end
-            if tenv.j == 1 then
-                tenv.maxloop(cnt[#cnt])
-                tenv.num = {}
-                tenv.gn = #cnt - 1
-            end
-            for i=2,#cnt do
-                tenv.gi = i - 1
-                tenv.gin = cnt[i] - cnt[i - 1]
-                tenv.gii = tenv.j - cnt[i - 1]
-                if tenv.j <= cnt[i] then
-                    break
-                end
+tenv.gloop = function(differ_loop,rand_num)
+    local cnt = {0}
+    if type(differ_loop) == "number" then
+        if tenv.j == 1 then
+            tenv.maxloop(differ_loop)
+            tenv.num = {}
+            tenv.gi = 1
+            tenv.gn = 1
+            tenv.gin = differ_loop
+        end
+        tenv.gii = tenv.j
+    elseif type(differ_loop[1]) == "table" then
+        if tenv.j == 1 then
+            tenv.gn = differ_loop[1][1]
+            tenv.gin = differ_loop[1][2]
+            tenv.num = {}
+            tenv.maxloop(tenv.gn*tenv.gin)
+        end
+        tenv.gi = math.ceil(tenv.j/tenv.gin)
+        tenv.gii = tenv.j % tenv.gin == 0 and tenv.gin or tenv.j % tenv.gin
+    else
+        for i = 1,#differ_loop do
+            cnt[i+1] = cnt[i] + differ_loop[i]
+        end
+        if tenv.j == 1 then
+            tenv.maxloop(cnt[#cnt])
+            tenv.num = {}
+            tenv.gn = #cnt - 1
+        end
+        for i = 2,#cnt do
+            tenv.gi = i - 1
+            tenv.gin = cnt[i] - cnt[i-1]
+            tenv.gii = tenv.j - cnt[i-1]
+            if tenv.j <= cnt[i] then
+                break
             end
         end
-        if type(rand_num) == "table" and tenv.gii == 1 then
-            tenv.num[tenv.gi] = {}
-            for i=1,#rand_num do
-                tenv.num[tenv.gi][rand_num[i][1]] = math.random(rand_num[i][2],rand_num[i][3])
-            end
-        end
-        return ""
     end
+    if type(rand_num) == "table" and tenv.gii == 1 then
+        tenv.num[tenv.gi] = {}
+        for i = 1,#rand_num do
+            tenv.num[tenv.gi][rand_num[i][1]] = math.random(rand_num[i][2],rand_num[i][3])
+        end
+    end
+    return ""
+end
 ```
 
 它是一个分组循环的函数，具体用法可以看 [多华宫前辈的教程](https://www.bilibili.com/video/BV1mv411i7Rm?vd_source=6df8fb6687b936d34db1b244f6a15be5)
