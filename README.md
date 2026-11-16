@@ -289,51 +289,51 @@ tenv.fdur = aegisub.ms_from_frame(101) and (aegisub.ms_from_frame(101) - aegisub
 
 ```lua
 tenv.gloop =
-	function(differ_loop,rand_num)
-		local cnt = {0}
-		if type(differ_loop) == "number" then
-			if tenv.j == 1 then
-				tenv.maxloop(differ_loop)
-				tenv.num = {}
-				tenv.gi = 1
-				tenv.gn = 1
-				tenv.gin = differ_loop
-			end
-			tenv.gii = tenv.j
-		elseif type(differ_loop[1]) == "table" then
-			if tenv.j == 1 then
-				tenv.gn = differ_loop[1][1]
-            	tenv.gin = differ_loop[1][2]
-				tenv.num = {} tenv.maxloop(tenv.gn*tenv.gin)
-			end
-			tenv.gi = math.ceil(tenv.j/tenv.gin)
-			tenv.gii = tenv.j % tenv.gin == 0 and tenv.gin or tenv.j % tenv.gin
-		else
-			for i = 1,#differ_loop do
-				cnt[i + 1] = cnt[i] + differ_loop[i]
-			end
-			if tenv.j == 1 then
-				tenv.maxloop(cnt[#cnt])
-				tenv.num = {}
-            	tenv.gn = #cnt - 1
-			end
-			for i=2,#cnt do
-				tenv.gi = i - 1
-            	tenv.gin = cnt[i] - cnt[i - 1]
-				tenv.gii = tenv.j - cnt[i - 1]
-				if tenv.j <= cnt[i] then
-					break
-				end
-			end
-		end
-		if type(rand_num) == "table" and tenv.gii == 1 then
-			tenv.num[tenv.gi] = {}
-			for i=1,#rand_num do
-				tenv.num[tenv.gi][rand_num[i][1]] = math.random(rand_num[i][2],rand_num[i][3])
-			end
-		end
-		return ""
-	end
+    function(differ_loop,rand_num)
+        local cnt = {0}
+        if type(differ_loop) == "number" then
+            if tenv.j == 1 then
+                tenv.maxloop(differ_loop)
+                tenv.num = {}
+                tenv.gi = 1
+                tenv.gn = 1
+                tenv.gin = differ_loop
+            end
+            tenv.gii = tenv.j
+        elseif type(differ_loop[1]) == "table" then
+            if tenv.j == 1 then
+                tenv.gn = differ_loop[1][1]
+                tenv.gin = differ_loop[1][2]
+                tenv.num = {} tenv.maxloop(tenv.gn*tenv.gin)
+            end
+            tenv.gi = math.ceil(tenv.j/tenv.gin)
+            tenv.gii = tenv.j % tenv.gin == 0 and tenv.gin or tenv.j % tenv.gin
+        else
+            for i = 1,#differ_loop do
+                cnt[i + 1] = cnt[i] + differ_loop[i]
+            end
+            if tenv.j == 1 then
+                tenv.maxloop(cnt[#cnt])
+                tenv.num = {}
+                tenv.gn = #cnt - 1
+            end
+            for i=2,#cnt do
+                tenv.gi = i - 1
+                tenv.gin = cnt[i] - cnt[i - 1]
+                tenv.gii = tenv.j - cnt[i - 1]
+                if tenv.j <= cnt[i] then
+                    break
+                end
+            end
+        end
+        if type(rand_num) == "table" and tenv.gii == 1 then
+            tenv.num[tenv.gi] = {}
+            for i=1,#rand_num do
+                tenv.num[tenv.gi][rand_num[i][1]] = math.random(rand_num[i][2],rand_num[i][3])
+            end
+        end
+        return ""
+    end
 ```
 
 它是一个分组循环的函数，具体用法可以看 [多华宫前辈的教程](https://www.bilibili.com/video/BV1mv411i7Rm?vd_source=6df8fb6687b936d34db1b244f6a15be5)
