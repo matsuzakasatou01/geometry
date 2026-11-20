@@ -1,7 +1,7 @@
 script_name = "双语样式匹配工具"
 script_description = "根据参考样式计算目标样式的参数，使之在视觉上与参考样式相匹配（支持中日韩字体）"
 script_author = "松坂さとう"
-script_version = "4.0.3"
+script_version = "4.0.4"
 
 include("karaskel.lua")
 local OK,Yutils = pcall(require,"Yutils")
@@ -21,7 +21,7 @@ function match_bilingual_styles(subs)
     local style_names = {}
     for name in pairs(styles) do
         if type(name) == "string" and string.find(name,"^%S") and string.find(name,"%S$") and name ~= "n" and not string.find(name,"-furigana$") then
-            style_names[#style_names+1] = name
+            table.insert(style_names,name)
         end
     end
     aegisub_exit(#style_names < 2,"至少需要两个非假名样式")
@@ -44,9 +44,9 @@ function match_bilingual_styles(subs)
         return (mode == "c" and cn + tw + hk or cn + tw + hk + jp + kr) == 1
     end
     local lang_style_names = {}
-    for i = 1,#style_names do
-        if check_language(style_names[i]) then
-            table.insert(lang_style_names,style_names[i])
+    for _,style in ipairs(style_names) do
+        if check_language(style) then
+            table.insert(lang_style_names,style)
         end
     end
     local function find_default_style(styles_tbl,priority_list)
@@ -183,8 +183,8 @@ function match_bilingual_styles(subs)
     local function measure_font(font)
         local width,height = 0,0
         local ymin,ymax = math.huge,-math.huge
-        for _,char in ipairs(text) do
-            local w,h,miny,maxy = real_bounding(font.text_to_shape(char))
+        for i = 1,#text do
+            local w,h,miny,maxy = real_bounding(font.text_to_shape(text[i]))
             width,height = width + w,height + h
             ymin,ymax = math.min(ymin,miny),math.max(ymax,maxy)
         end
@@ -222,8 +222,7 @@ function match_bilingual_styles(subs)
     end
     local spacing = source.spacing + ((source_body_width + source_wids * (direction * 0.015 - 1) / #text) * length_ratio - target_body_width + transition_wids / #text) / source.scale_x * 100
     local target_spacing = round(spacing,1)
-    local change_source_layer,change_target_layer = result.source_layer ~= -1,result.target_layer ~= -1
-    local need_layer_processing = same_align and (change_source_layer or change_target_layer)
+    local need_layer_processing = same_align and (result.source_layer ~= -1 or result.target_layer ~= -1)
     local have_template = false
     if target_spacing < 0 or need_layer_processing then
         for i = real_first,math.min(real_first+99,#subs) do
@@ -312,15 +311,14 @@ function match_bilingual_styles(subs)
     target_line.encoding = 1
     subs[target_index] = target_line
     if need_layer_processing and not have_template then
-        local layers = {[result.source_style] = change_source_layer and result.source_layer,[result.target_style] = change_target_layer and result.target_layer}
+        local layers = {[result.source_style] = result.source_layer ~= -1 and result.source_layer,[result.target_style] = result.target_layer ~= -1 and result.target_layer}
         for i = real_first,#subs do
             local line = subs[i]
             if line.effect == "fx" then
                 break
             end
-            local layer = not line.comment and layers[line.style]
-            if layer then
-                line.layer = layer
+            if not line.comment and layers[line.style] then
+                line.layer = layers[line.style]
                 subs[i] = line
             end
         end
